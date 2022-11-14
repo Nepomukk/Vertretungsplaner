@@ -1,6 +1,16 @@
 <html>
     <head>
         <title>{{ title }}</title>
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-5.2.2-dist/css/bootstrap.css') }}">
+        <script src="{{url_for('static', filename='bootstrap-5.2.2-dist/js/bootstrap.js')}}"></script>
+
+        {% for css_file in default['css_files']: %}
+            <link rel="stylesheet" href="{{ url_for('static', filename=('css/' + css_file)) }}">
+	    {% endfor %}
+        {% for js_file in default['js_files']: %}
+            <script src="{{url_for('static', filename=('js/' + js_file))}}"></script>
+	    {% endfor %}
     </head>
     <body>
         <h1>Hello {{ username }}</h1>
