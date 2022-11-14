@@ -6,15 +6,17 @@
  appearance:none;
   }
 
+  .login-wrapper{
+  width:100%;
+  }
+
   .loginbox{
+  width: 100%;
   margin:auto;
   border:2px solid lightgrey;
   border-radius:5px;
   margin: 20px 0;
-  }
-
-  .loginbox .form-control{
-    display:inline-block;
+  padding:20px;
   }
 
   .image-wrapper{
@@ -23,3 +25,19 @@
   display:block;
   align-items:center;
   }
+
+.wrapper {
+    display:flex;
+    align-items:center;
+    width:100%;
+}
+
+.w40{
+width:40%;
+}
+
+img{
+   width:100%;
+   height:auto;
+   object-fit:cover;
+}
