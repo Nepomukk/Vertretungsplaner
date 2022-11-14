@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <p>Login {{ username }}</p>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="loginbox">
+                <div class="col image-wrapper mb-5">
+                    <img src="static/img/logo.png" class="gso-logo">
+                </div>
+                <div class="input-group col-md-12">
+                    <div class="col-md-4">
+                        <label for="username">Benutzername:</label>
+                        <input type="text" class="form-control" id="username" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="password">Passwort:</label>
+                        <input type="password" class="form-control" id="password" placeholder="Password" aria-label="Password" aria-describedby="basic-addon1">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

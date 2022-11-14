@@ -5,7 +5,6 @@ import flask
 from flask import request, jsonify
 from flask import render_template
 
-
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 
@@ -24,10 +23,11 @@ def home():
     name = 'Lehrer x'
     return render_template('pages/home.html', default=default, username=name)
 
+
 @app.route('/login')
 def loginpage():
     username = 'User X'
-    return render_template('pages/login.html', default=default, username=username)
+    return render_template('pages/A1-login-page.html', default=default, username=username)
 
 
 app.run()

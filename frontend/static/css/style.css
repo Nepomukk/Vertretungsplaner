@@ -6,9 +6,20 @@
  appearance:none;
   }
 
-  .box{
-  width:50%;
+  .loginbox{
   margin:auto;
-  border:1px solid red;
+  border:2px solid lightgrey;
+  border-radius:5px;
   margin: 20px 0;
+  }
+
+  .loginbox .form-control{
+    display:inline-block;
+  }
+
+  .image-wrapper{
+  width: 100px;
+  height:100px;
+  display:block;
+  align-items:center;
   }
