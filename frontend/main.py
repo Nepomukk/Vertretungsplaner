@@ -36,6 +36,12 @@ def home():
     return render_template('pages/home.html', default=default, username=name)
 
 
+@app.route('/login')
+def loginpage():
+    username = 'User X'
+    return render_template('pages/A1-login-page.html', default=default, username=username)
+
+
 @app.route('/formular')
 def formular_page():
     name = 'Lehrer x'
