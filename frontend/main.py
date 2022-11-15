@@ -41,13 +41,11 @@ def formular_page():
 
 @app.route('/notifications')
 def test_message_bell():
-    messages = []
     username = 'Lehrer X'
-    message1 = "Hallo" + username
-    message2 = "Antrag angenommen"
-    messages.append(message1)
-    messages.append(message2)
+    location = menu_items['formular']['path']
+    messages = ['Antrag A annehmen', 'Antrag B ablehnen', 'Antrag C wartend','Antrag D angenommen']
     # wird später mit for-Schleife aus der DB umgesetzt"
-    return render_template('pages/notifications.html', messages=messages, default=default)
+    return render_template('pages/notifications.html', messages=messages, default=default, location=location)
+
 
 app.run()

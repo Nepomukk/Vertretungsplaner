@@ -40,7 +40,11 @@
                     <div class="notifications-bell-container icon-button">
                         <i class="fa-solid fa-bell" onclick="showMessages()"></i>
                         <div class="hidden" id="toggleBox">
-                                   Test
+                            {% for message in messages %}
+                            <ul id="messagelist">
+                                <li onclick="redirectForm()"><a href="{{location}}">{{message}}</a></li>
+                            </ul>
+                            {% endfor %}
                         </div>
                     </div>
                     <div class="logged-in-user">

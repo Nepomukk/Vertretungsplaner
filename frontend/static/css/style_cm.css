@@ -1,5 +1,7 @@
 {% extends 'layout.html' %}
 
+/* A1 login box */
+
 * {
  margin:0;
  padding:0;
@@ -38,6 +40,25 @@ img{
    width:100%;
    height:auto;
    object-fit:cover;
+}
+
+/* A3 notification bell */
+
+#messagelist{
+    list-style-type:none;
+}
+
+#messagelist li {
+    font-size:9pt;
+}
+
+#messagelist li a {
+color:black;
+}
+
+#toggleBox{
+    background-color:aliceblue;
+    margin-top:164px;
 }
 
 .hidden{

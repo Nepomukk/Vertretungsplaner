@@ -9,3 +9,8 @@ function showMessages(){
     toggleBox.classList.add('hidden')
     }
 }
+
+function redirectForm(){
+
+
+}

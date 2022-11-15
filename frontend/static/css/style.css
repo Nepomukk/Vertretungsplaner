@@ -47,4 +47,5 @@ width:40%;
 #lp .show{
     display:block;
     visibility:visible;
+    line-height: 1rem;
 }
