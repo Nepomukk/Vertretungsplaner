@@ -1,0 +1,28 @@
+.fp-absence-grid {
+    display: grid;
+    grid-template-columns: [first-col] 25% 10% 20% 20% auto [last-col] 45px;
+    padding: 5px;
+}
+.fp-absence-grid .last-col {
+    grid-column-start: last-col;
+}
+
+.fp-department-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 30px);
+    /* padding: 5px; */
+}
+.fp-department-grid > * {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+}
+
+.fp-row-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}

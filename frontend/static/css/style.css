@@ -1,0 +1,35 @@
+.icon-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 45px;
+    height: 45px;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 25px;
+}
+.icon-button:hover {
+    background: #00000047;
+}
+
+.circle-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    cursor: pointer;
+}
+.circle-button.text-danger:hover {
+    color: rgb(193, 19, 36) !important
+}
+.circle-button.text-success:hover {
+    color: rgb(13, 107, 63) !important
+}
+
+input.hide-text + textarea {
+    display: none;
+}
+input.hide-text:checked + textarea {
+    display: initial;
+}
