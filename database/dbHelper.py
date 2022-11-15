@@ -13,7 +13,7 @@ class User(Base):
     __tablename__ = "users"
 
     userid = Column(Integer, nullable=False, primary_key=True)
-    username = Column(String, nullable=False)
+    username = Column(String, nullable=False, unique=True)
     pwd = Column(String, nullable=False)
     firstname = Column(String, nullable=False)
     lastname = Column(String, nullable=False)
