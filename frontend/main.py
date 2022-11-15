@@ -4,24 +4,32 @@ import os
 import flask
 from flask import request, jsonify
 from flask import render_template
+from typing import List, Union, TypedDict
 
 # Roles
 from backend.model import Role, User
-
-# my imports
-from typing import List, Union, TypedDict
 from backend import Configuration_Roles
 
 app = flask.Flask(__name__)
-app.config["DEBUG"] = True
+# app.config["DEBUG"] = True
 
 # load all file names from the respective folder to automatically add all files within
-js_files = os.listdir('frontend/static/js')
-css_files = os.listdir('frontend/static/css')
+js_files = os.listdir('static/js')
+css_files = os.listdir('static/css')
+
+menu_items = {
+    'formular': {
+        'name': 'Formular erstellen',
+        'path': '/formular',
+        'icon': 'fa-solid fa-file-circle-plus',
+    },
+}
+
 # add to default var set for all templates
 default = {
     "js_files": js_files,
     "css_files": css_files,
+    "menu_items": menu_items,
 }
 ##### BeisplielDATEN
 placeholder_roles: List[Role] = [
@@ -30,6 +38,8 @@ placeholder_roles: List[Role] = [
     Role("user-3", 1, False)
 ]
 
+
+# INFO: add hide_menu=True to render_template() to disable the menu for a route
 
 
 @app.route('/')
@@ -56,5 +66,11 @@ def config_users():
 def config_edit__user():
     user_id: int = 1 # get this
     return render_template('pages/configuration_edit_role.html', default=default, user_id=user_id)
+
+@app.route('/formular')
+def formular_page():
+    name = 'Lehrer x'
+    return render_template('pages/formular.html', default=default, username=name)
+
 
 app.run()
