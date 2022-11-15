@@ -49,3 +49,41 @@ width:40%;
     visibility:visible;
     line-height: 1rem;
 }
+
+#message-bell {
+  position:relative;
+}
+
+#toggleBox{
+    position: absolute;
+    top: 60px;
+    padding: 10px;
+    width:200px;
+    right:0;
+}
+
+#toggleBox ul {
+
+padding:0;
+margin:0;
+width:200px;
+margin-right:10px;
+}
+
+#messagelist{
+    list-style-type:none;
+}
+
+#messagelist li {
+    font-size:9pt;
+    padding:10px;
+}
+
+#messagelist li a {
+color:black;
+}
+
+.hidden{
+display:none;
+visibility:none;
+}

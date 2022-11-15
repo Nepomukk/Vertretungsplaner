@@ -38,8 +38,8 @@
             <div class="page">
                 <div class="menu topbar">
                     <div class="notifications-bell-container icon-button">
-                        <i class="fa-solid fa-bell" onclick="showMessages()"></i>
-                        <div class="hidden" id="toggleBox">
+                        <i class="fa-solid fa-bell" onclick="showMessages()" id="message-bell"></i>
+                        <div class="hidden border rounded" id="toggleBox">
                             {% for message in messages %}
                             <ul id="messagelist">
                                 <li onclick="redirectForm()"><a href="{{location}}">{{message}}</a></li>
