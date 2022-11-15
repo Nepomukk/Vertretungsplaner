@@ -44,3 +44,7 @@ width:40%;
     display:none;
     visibility:none
 }
+#lp .show{
+    display:block;
+    visibility:visible;
+}
