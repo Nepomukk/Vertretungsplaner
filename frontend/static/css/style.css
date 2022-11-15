@@ -1,4 +1,5 @@
 {% extends 'layout.html' %}
+/* A1 login box */
 
 #lp * {
  margin:0;
@@ -50,3 +51,43 @@ width:40%;
     line-height: 1rem;
 }
 
+/* A3 notification bell */
+
+.notifications-bell-container {
+  position:relative;
+}
+
+#toggleBox{
+    position: absolute;
+    top: 60px;
+    padding: 10px;
+    width:200px;
+    right:0;
+    background:white;
+}
+
+#messagelist{
+    list-style-type:none;
+}
+
+#messagelist li {
+    font-size:9pt;
+    padding:10px;
+}
+
+#messagelist li a {
+color:black;
+}
+
+.hidden{
+display:none;
+visibility:none;
+}
+
+#toggleBox ul {
+
+padding:0;
+margin:0;
+width:200px;
+margin-right:10px;
+}
