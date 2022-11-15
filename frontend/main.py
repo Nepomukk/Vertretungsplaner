@@ -6,7 +6,7 @@ from flask import request, jsonify
 from flask import render_template
 
 app = flask.Flask(__name__)
-app.config["DEBUG"] = True
+# app.config["DEBUG"] = True
 
 # load all file names from the respective folder to automatically add all files within
 js_files = os.listdir('static/js')
@@ -16,6 +16,7 @@ menu_items = {
     'formular': {
         'name': 'Formular erstellen',
         'path': '/formular',
+        'icon': 'fa-solid fa-file-circle-plus',
     },
 }
 
@@ -25,6 +26,8 @@ default = {
     "css_files": css_files,
     "menu_items": menu_items,
 }
+
+# INFO: add hide_menu=True to render_template() to disable the menu for a route
 
 
 @app.route('/')

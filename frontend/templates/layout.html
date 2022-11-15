@@ -14,45 +14,51 @@
 	    {% endfor %}
     </head>
     <body>
-        <div class="main-layout">
-            <div class="menu sidebar">
+        {% if not hide_menu %}
+            <div class="main-layout">
+                <div class="menu sidebar">
 
-                <a href="/" class="home-link">
-                    <h3 class="title">
-                        <i class="fa-solid fa-house"></i>
-                        GSO Vertretung
-                    </h3>
-                </a>
+                    <a href="/" class="home-link pb-2 pt-1 mb-3 border-bottom">
+                        <h3 class="title">
+                            <i class="fa-solid fa-house"></i>
+                            GSO Vertretung
+                        </h3>
+                    </a>
 
-                <ul class="nav nav-pills flex-column">
-                    {% for key, item in default['menu_items'].items() %}
-                        <li class="nav-item">
-                            <a href="{{ item['path'] }}" class="nav-link">
-                                {{ item['name'] }}
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
+                    <ul class="nav nav-pills flex-column">
+                        {% for key, item in default['menu_items'].items() %}
+                            <li class="nav-item">
+                                <a href="{{ item['path'] }}" class="nav-link">
+                                    <i class="{{ item['icon'] }} mr-2"></i>
+                                    {{ item['name'] }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
 
-            </div>
-            <div class="page">
-                <div class="menu topbar">
-                    <div class="notifications-bell-container icon-button">
-                        <i class="fa-solid fa-bell"></i>
+                </div>
+
+                <div class="page">
+                    <div class="menu topbar">
+                        <div class="notifications-bell-container icon-button">
+                            <i class="fa-solid fa-bell"></i>
+                        </div>
+                        <div class="logged-in-user">
+                            <i class="fa-solid fa-circle-user"></i>
+                            <span>{{ username }}</span>
+                        </div>
+                        <div class="logout-container">
+                            <i class="fa-solid fa-right-from-bracket icon-button"></i>
+                        </div>
                     </div>
-                    <div class="logged-in-user">
-                        <i class="fa-solid fa-circle-user"></i>
-                        <span>{{ username }}</span>
-                    </div>
-                    <div class="logout-container">
-                        <i class="fa-solid fa-right-from-bracket icon-button"></i>
+                    <div class="content">
+        {% endif %}
+                        {% block content %}{% endblock %}
+        {% if not hide_menu %}
                     </div>
                 </div>
-                <div class="content">
-                    {% block content %}{% endblock %}
-                </div>
             </div>
-        </div>
+        {% endif %}
 
         <div class="overlay">
         </div>
