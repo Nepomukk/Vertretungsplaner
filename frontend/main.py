@@ -48,6 +48,6 @@ def test_message_bell():
     messages.append(message1)
     messages.append(message2)
     # wird später mit for-Schleife aus der DB umgesetzt"
-    return render_template('pages/layout.html', messages=messages)
+    return render_template('pages/notifications.html', messages=messages, default=default)
 
 app.run()

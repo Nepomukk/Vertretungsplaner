@@ -1,0 +1,63 @@
+<html>
+    <head>
+        <title>{{ title }}</title>
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='fontawesome-free-6.2.0-web/css/all.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-5.2.2-dist/css/bootstrap.css') }}">
+        <script src="{{url_for('static', filename='bootstrap-5.2.2-dist/js/bootstrap.js')}}"></script>
+
+        {% for css_file in default['css_files']: %}
+            <link rel="stylesheet" href="{{ url_for('static', filename=('css/' + css_file)) }}">
+	    {% endfor %}
+        {% for js_file in default['js_files']: %}
+            <script src="{{url_for('static', filename=('js/' + js_file))}}"></script>
+	    {% endfor %}
+    </head>
+    <body>
+        <div class="main-layout">
+            <div class="menu sidebar">
+
+                <a href="/" class="home-link">
+                    <h3 class="title">
+                        <i class="fa-solid fa-house"></i>
+                        GSO Vertretung
+                    </h3>
+                </a>
+
+                <ul class="nav nav-pills flex-column">
+                    {% for key, item in default['menu_items'].items() %}
+                        <li class="nav-item">
+                            <a href="{{ item['path'] }}" class="nav-link">
+                                {{ item['name'] }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+            <div class="page">
+                <div class="menu topbar">
+                    <div class="notifications-bell-container icon-button">
+                        <i class="fa-solid fa-bell" onclick="showMessages()"></i>
+                        <div class="hidden id="toggleBox">
+                                   Test
+                        </div>
+                    </div>
+                    <div class="logged-in-user">
+                        <i class="fa-solid fa-circle-user"></i>
+                        <span>{{ username }}</span>
+                    </div>
+                    <div class="logout-container">
+                        <i class="fa-solid fa-right-from-bracket icon-button"></i>
+                    </div>
+                </div>
+                <div class="content">
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+<script src="static/js/main.js"></script>
+        <div class="overlay">
+        </div>
+    </body>
+</html>

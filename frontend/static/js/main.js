@@ -1,10 +1,7 @@
 
-    document.getElementByClass("notifications-bell-container").click(showMessages)
-
 
 function showMessages(){
-    document.getElementById()
 
-
-
+    var toggleBox = document.getElementById('toggleBox')
+    toggleBox.classList.remove('hidden')
 }
