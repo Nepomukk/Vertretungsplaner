@@ -44,7 +44,7 @@ img{
 
 /* A3 notification bell */
 
-#message-bell {
+.notifications-bell-container {
   position:relative;
 }
 
