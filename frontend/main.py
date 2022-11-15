@@ -7,7 +7,7 @@ from flask import render_template
 from typing import List, Union, TypedDict
 
 # Roles
-from backend.model import Role, User
+from backend.model import Roles, User
 from backend import Configuration_Roles
 
 app = flask.Flask(__name__)
@@ -32,10 +32,10 @@ default = {
     "menu_items": menu_items,
 }
 ##### BeisplielDATEN
-placeholder_roles: List[Role] = [
-    Role("user-1", 1, False),
-    Role("user-2", 1, False),
-    Role("user-3", 1, False)
+placeholder_roles: List[Roles] = [
+    Roles("user-1", 1, False),
+    Roles("user-2", 1, False),
+    Roles("user-3", 1, False)
 ]
 
 
@@ -50,7 +50,7 @@ def home():
 # A6 Konfiguration Endpoints
 @app.route('/configuration/roles') # Manage roles
 def config_roles():
-    role_dicts: List[Role.RoleSchema] = Configuration_Roles.ConfigurationRoles.get_roles_dicts()
+    role_dicts: List[Roles.RoleSchema] = Configuration_Roles.ConfigurationRoles.get_roles_dicts()
     return render_template('pages/configuration_roles.html', default=default, roles = role_dicts)
 
 @app.route('/configuration/role_edit') # Edit Role

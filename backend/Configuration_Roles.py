@@ -1,22 +1,23 @@
-from model import Role
-from typing import List, Any
+from backend.model import Roles
+from typing import List, Any, NoReturn
+from database import dbHelper
 
 class ConfigurationRoles():
-    db_session: Any
+    session: dbHelper.Session
 
-    def __init__(self) -> None:
-        self.db_session = "" # todo
+    def __init__(self) -> NoReturn:
+        self.db_session = dbHelper.Session.getSession()
 
-    def get_roles_objs(self) -> List[Role.Role]:
-        db_roles_data: Any
+    def get_roles_objs(self) -> List[Roles.Role]:
+        db_roles_data: Any = self.session.getSession()
 
-        roles: List[Role.Role]
+        roles: List[Roles.Role]
         return roles
 
-    def get_roles_dicts(self) -> List[Role.RoleSchema]:
-        role_objs: List[Role.Role] = self.get_roles_objs()
+    def get_roles_dicts(self) -> List[Roles.RoleSchema]:
+        role_objs: List[Roles.Role] = self.get_roles_objs()
 
-        role_dicts: List[Role.RoleSchema] = [role.to_dict() for role in role_objs]
+        role_dicts: List[Roles.RoleSchema] = [role.to_dict() for role in role_objs]
         return role_dicts
 
         

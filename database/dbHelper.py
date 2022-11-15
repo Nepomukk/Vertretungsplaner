@@ -77,27 +77,6 @@ class SubstitutionTypes(Base):
                f"descr={self.descr!r})"
 
 
-class Roles(Base):
-    __tablename__ = "roles"
-
-    roleid = Column(Integer, nullable=False, primary_key=True)
-    name = Column(String, nullable=False)
-    admin = Column(Boolean, nullable=False)
-    level = Column(Integer, nullable=False, unique=True)
-
-    def __init__(self, name, admin, level):
-        self.name = name
-        self.admin = admin
-        self.level = level
-
-    def __repr__(self):
-        return f"Roles(roleid={self.roleid!r}, " \
-               f"name={self.name!r}, " \
-               f"admin={self.admin!r}, " \
-               f"level={self.level!r}, " \
-               f")"
-
-
 class Departments(Base):
     __tablename__ = "departments"
 
