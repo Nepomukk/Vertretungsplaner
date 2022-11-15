@@ -40,7 +40,9 @@
                     <div class="notifications-bell-container icon-button">
                         <i class="fa-solid fa-bell" onclick="showMessages()"></i>
                         <div class="col-md-12">
-
+                            {% for message in messages %}
+                            <p>{{message}}</p>
+                            {% endfor %}
                         </div>
                     </div>
                     <div class="logged-in-user">
