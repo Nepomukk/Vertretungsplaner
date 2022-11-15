@@ -1,46 +1,31 @@
-create table if not exists users
+create table users
 (
-	userid serial
-		constraint users_pk
-			primary key,
-	username varchar not null,
-	pwd varchar not null,
-	firstname varchar not null,
-	lastname varchar not null,
-	email varchar not null
+    userid    serial
+        constraint users_pk
+            primary key,
+    username  varchar not null,
+    pwd       varchar not null,
+    firstname varchar not null,
+    lastname  varchar not null,
+    email     varchar not null
 );
 
-alter table users owner to postgres;
+alter table users
+    owner to postgres;
 
--- Roles ----------------------------------------------------
 create table roles
 (
     roleid serial
         constraint roles_pk
             primary key,
     name   varchar not null,
-    admin  integer not null,
+    admin  boolean not null,
     level  integer not null
 );
 
-alter table roles owner to postgres;
-
--- usertorole ----------------------------------------------
-
-create table usertorole
-(
-    userid integer not null
-        constraint usertorole_users_userid_fk
-            references users,
-    roleid integer not null
-        constraint usertorole_roles_roleid_fk
-            references roles
-);
-
-alter table usertorole
+alter table roles
     owner to postgres;
 
--- absensereasons ------------------------------
 create table absensereasons
 (
     id    integer default nextval('absencereasons_id_seq'::regclass) not null
@@ -51,7 +36,7 @@ create table absensereasons
 
 alter table absensereasons
     owner to postgres;
--- statustype-----------------------------------
+
 create table statustypes
 (
     id    serial
@@ -62,19 +47,7 @@ create table statustypes
 
 alter table statustypes
     owner to postgres;
--- department ----------------------------------
-create table department
-(
-    id       serial
-        constraint department_pk
-            primary key,
-    descr    varchar not null,
-    shortcut varchar not null
-);
 
-alter table department
-    owner to postgres;
--- substittiontypes ----------------------------
 create table substitutiontypes
 (
     id    serial
@@ -85,7 +58,7 @@ create table substitutiontypes
 
 alter table substitutiontypes
     owner to postgres;
--- forms ---------------------------------------
+
 create table forms
 (
     formatid      serial
@@ -96,9 +69,6 @@ create table forms
     absensereason integer,
     other         varchar,
     appendfile    varchar,
-    department    integer
-        constraint forms_department_id_fk
-            references department,
     pdffile       varchar,
     createdate    date,
     activ         boolean,
@@ -113,7 +83,25 @@ create table forms
 
 alter table forms
     owner to postgres;
--- sublessons ----------------------------------
+
+create table confirmation
+(
+    id       serial
+        constraint confirmation_pk
+            primary key,
+    userid   integer   not null
+        constraint confirmation_users_userid_fk
+            references users,
+    formatid integer   not null
+        constraint confirmation_forms_formatid_fk
+            references forms,
+    comdate  timestamp not null,
+    ok       boolean   not null
+);
+
+alter table confirmation
+    owner to postgres;
+
 create table sublessons
 (
     id              serial
@@ -140,25 +128,51 @@ create table sublessons
 alter table sublessons
     owner to postgres;
 
-
--- confirmation --------------------------------
-create table confirmation
+create table departments
 (
     id       serial
-        constraint confirmation_pk
+        constraint departments_pk
             primary key,
-    userid   integer   not null
-        constraint confirmation_users_userid_fk
-            references users,
-    formatid integer   not null
-        constraint confirmation_forms_formatid_fk
-            references forms,
-    comdate  timestamp not null,
-    ok       boolean   not null
+    descr    varchar not null,
+    shortcut varchar not null
 );
 
-alter table confirmation
+alter table departments
     owner to postgres;
+
+create table usertorole
+(
+    userid       integer not null
+        constraint usertorole_users_userid_fk
+            references users,
+    roleid       integer not null
+        constraint usertorole_roles_roleid_fk
+            references roles,
+    departmentid integer not null
+        constraint usertorole_departments_id_fk
+            references departments,
+    constraint usertorole_pk
+        primary key (userid, roleid, departmentid)
+);
+
+alter table usertorole
+    owner to postgres;
+
+create table fromattodepartment
+(
+    formatid     integer not null
+        constraint table_name_forms_formatid_fk
+            references forms,
+    departmentid integer not null
+        constraint fromattodepartment_pk
+            primary key
+        constraint fromattodepartment_departments_id_fk
+            references departments
+);
+
+alter table fromattodepartment
+    owner to postgres;
+
 
 
 -- Metadaten ------------------------------------------
@@ -172,7 +186,7 @@ INSERT INTO public.statustypes (id, descr) VALUES (6, 'angenommen von Vertretung
 
 
 INSERT INTO public.substitutiontypes (id, descr) VALUES (1, 'Fachvertretung');
-INSERT INTO public.substitutiontypes (id, descr) VALUES (2, 'passive Vertretung ');
+INSERT INTO public.substitutiontypes (id, descr) VALUES (2, 'passive Vertretung');
 
 
 INSERT INTO public.absensereasons (id, descr) VALUES (1, 'Dienstveranstaltung');
@@ -181,10 +195,10 @@ INSERT INTO public.absensereasons (id, descr) VALUES (3, 'Fortbildung');
 INSERT INTO public.absensereasons (id, descr) VALUES (4, 'Unterrichtsgang');
 INSERT INTO public.absensereasons (id, descr) VALUES (5, 'Sonstiges');
 
-INSERT INTO public.department (id, descr, shortcut) VALUES (2, 'AV Abteilung', 'AV');
-INSERT INTO public.department (id, descr, shortcut) VALUES (3, 'Elektrotechnik', 'ET');
-INSERT INTO public.department (id, descr, shortcut) VALUES (4, 'IT Abteilung', 'IT');
-INSERT INTO public.department (id, descr, shortcut) VALUES (5, 'BFS Abteilung', 'BFS');
-INSERT INTO public.department (id, descr, shortcut) VALUES (6, 'ITA Abteilung', 'ITA');
-INSERT INTO public.department (id, descr, shortcut) VALUES (7, 'FOS Abteilung', 'FOS');
-INSERT INTO public.department (id, descr, shortcut) VALUES (8, 'FS Abteilung', 'FS');
+INSERT INTO public.departments (id, descr, shortcut) VALUES (1, 'AV Abteilung', 'AV');
+INSERT INTO public.departments (id, descr, shortcut) VALUES (2, 'Elektrotechnik', 'ET');
+INSERT INTO public.departments (id, descr, shortcut) VALUES (3, 'IT Abteilung', 'IT');
+INSERT INTO public.departments (id, descr, shortcut) VALUES (4, 'BFS Abteilung', 'BFS');
+INSERT INTO public.departments (id, descr, shortcut) VALUES (5, 'ITA Abteilung', 'ITA');
+INSERT INTO public.departments (id, descr, shortcut) VALUES (6, 'FOS Abteilung', 'FOS');
+INSERT INTO public.departments (id, descr, shortcut) VALUES (7, 'FS Abteilung', 'FS');
