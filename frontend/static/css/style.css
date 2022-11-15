@@ -20,8 +20,8 @@
   }
 
   .image-wrapper{
-  display:block;
-  align-items:center;
+  justify-content: center;
+  display:flex;
   }
 
 .wrapper {
@@ -35,7 +35,6 @@ width:40%;
 }
 
 img{
-   width:100%;
-   height:auto;
-   object-fit:cover;
+   width:50%;
+   height:50%;
 }
