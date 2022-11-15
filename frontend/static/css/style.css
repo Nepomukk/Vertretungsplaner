@@ -6,9 +6,6 @@
  appearance:none;
   }
 
-  .login-wrapper{
-  width:100%;
-  }
 
   .loginbox{
   width: 100%;
@@ -35,6 +32,11 @@ width:40%;
 }
 
 img{
-   width:50%;
-   height:50%;
+   width:30%;
+   height:30%;
+}
+
+.flex
+{
+justify-content:center;
 }
