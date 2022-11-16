@@ -57,7 +57,7 @@ def get_config_roles_page():
 
 @app.route('/config/roles/add') # get page add role
 def config_roles_add_page():    
-    role = Roles(
+    role = Roles( # todo
         roleid=0,
         name='Bezeichnung',
         admin=False,
@@ -144,6 +144,19 @@ def config_users_edit_page(userid: str):
     user = ConfigurationUsersAPI.get_user(user_id=user_id)
     url: str = '/api/config/users/edit/'
     return render_template('pages/config_users_edit_page.html', default=default, user=user, action_title="Bearbeiten", post_url=url)
+
+@app.route('/config/users/add') # get page add role
+def config_users_add_page():
+    user = User(
+        userid=0,
+        username='Benutzername',
+        pwd='Password',
+        firstname='Vorname',
+        lastname='Nachname',
+        email='Email'
+    )
+    url: str = '/api/config/users/add'
+    return render_template('pages/config_users_edit_page.html', default=default, user=user, action_title="Hinzufügen", post_url=url)
 
 @app.route('/api/config/users/edit/', methods=['POST']) # edit user
 def config_users_edit():

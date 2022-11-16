@@ -19,7 +19,9 @@ class ConfigurationUsersAPI:
         users: List[User] = []
 
         user1 = User('user1', 'asd', 'firstname', 'lastname', 'eail', 0)
+        user2 = User('user2', 'asd', 'firstname', 'lastname', 'eail', 1)
         users.append(user1)
+        users.append(user2)
         return users
 
     def get_users_dicts() -> List[UserSchema]:
