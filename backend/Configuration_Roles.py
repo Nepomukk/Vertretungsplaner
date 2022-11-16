@@ -25,7 +25,7 @@ class ConfigurationRolesAPI:
         roles.append(role2)
         return roles
 
-    def get_roles_dicts() -> List[RoleSchema]:
+    def get_roles_dicts() -> List[RoleSchema]: # todo
         role_objs: List[Roles] = ConfigurationRolesAPI.get_roles_objs()
         role_dicts: List[RoleSchema] = [role.to_dict() for role in role_objs]
         return role_dicts

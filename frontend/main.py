@@ -138,14 +138,14 @@ def get_config_users_page():
     url: str = '/api/config/roles/del'
     return render_template('pages/config_users_page.html', default=default, users=users, post_url=url)
 
-@app.route('/config/users/edit/<userid>', methods=['GET']) # get page edit role
+@app.route('/config/users/edit/<userid>', methods=['GET']) # get page edit users
 def config_users_edit_page(userid: str):
     user_id: int = int(userid)
     user = ConfigurationUsersAPI.get_user(user_id=user_id)
     url: str = '/api/config/users/edit/'
     return render_template('pages/config_users_edit_page.html', default=default, user=user, action_title="Bearbeiten", post_url=url)
 
-@app.route('/config/users/add') # get page add role
+@app.route('/config/users/add') # get page add user
 def config_users_add_page():
     user = User(
         userid=0,
@@ -180,6 +180,27 @@ def config_users_edit():
         resp = Response("invalid request", status=400)
         return resp
 
+@app.route('/api/config/users/add/', methods=['POST']) # add user
+def config_users_add():
+    try:
+        form_data = request.form
+        userid: int = int(form_data.get('userid', 0))
+
+        user = ConfigurationUsersAPI.get_user(user_id=userid)
+        url: str = '/api/config/users/add'
+
+        ConfigurationUsersAPI.add_user(
+            userid=userid,
+            username=form_data.get('username', None),
+            pwd=form_data.get('pwd', None),
+            firstname=form_data.get('firstname', None),            
+            lastname=form_data.get('lastname', None),            
+            email=form_data.get('email', None)
+        )
+        return render_template('pages/config_users_edit_page.html', default=default, user=user, action_title="Bearbeiten", post_url=url)
+    except:
+        resp = Response("invalid request", status=400)
+        return resp
 # ############################################################ A6 Konfiguration Page Endpoints - USERS \
 
 @app.route('/formular')

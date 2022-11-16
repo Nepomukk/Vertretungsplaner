@@ -13,7 +13,7 @@ from database.users import User, UserSchema
 from database.dbHelper import Session
 
 class ConfigurationUsersAPI:
-    def get_users_objs() -> List[User]:
+    def get_users_objs() -> List[User]: # todo
         session: sessionmaker = Session.getSession()
 
         users: List[User] = []
