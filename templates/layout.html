@@ -2,15 +2,15 @@
     <head>
         <title>{{ title }}</title>
 
-        <link rel="stylesheet" href="{{ url_for('static', filename='fontawesome-free-6.2.0-web/css/all.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-5.2.2-dist/css/bootstrap.css') }}">
-        <script src="{{url_for('static', filename='bootstrap-5.2.2-dist/js/bootstrap.js')}}"></script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='fontawesome-free-6.2.0-web/css/all.css', _external=True) }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-5.2.2-dist/css/bootstrap.css', _external=True) }}">
+        <script src="{{url_for('static', filename='bootstrap-5.2.2-dist/js/bootstrap.js', _external=True)}}"></script>
 
         {% for css_file in default['css_files']: %}
-            <link rel="stylesheet" href="{{ url_for('static', filename=('css/' + css_file)) }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename=('css/' + css_file), _external=True) }}">
 	    {% endfor %}
         {% for js_file in default['js_files']: %}
-            <script src="{{url_for('static', filename=('js/' + js_file))}}"></script>
+            <script src="{{url_for('static', filename=('js/' + js_file), _external=True)}}"></script>
 	    {% endfor %}
     </head>
     <body>

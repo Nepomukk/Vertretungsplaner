@@ -99,3 +99,16 @@ img {
     height: 100%;
     align-content: center;
 }
+
+.fimg {
+    padding: 0.25rem;
+    background-color: #fff;
+    max-width: 100%;
+    height: auto;
+}
+
+.fimg-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}

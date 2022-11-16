@@ -1,7 +1,10 @@
+import base64
 import os
+from pathlib import Path
 
 import flask
-from flask import render_template, redirect, url_for, flash
+import pdfkit as pdfkit
+from flask import render_template, redirect, url_for, flash, request, make_response, send_file
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from flask_migrate import Migrate
 from werkzeug.security import check_password_hash
@@ -171,6 +174,29 @@ def formular_page():
     return render_template('pages/formular.html', default=default, username=name,
                            absence_reasons=absence_reasons,
                            affected_departments=affected_departments)
+
+
+@app.route('/formular/pdf', methods=["GET", "POST"])
+@login_required
+def formular_pdf():
+    if flask.request.method == 'GET':
+        raw_formatid = request.args.get('formatid')
+        if raw_formatid is not None and raw_formatid.isdigit():
+            img = Path("static/img/logo.png").absolute()
+            formatid = int(raw_formatid)
+            form = Forms.query.filter_by(formatid=formatid).first()
+            lessons = SubLessons.query.filter_by(formatid=formatid).order_by(SubLessons.lessondate).all()
+            date = lessons[0].lessondate.strftime("%d.%m.%Y") + '-' + lessons[1].lessondate.strftime("%d.%m.%Y")
+            # render Template
+            html = render_template(
+                "pdflayout/pdf.html",
+                default=default, form=form, lessons=lessons, date=date, img=img, hide_menu=True)
+            Path("requests").mkdir(parents=True, exist_ok=True)
+            file_path = "requests/Request_" + str(form.formatid) + ".pdf"
+            path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
+            config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
+            pdfkit.from_string(html, file_path, configuration=config)
+            return send_file(file_path, as_attachment=True)
 
 
 @app.errorhandler(404)
