@@ -46,7 +46,12 @@ class ConfigurationMngrRoles:
     def edit_role(roleid: int, name=None, admin=False, level=None) -> NoReturn: # todo
         pass
 
-    def add_role(roleid: Union[str, int] = 0, name: str = 'role', admin: Union[str, bool] = False, level: Union[str, int] = 0) -> NoReturn: # todo
+    def add_role(
+        roleid: Union[str, int] = 0, 
+        name: str = 'role', 
+        admin: Union[str, bool] = False, 
+        level: Union[str, int] = 0
+        ) -> NoReturn: # todo
         # with Session(engine) as session:
         #     new_role: Roles = Roles(
         #         roleid=int(roleid),
