@@ -129,6 +129,13 @@ def formular_page():
                            affected_departments=affected_departments)
 
 
+@app.errorhandler(404)
+def page_not_found(e):
+    hide_menu = True
+    if current_user.is_authenticated and current_user.username is not None:
+        hide_menu = False
+    return render_template("pages/error.html", hide_menu=hide_menu, default=default), 404
+
 
 if __name__ == "__main__":
     app.run()
