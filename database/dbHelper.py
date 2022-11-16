@@ -14,73 +14,9 @@ from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import TIMESTAMP
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-from typing import TypedDict, NoReturn
-
-## Roles
-Base = declarative_base()
-
-class RoleSchema(TypedDict):
-    roleid: int
-    name: str
-    admin: bool
-    level: int
-
-
-class Roles(Base):
-    __tablename__ = "roles"
-
-    roleid = Column(Integer, nullable=False, primary_key=True)
-    name = Column(String, nullable=False)
-    admin = Column(Boolean, nullable=False)
-    level = Column(Integer, nullable=False, unique=True)
-
-    def __init__(self, roleid: int, name: str, level: int, admin: bool):
-        self.roleid = roleid
-        self.name = name
-        self.level = level
-        self.admin = admin
-
-    def __repr__(self) -> str:
-        return f"Roles(roleid={self.roleid!r}, " \
-               f"name={self.name!r}, " \
-               f"admin={self.admin!r}, " \
-               f"level={self.level!r}, " \
-               f")"
-
-    def to_dict(self) -> RoleSchema:
-        def set_dict(dictonary: dict, key: str) -> NoReturn:
-            dictonary[key] = getattr(self, key, None)
-
-        keys = RoleSchema.__annotations__
-        result: RoleSchema = dict   
-        return [set_dict(result, key) for key in keys]
-## Roles /
-
-
-class User(Base):
-    __tablename__ = "users"
-
-    userid = Column(Integer, nullable=False, primary_key=True)
-    username = Column(String, nullable=False)
-    pwd = Column(String, nullable=False)
-    firstname = Column(String, nullable=False)
-    lastname = Column(String, nullable=False)
-    email = Column(String, nullable=False)
-
-    def __init__(self, username, pwd, firstname, lastname, email):
-        self.username = username
-        self.pwd = pwd
-        self.firstname = firstname
-        self.lastname = lastname
-        self.email = email
-
-    def __repr__(self):
-        return f"User(userid={self.userid!r}, " \
-               f"username={self.username!r}, " \
-               f"firstname={self.firstname!r}, " \
-               f"lastname={self.lastname!r}, " \
-               f"pwd={self.pwd!r}, " \
-               f"email={self.email!r})"
+from baseModel import Base
+from roles import Roles
+from users import User
 
 
 class AbsenseReasons(Base):
@@ -331,3 +267,4 @@ class Session:
 
 if __name__ == '__main__':
     Session.createDatabase()
+    # Session.dropDatabase()
