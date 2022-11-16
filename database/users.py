@@ -1,4 +1,4 @@
-from baseModel import Base
+from .baseModel import Base
 
 from sqlalchemy import Column, create_engine, Date, Identity, text
 from sqlalchemy import ForeignKey

@@ -1,10 +1,10 @@
-import os
-import sys
-import inspect
+# import os
+# import sys
+# import inspect
 
-currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(currentdir)
-sys.path.insert(0, parentdir) 
+# currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+# parentdir = os.path.dirname(currentdir)
+# sys.path.insert(0, parentdir) 
 
 from sqlalchemy import Column, create_engine, Date, Identity, text
 from sqlalchemy import ForeignKey
@@ -14,9 +14,9 @@ from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import TIMESTAMP
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-from baseModel import Base
-from roles import Roles
-from users import User
+from .baseModel import Base
+from .roles import Roles
+from .users import User
 
 
 class AbsenseReasons(Base):

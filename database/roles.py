@@ -1,4 +1,4 @@
-from baseModel import Base
+from .baseModel import Base
 
 from sqlalchemy import Column, create_engine, Date, Identity, text
 from sqlalchemy import ForeignKey
@@ -18,7 +18,7 @@ class RoleSchema(TypedDict):
     level: int
 
 
-class Roles(Base):
+class Roles(Base, object):
     __tablename__ = "roles"
 
     roleid = Column(Integer, nullable=False, primary_key=True)
@@ -40,9 +40,9 @@ class Roles(Base):
                f")"
 
     def to_dict(self) -> RoleSchema:
-        def set_dict(dictonary: dict, key: str) -> NoReturn:
-            dictonary[key] = getattr(self, key, None)
-
-        keys = RoleSchema.__annotations__
-        result: RoleSchema = dict   
-        return [set_dict(result, key) for key in keys]
+        return {
+            'roleid': self.roleid,
+            'name': self.name,
+            'admin': self.admin,
+            'level': self.level
+        }

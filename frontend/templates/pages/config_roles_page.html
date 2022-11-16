@@ -1,0 +1,50 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="configuration-component">
+
+    <h1>Konfiguration</h1>
+
+        <div class="config-section-title">
+            <p>Rollen Verwalten</p>
+        </div>
+
+        <div class="manage-roles">
+          <button type="button" class="btn btn-primary float-right">Hinzufügen</button>
+
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Reihenfolge</th>
+                    <th scope="col">Rollen-ID</th>
+                    <th scope="col">Rollenbezeichnung</th>
+                    <th scope="col">Sicherheitsstufe</th>
+                    <th scope="col">Aktionen</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  {%for role in roles%}
+                    <tr>
+                      <td>{{roles.index(role)}}</td>
+                      <td>{{role.roleid}}</td>
+                      <td>{{role.name}}</td>
+                      <td>{{role.level}}</td>
+                      <td>
+                          <div class="row">
+                              <div class="col-sm-6">
+                                  <button type="button" class="btn btn-secondary">Editieren</button>
+                              </div>
+                              <div class="col-sm-6">
+                                  <button type="button" class="btn btn-danger">Löschen</button>                      
+                              </div>
+                          </div>
+                      </td>
+                    </tr>
+                  {%endfor%}
+
+                </tbody>
+              </table>        
+        </div>
+</div>
+{% endblock %}

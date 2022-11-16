@@ -1,21 +1,28 @@
+import inspect
+import os
+import sys
+
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
+
 import json
 import os
+from typing import List, TypedDict, Union
 
 import flask
-from flask import request, jsonify
-from flask import render_template
-from typing import List, Union, TypedDict
+from flask import jsonify, render_template, request
 
 # Roles
-from backend.model import Roles, User
-from backend import Configuration_Roles
+from backend.Configuration_Roles import ConfigurationRolesAPI, get_roles_objs
+from database.dbHelper import Session
 
 app = flask.Flask(__name__)
 # app.config["DEBUG"] = True
 
 # load all file names from the respective folder to automatically add all files within
-js_files = os.listdir('static/js')
-css_files = os.listdir('static/css')
+js_files = os.listdir('frontend/static/js')
+css_files = os.listdir('frontend/static/css')
 
 menu_items = {
     'formular': {
@@ -31,13 +38,6 @@ default = {
     "css_files": css_files,
     "menu_items": menu_items,
 }
-##### BeisplielDATEN
-placeholder_roles: List[Roles] = [
-    Roles("user-1", 1, False),
-    Roles("user-2", 1, False),
-    Roles("user-3", 1, False)
-]
-
 
 # INFO: add hide_menu=True to render_template() to disable the menu for a route
 
@@ -47,25 +47,41 @@ def home():
     name = 'Lehrer x'
     return render_template('pages/home.html', default=default, username=name)
 
-# A6 Konfiguration Endpoints
-@app.route('/configuration/roles') # Manage roles
-def config_roles():
-    role_dicts: List[Roles.RoleSchema] = Configuration_Roles.ConfigurationRoles.get_roles_dicts()
-    return render_template('pages/configuration_roles.html', default=default, roles = role_dicts)
+# A6 Konfiguration Page Endpoints
+@app.route('/config/roles') # get page config-roles
+def get_config_roles_page():
+    roles = get_roles_objs()
+    return render_template('pages/config_roles_page.html', default=default, roles=roles)
 
-@app.route('/configuration/role_edit') # Edit Role
-def config_edit_role():
-    role_id: int = 1 # get this
-    return render_template('pages/configuration_edit_role.html', default=default, role_id=role_id)
+@app.route('/api/config/roles/del/<roleid>', methods=['GET']) # del role
+def config_roles_del(roleid: int):
+    tesdfsdf = roleid
+    pass
 
-@app.route('/configuration/users') # Manage users
-def config_users():
-    return render_template('pages/configuration_users.html', default=default)
+@app.route('/api/config/roles/add/') # add role
+def config_roles_add():
+    pass
 
-@app.route('/configuration/user_edit') # Edit user
-def config_edit__user():
-    user_id: int = 1 # get this
-    return render_template('pages/configuration_edit_role.html', default=default, user_id=user_id)
+@app.route('/api/config/roles/edit/') # edit role
+def config_roles_edit():
+    roleid: int = 1
+    name: str
+    admin: bool
+    level: int
+    return render_template('pages/configuration_edit_role.html', default=default, role_id=roleid)
+
+
+# @app.route('/api/config/users/') # get page config-roles
+# def get_config_users_page():
+#     pass
+
+# @app.route('/api/config/users/edit/') # edit user
+# def config_edit_user():
+#     pass
+
+# @app.route('/api/config/users/add/') # edit user
+# def config_add_user():
+#     pass
 
 @app.route('/formular')
 def formular_page():
