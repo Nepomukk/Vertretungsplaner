@@ -1,5 +1,5 @@
 
-from flask import render_template
+from flask import render_template, Response, redirect
 from backend.ConfigurationManager_Roles import ConfigurationMngrRoles
 from database.roles import Roles
 
@@ -29,21 +29,44 @@ class ConfigurationPages_Roles:
         return render_template('pages/config_roles_edit_page.html', default=default, role=role, action_title="Bearbeiten", post_url=url)
 
 class ConfigurationAPI_Roles:
-    def config_roles_edit(form_data: dict, roldeid: int):
-        ConfigurationMngrRoles.edit_role(
-            roleid=roldeid,
-            name=form_data.get('name', None),
-            admin=form_data.get('admin', None),
-            level=form_data.get('level', None)
-        )
+    def config_roles_edit(form_data: dict):
+        try:
+            roldeid: int = int(form_data.get('roleid', 0))
+            
+            ConfigurationMngrRoles.edit_role(
+                roleid=roldeid,
+                name=form_data.get('name', None),
+                admin=form_data.get('admin', None),
+                level=form_data.get('level', None)
+            )
+            
+            return redirect(f'/config/roles/edit/{roldeid}')
+        except:
+            resp = Response("invalid request", status=400)
+            return resp
 
-    def config_roles_del(role_id: int):
-        ConfigurationMngrRoles.del_role(roleid=role_id)
+    def config_roles_del(roleid: str):
+        try:
+            role_id: int = int(roleid)
+            ConfigurationMngrRoles.del_role(roleid=role_id)
 
-    def config_roles_add(form_data: dict, role_id: int):
-        ConfigurationMngrRoles.add_role(
-            roleid=role_id,
-            name=form_data.get('name', None),
-            admin=form_data.get('admin', False),
-            level=form_data.get('level', None)
-        )
+            return redirect(f'/config/roles')
+        except:
+            resp = Response("invalid request", status=400)
+            return resp
+
+    def config_roles_add(form_data: dict):
+        try:
+            role_id: int = int(form_data.get('roleid', 0))
+
+            ConfigurationMngrRoles.add_role(
+                roleid=role_id,
+                name=form_data.get('name', None),
+                admin=form_data.get('admin', False),
+                level=form_data.get('level', None)
+            )
+
+            return redirect(f'/config/roles/edit/{role_id}')
+        except:
+            resp = Response("invalid request", status=400)
+            return resp

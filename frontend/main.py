@@ -15,7 +15,6 @@ from flask import render_template, request, Response, redirect
 from backend.ConfigurationAPI_Roles import ConfigurationAPI_Roles, ConfigurationPages_Roles
 
 # Roles
-from backend.ConfigurationManager_Roles import ConfigurationMngrRoles, Roles
 from backend.Configuration_Users import ConfigurationUsersAPI, User
 from database.dbHelper import Session
 
@@ -74,40 +73,15 @@ def config_roles_edit_page(roleid: str):
 
 @app.route('/api/config/roles/edit/', methods=['POST']) # edit role
 def config_roles_edit():
-    try:
-        form_data: dict = request.form
-        roldeid: int = int(form_data.get('roleid', 0))
-        ConfigurationAPI_Roles.config_roles_edit(form_data=form_data, roldeid=roldeid)
-        
-        return redirect(f'/config/roles/edit/{roldeid}')
-    except:
-        resp = Response("invalid request", status=400)
-        return resp
+    return ConfigurationAPI_Roles.config_roles_edit(form_data=request.form)
 
 @app.route('/api/config/roles/del/<roleid>', methods=['POST']) # del role
 def config_roles_del(roleid: str):
-    try:
-        role_id: int = int(roleid)
-
-        ConfigurationAPI_Roles.config_roles_del(roleid=role_id)
-
-        return redirect(f'/config/roles')
-    except:
-        resp = Response("invalid request", status=400)
-        return resp
+    return ConfigurationAPI_Roles.config_roles_del(roleid=roleid)
 
 @app.route('/api/config/roles/add/', methods=['POST']) # add role
 def config_roles_add():
-    try:
-        form_data = request.form
-        roldeid: int = int(form_data.get('roleid', 0))
-
-        ConfigurationAPI_Roles.config_roles_add(form_data=form_data, role_id=roldeid)
-
-        return redirect(f'/config/roles/edit/{roldeid}')
-    except:
-        resp = Response("invalid request", status=400)
-        return resp
+    return ConfigurationAPI_Roles.config_roles_add(form_data=request.form)
 # ############################################################ A6 Konfiguration-roles Endpoints \
 
 # ############################################################ A6 Konfiguration-users Endpoints
