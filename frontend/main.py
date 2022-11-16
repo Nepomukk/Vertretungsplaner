@@ -47,7 +47,7 @@ def home():
     name = 'Lehrer x'
     return render_template('pages/home.html', default=default, username=name)
 
-# A6 Konfiguration Page Endpoints
+# ############################################################ A6 Konfiguration Page Endpoints - ROLES
 @app.route('/config/roles') # get page config-roles
 def get_config_roles_page():
     roles = ConfigurationRolesAPI.get_roles_objs()
@@ -128,6 +128,9 @@ def config_roles_add():
     except:
         resp = Response("invalid request", status=400)
         return resp
+# ############################################################ A6 Konfiguration Page Endpoints - ROLES \
+# ############################################################ A6 Konfiguration Page Endpoints - USERS
+# ############################################################ A6 Konfiguration Page Endpoints - USERS \
 
 @app.route('/formular')
 def formular_page():
