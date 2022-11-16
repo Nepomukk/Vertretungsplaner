@@ -36,7 +36,9 @@
                                   <button type="button" class="btn btn-secondary">Editieren</button>
                               </div>
                               <div class="col-sm-6">
-                                  <button type="button" class="btn btn-danger">Löschen</button>                      
+                                  <form action="{{post_url}}/{{role.roleid}}" method="post">
+                                    <button type="submit" class="btn btn-danger">Löschen</button>
+                                  </form>                    
                               </div>
                           </div>
                       </td>

@@ -51,7 +51,8 @@ def home():
 @app.route('/config/roles') # get page config-roles
 def get_config_roles_page():
     roles = ConfigurationRolesAPI.get_roles_objs()
-    return render_template('pages/config_roles_page.html', default=default, roles=roles)
+    url: str = '/api/config/roles/del'
+    return render_template('pages/config_roles_page.html', default=default, roles=roles, post_url=url)
 
 @app.route('/config/roles/add') # get page add role
 def config_roles_add_page():    
@@ -93,7 +94,20 @@ def config_roles_edit():
 
 @app.route('/api/config/roles/del/<roleid>', methods=['POST']) # del role
 def config_roles_del(roleid: int):
-    ConfigurationRolesAPI.del_role(roleid=roleid)
+    url: str = '/api/config/roles/del/<roleid>'
+    role_id: int = int(roleid)
+
+    try:
+        url: str = '/api/config/roles/del/<roleid>'
+        role_id: int = int(roleid)
+
+        ConfigurationRolesAPI.del_role(roleid=role_id)
+        url: str = '/api/config/roles/del'
+        roles = ConfigurationRolesAPI.get_roles_objs()
+        return render_template('pages/config_roles_page.html', default=default, roles=roles, post_url=url)
+    except:
+        resp = Response("invalid request", status=400)
+        return resp
 
 @app.route('/api/config/roles/add/', methods=['POST']) # add role
 def config_roles_add():
