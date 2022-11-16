@@ -1,0 +1,34 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="configuration-component">
+
+    <h1>Rolle {{action_title}}</h1>
+
+    <div class="manage-menu">
+      <h4>Menü</h4>
+      <a type="button" class="btn btn-primary" href="/config/roles">Verwaltung: Rollen</a>
+      <a type="button" class="btn btn-primary" href="/config/users">Verwaltung: Benutzer</a>
+      <a type="button" class="btn btn-primary" href="/config">Verwaltung: Übersicht</a>
+    </div>
+    <br>
+
+        <div class="config-section-title">
+            <h2>{{role.name}}</h2>
+        </div>
+
+        <div class="manage-role">
+          <form action="{{post_url}}" method="post">
+            <label for="roleid">ID:</label><br>
+            <input type="text" id="roleid" name="roleid" value="{{role.roleid}}"><br>
+            <label for="name">Bezeichnung:</label><br>
+            <input type="text" id="name" name="name" value="{{role.name}}"><br>
+            <label for="admin">Admin:</label><br>
+            <input type="checkbox" id="admin" name="admin" value="{{role.admin}}"><br><br>
+            <label for="level">Level:</label><br>
+            <input type="number" id="level" name="level" value="{{role.level}}"><br><br>
+            <button type="submit" class="btn btn-primary float-right">Speichern</button>
+          </form>
+        </div>
+</div>
+{% endblock %}
