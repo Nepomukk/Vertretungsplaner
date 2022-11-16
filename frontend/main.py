@@ -27,6 +27,7 @@ default = {
     "menu_items": menu_items,
 }
 
+
 # INFO: add hide_menu=True to render_template() to disable the menu for a route
 
 
@@ -45,7 +46,43 @@ def loginpage():
 @app.route('/formular')
 def formular_page():
     name = 'Lehrer x'
-    return render_template('pages/formular.html', default=default, username=name)
+    absence_reasons = {
+        'work_event': {
+            'name': 'Dienstveranstaltung',
+            'enable_textarea': False,
+        },
+        'exma_committee': {
+            'name': 'Prüfungsausschuss',
+            'enable_textarea': False,
+        },
+        'further_education': {
+            'name': 'Fortbildung',
+            'enable_textarea': False,
+        },
+        'lesson_course': {
+            'name': 'Unterrichtsgang',
+            'enable_textarea': False,
+        },
+        'other': {
+            'name': 'Sonstiges',
+            'enable_textarea': True,
+        },
+    }
+    affected_departments = {
+        'av': {
+            'name': 'AV',
+        },
+        'et': {
+            'name': 'ET',
+        },
+        'it': {
+            'name': 'IT',
+        },
+    }
+    return render_template('pages/formular.html', default=default, username=name,
+                           absence_reasons=absence_reasons,
+                           affected_departments=affected_departments
+                           )
 
 
 app.run()

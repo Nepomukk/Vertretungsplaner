@@ -1,5 +1,77 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-    <p>Zu vertretender Lehrer {{ username }}</p>
+    <div class="form-container p-3">
+        <form>
+            <h5>Zu vertretender Lehrer: {{ username }}</h5>
+
+            <div class="fp-absence-lessons mb-3 mt-4">
+                <h5>Vertretungsvorschläge</h5>
+                <div class="label-container fp-absence-grid">
+                    <label for="">Tag/Datum</label>
+                    <label for="">UStd</label>
+                    <label for="">Fach</label>
+                    <label for="">Klasse</label>
+                    <label for="">Vertretender Lehrer</label>
+                    <span class="circle-button text-success last-col" onclick="fpAddAbsenceLesson()">
+                        <i class="fa-solid fa-circle-plus"></i>
+                    </span>
+                </div>
+                <div class="input-container fp-absence-grid border rounded">
+                    <input type="date" class="form-control">
+                    <input type="number" class="form-control">
+                    <input type="text" class="form-control">
+                    <input type="text" class="form-control">
+                    <input type="text" class="form-control">
+                    <span class="circle-button text-danger" onclick="fpRemoveAbsenceLesson(this)">
+                        <i class="fa-solid fa-circle-minus"></i>
+                    </span>
+                </div>
+            </div>
+
+            <div class="fp-row-container">
+
+                <div class="absence-reasons mb-3 p-2 w-50">
+                    <h5>Abwesenheitsgründe</h5>
+                    {% for key, item in absence_reasons.items() %}
+                        <div class="form-check">
+                            <label class="form-check-label" for="absence-reasons-{{ key }}">
+                                {{ item['name'] }}
+                            </label>
+                            <input class="form-check-input hide-text" type="radio" name="absence-reasons" id="absence-reasons-{{ key }}" value="{{ key }}">
+                            {% if item['enable_textarea'] %}
+                                <textarea class="form-control" id="absence-reasons-text-{{ key }}" rows="3"></textarea>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="w-50">
+                    <div class="affected-departments mb-3 p-2">
+                        <h5>Betroffene Bereiche</h5>
+                        <div class="fp-department-grid label-container">
+                            {% for key, item in affected_departments.items() %}
+                                <label class="form-check-label" for="affected-departments-{{ key }}">{{ item['name'] }}</label>
+                            {% endfor %}
+                        </div>
+                        <div class="fp-department-grid input-container">
+                            {% for key, item in affected_departments.items() %}
+                                <span>
+                                    <input type="radio" class="form-check-input" name="affected-departments" id="affected-departments-{{ key }}">
+                                </span>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="file-upload mb-3 p-2">
+                        <h5>Datei Upload</h5>
+                        <input class="form-control" type="file" id="formFile">
+                    </div>
+                </div>
+
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
 {% endblock %}
