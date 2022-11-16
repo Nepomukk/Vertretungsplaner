@@ -12,9 +12,10 @@ from typing import List, TypedDict, Union
 
 import flask
 from flask import render_template, request, Response, redirect
+from backend.ConfigurationAPI_Roles import ConfigurationAPI_Roles, ConfigurationPages_Roles
 
 # Roles
-from backend.Configuration_Roles import ConfigurationRolesAPI, Roles
+from backend.ConfigurationManager_Roles import ConfigurationMngrRoles, Roles
 from backend.Configuration_Users import ConfigurationUsersAPI, User
 from database.dbHelper import Session
 
@@ -55,46 +56,29 @@ def home():
 # ############################################################ A6 Konfiguration Endpoints
 @app.route('/config') # get page config
 def get_config_page():
-    return render_template('pages/config_page.html', default=default)
+    return ConfigurationPages_Roles.get_config_page(default=default)
 # ############################################################ A6 Konfiguration Endpoints \
 # ############################################################ A6 Konfiguration-roles Endpoints
 @app.route('/config/roles') # get page config-roles
 def get_config_roles_page():
-    roles = ConfigurationRolesAPI.get_roles_objs()
-    url: str = '/api/config/roles/del'
-    return render_template('pages/config_roles_page.html', default=default, roles=roles, post_url=url)
+    return ConfigurationPages_Roles.get_config_roles_page(default=default)
 
 @app.route('/config/roles/add') # get page add role
 def config_roles_add_page():    
-    role = Roles( # todo
-        roleid=0,
-        name='Bezeichnung',
-        admin=False,
-        level=1
-    )
-    url: str = '/api/config/roles/add'
-    return render_template('pages/config_roles_edit_page.html', default=default, role=role, action_title="Erstellen", post_url=url)
+    return ConfigurationPages_Roles.config_roles_add_page(default=default)
 
 @app.route('/config/roles/edit/<roleid>', methods=['GET']) # get page edit role
 def config_roles_edit_page(roleid: str):
     role_id: int = int(roleid)
-    role = ConfigurationRolesAPI.get_role(role_id=role_id)
-    url: str = '/api/config/roles/edit/'
-    return render_template('pages/config_roles_edit_page.html', default=default, role=role, action_title="Bearbeiten", post_url=url)
+    return ConfigurationPages_Roles.config_roles_edit_page(default=default, roleid=role_id)
 
 @app.route('/api/config/roles/edit/', methods=['POST']) # edit role
 def config_roles_edit():
     try:
-        form_data = request.form
-        roldeid: int = int(form_data.get('roleid', None))
-
-        ConfigurationRolesAPI.edit_role(
-            roleid=roldeid,
-            name=form_data.get('name', None),
-            admin=form_data.get('admin', None),
-            level=form_data.get('level', None)
-        )
-
+        form_data: dict = request.form
+        roldeid: int = int(form_data.get('roleid', 0))
+        ConfigurationAPI_Roles.config_roles_edit(form_data=form_data, roldeid=roldeid)
+        
         return redirect(f'/config/roles/edit/{roldeid}')
     except:
         resp = Response("invalid request", status=400)
@@ -105,7 +89,7 @@ def config_roles_del(roleid: str):
     try:
         role_id: int = int(roleid)
 
-        ConfigurationRolesAPI.del_role(roleid=role_id)
+        ConfigurationAPI_Roles.config_roles_del(roleid=role_id)
 
         return redirect(f'/config/roles')
     except:
@@ -118,12 +102,7 @@ def config_roles_add():
         form_data = request.form
         roldeid: int = int(form_data.get('roleid', 0))
 
-        ConfigurationRolesAPI.add_role(
-            roleid=roldeid,
-            name=form_data.get('name', None),
-            admin=form_data.get('admin', False),
-            level=form_data.get('level', None)
-        )
+        ConfigurationAPI_Roles.config_roles_add(form_data=form_data, role_id=roldeid)
 
         return redirect(f'/config/roles/edit/{roldeid}')
     except:

@@ -15,7 +15,7 @@ from sqlalchemy.orm import Session
 
 engine = db.create_engine("postgresql+psycopg2://postgres:docker@localhost:5432/postgres")
 
-class ConfigurationRolesAPI: 
+class ConfigurationMngrRoles:
 
     def get_roles_objs() -> List[Roles]:
         roles: List[Roles] = []
@@ -27,12 +27,12 @@ class ConfigurationRolesAPI:
         return roles
 
     def get_roles_dicts() -> List[RoleSchema]: # todo
-        role_objs: List[Roles] = ConfigurationRolesAPI.get_roles_objs()
+        role_objs: List[Roles] = ConfigurationMngrRoles.get_roles_objs()
         role_dicts: List[RoleSchema] = [role.to_dict() for role in role_objs]
         return role_dicts
 
     def get_role(role_id: int) -> Union[Roles, None]:
-        role_objs: List[Roles] = ConfigurationRolesAPI.get_roles_objs()
+        role_objs: List[Roles] = ConfigurationMngrRoles.get_roles_objs()
         for role in role_objs:
             if role.roleid == role_id: return role
         return None
@@ -47,20 +47,21 @@ class ConfigurationRolesAPI:
         pass
 
     def add_role(roleid: Union[str, int] = 0, name: str = 'role', admin: Union[str, bool] = False, level: Union[str, int] = 0) -> NoReturn: # todo
-        with Session(engine) as session:
-            new_role: Roles = Roles(
-                roleid=int(roleid),
-                name=name,
-                admin=bool(admin),
-                level=int(level)
-            )
-            role1 = Roles(6, 'adasdad', 565, False)
-            session.add_all([role1])
-            session.commit()
+        # with Session(engine) as session:
+        #     new_role: Roles = Roles(
+        #         roleid=int(roleid),
+        #         name=name,
+        #         admin=bool(admin),
+        #         level=int(level)
+        #     )
+        #     role1 = Roles(6, 'adasdad', 565, False)
+        #     session.add_all([role1])
+        #     session.commit()
+        pass
 
     def get_roles_json() -> str:
-        return json.dumps(ConfigurationRolesAPI.get_roles_dicts())
+        return json.dumps(ConfigurationMngrRoles.get_roles_dicts())
 
     def get_role_json(role_id: int) -> str:
-        return json.dumps(ConfigurationRolesAPI.get_role_dict(ConfigurationRolesAPI.get_role(role_id=role_id)))
+        return json.dumps(ConfigurationMngrRoles.get_role_dict(ConfigurationMngrRoles.get_role(role_id=role_id)))
 
