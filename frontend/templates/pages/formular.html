@@ -5,7 +5,7 @@
         <form>
             <h5>Zu vertretender Lehrer: {{ username }}</h5>
 
-            <div class="absence-lessons mb-3 mt-4">
+            <div class="fp-absence-lessons mb-3 mt-4">
                 <h5>Vertretungsvorschläge</h5>
                 <div class="label-container fp-absence-grid">
                     <label for="">Tag/Datum</label>
@@ -13,6 +13,9 @@
                     <label for="">Fach</label>
                     <label for="">Klasse</label>
                     <label for="">Vertretender Lehrer</label>
+                    <span class="circle-button text-success last-col" onclick="fpAddAbsenceLesson()">
+                        <i class="fa-solid fa-circle-plus"></i>
+                    </span>
                 </div>
                 <div class="input-container fp-absence-grid border rounded">
                     <input type="date" class="form-control">
@@ -20,13 +23,8 @@
                     <input type="text" class="form-control">
                     <input type="text" class="form-control">
                     <input type="text" class="form-control">
-                    <span class="circle-button text-danger">
+                    <span class="circle-button text-danger" onclick="fpRemoveAbsenceLesson(this)">
                         <i class="fa-solid fa-circle-minus"></i>
-                    </span>
-                </div>
-                <div class="input-container fp-absence-grid">
-                    <span class="circle-button text-success last-col">
-                        <i class="fa-solid fa-circle-plus"></i>
                     </span>
                 </div>
             </div>
