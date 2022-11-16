@@ -13,6 +13,19 @@
           <form action="{{post_url}}" method="post">
             <label for="userid">ID:</label><br>
             <input type="text" id="userid" name="userid" value="{{user.userid}}"><br>
+
+            <label for="username">Benutzername:</label><br>
+            <input type="text" id="username" name="username" value="{{user.username}}"><br>
+
+            <label for="firstname">Vorname:</label><br>
+            <input type="text" id="firstname" name="firstname" value="{{user.firstname}}"><br>
+
+            <label for="lastname">Nachname:</label><br>
+            <input type="text" id="lastname" name="lastname" value="{{user.lastname}}"><br>
+
+            <label for="email">Email:</label><br>
+            <input type="text" id="email" name="email" value="{{user.email}}"><br>
+
             <button type="submit" class="btn btn-primary float-right">Hinzufügen</button>
           </form>
         </div>

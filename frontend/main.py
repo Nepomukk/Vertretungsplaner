@@ -67,7 +67,7 @@ def config_roles_add_page():
     return render_template('pages/config_roles_edit_page.html', default=default, role=role, action_title="Erstellen", post_url=url)
 
 @app.route('/config/roles/edit/<roleid>', methods=['GET']) # get page edit role
-def config_roles_edit_page(roleid: int):
+def config_roles_edit_page(roleid: str):
     role_id: int = int(roleid)
     role = ConfigurationRolesAPI.get_role(role_id=role_id)
     url: str = '/api/config/roles/edit/'
@@ -94,7 +94,7 @@ def config_roles_edit():
         return resp
 
 @app.route('/api/config/roles/del/<roleid>', methods=['POST']) # del role
-def config_roles_del(roleid: int):
+def config_roles_del(roleid: str):
     url: str = '/api/config/roles/del/<roleid>'
     role_id: int = int(roleid)
 
@@ -137,6 +137,36 @@ def get_config_users_page():
     users = ConfigurationUsersAPI.get_users_objs()
     url: str = '/api/config/roles/del'
     return render_template('pages/config_users_page.html', default=default, users=users, post_url=url)
+
+@app.route('/config/users/edit/<userid>', methods=['GET']) # get page edit role
+def config_users_edit_page(userid: str):
+    user_id: int = int(userid)
+    user = ConfigurationUsersAPI.get_user(user_id=user_id)
+    url: str = '/api/config/users/edit/'
+    return render_template('pages/config_users_edit_page.html', default=default, user=user, action_title="Bearbeiten", post_url=url)
+
+@app.route('/api/config/users/edit/', methods=['POST']) # edit user
+def config_users_edit():
+    try:
+        form_data = request.form
+        userid: int = int(form_data.get('userid', None))
+
+        user = ConfigurationUsersAPI.get_user(user_id=userid)
+        url: str = '/api/config/users/edit/'
+
+        ConfigurationUsersAPI.edit_user(
+            userid=userid,
+            username=form_data.get('username', None),
+            pwd=form_data.get('pwd', None),
+            firstname=form_data.get('firstname', None),
+            lastname=form_data.get('lastname', None),
+            email=form_data.get('email', None),
+        )
+        return render_template('pages/config_users_edit_page.html', default=default, user=user, action_title="Bearbeiten", post_url=url)
+    except:
+        resp = Response("invalid request", status=400)
+        return resp
+
 # ############################################################ A6 Konfiguration Page Endpoints - USERS \
 
 @app.route('/formular')

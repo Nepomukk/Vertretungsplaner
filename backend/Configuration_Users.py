@@ -39,10 +39,24 @@ class ConfigurationUsersAPI:
     def del_user(userid: int) -> NoReturn: # todo
         pass
 
-    def edit_user(userid: int, name=None, admin=False, level=None) -> NoReturn: # todo
+    def edit_user(
+            userid: int, 
+            username: str, 
+            pwd: str, 
+            firstname: str, 
+            lastname: str,
+            email: str
+            ) -> NoReturn: # todo
         pass
 
-    def add_user(userid: int, name=None, admin=False, level=None) -> NoReturn: # todo
+    def add_user(
+            userid: int, 
+            username: str, 
+            pwd: str, 
+            firstname: str, 
+            lastname: str,
+            email: str
+            ) -> NoReturn: # todo
         pass
 
     def get_users_json() -> str:
