@@ -95,11 +95,7 @@ def config_roles_edit():
 
 @app.route('/api/config/roles/del/<roleid>', methods=['POST']) # del role
 def config_roles_del(roleid: str):
-    url: str = '/api/config/roles/del/<roleid>'
-    role_id: int = int(roleid)
-
     try:
-        url: str = '/api/config/roles/del/<roleid>'
         role_id: int = int(roleid)
 
         ConfigurationRolesAPI.del_role(roleid=role_id)
@@ -135,7 +131,7 @@ def config_roles_add():
 @app.route('/config/users') # get page config-users
 def get_config_users_page():
     users = ConfigurationUsersAPI.get_users_objs()
-    url: str = '/api/config/roles/del'
+    url: str = '/api/config/users/del'
     return render_template('pages/config_users_page.html', default=default, users=users, post_url=url)
 
 @app.route('/config/users/edit/<userid>', methods=['GET']) # get page edit users
@@ -176,6 +172,19 @@ def config_users_edit():
             email=form_data.get('email', None),
         )
         return render_template('pages/config_users_edit_page.html', default=default, user=user, action_title="Bearbeiten", post_url=url)
+    except:
+        resp = Response("invalid request", status=400)
+        return resp
+
+@app.route('/api/config/users/del/<userid>', methods=['POST']) # del user
+def config_users_del(userid: str):
+    try:
+        user_id: int = int(userid)
+
+        ConfigurationUsersAPI.del_user(userid=user_id)
+        url: str = '/api/config/users/del'
+        users = ConfigurationUsersAPI.get_users_objs()
+        return render_template('pages/config_users_page.html', default=default, users=users, post_url=url)
     except:
         resp = Response("invalid request", status=400)
         return resp
