@@ -7,6 +7,7 @@ parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
 
 import json
+import sqlalchemy as db
 from sqlalchemy.orm import declarative_base, sessionmaker
 from typing import List, Any, NoReturn, Union
 from database.roles import Roles, RoleSchema
@@ -19,7 +20,7 @@ class ConfigurationRolesAPI:
         roles: List[Roles] = []
 
         role1 = Roles(1, 'role1', 1, False)
-        role2 = Roles(1, 'role2', 2, True)
+        role2 = Roles(2, 'role2', 2, True)
         roles.append(role1)
         roles.append(role2)
         return roles
@@ -38,10 +39,13 @@ class ConfigurationRolesAPI:
     def get_role_dict(role: Roles) -> RoleSchema:
         return role.to_dict()
 
-    def del_role(roleid: int) -> NoReturn:
+    def del_role(roleid: int) -> NoReturn: # todo
         pass
 
-    def edit_role(roleid: int, name=None, admin=False, level=None) -> NoReturn:
+    def edit_role(roleid: int, name=None, admin=False, level=None) -> NoReturn: # todo
+        pass
+
+    def add_role(roleid: int, name=None, admin=False, level=None) -> NoReturn: # todo
         pass
 
     def get_roles_json() -> str:
@@ -50,8 +54,3 @@ class ConfigurationRolesAPI:
     def get_role_json(role_id: int) -> str:
         return json.dumps(ConfigurationRolesAPI.get_role_dict(ConfigurationRolesAPI.get_role(role_id=role_id)))
 
-    def config_roles():
-        pass
-
-    def config_edit_role():
-        pass
