@@ -30,4 +30,13 @@ def loginpage():
     return render_template('pages/A1-login-page.html', default=default, username=username)
 
 
+# Invalid URL
+
+#TODO für eingeloggte User muss das Menü wieder angezeigt werden
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template("pages/error.html",hide_menu=True, default=default), 404
+
+
+
 app.run()
