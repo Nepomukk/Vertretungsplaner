@@ -27,3 +27,6 @@
     align-items: flex-start;
     flex-wrap: wrap;
 }
+#fp-comment-box fp-comment{
+    width:50% !important;
+}
