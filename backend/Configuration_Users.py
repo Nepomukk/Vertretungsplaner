@@ -17,6 +17,9 @@ class ConfigurationUsersAPI:
         session: sessionmaker = Session.getSession()
 
         users: List[User] = []
+
+        user1 = User('user1', 'asd', 'firstname', 'lastname', 'eail', 0)
+        users.append(user1)
         return users
 
     def get_users_dicts() -> List[UserSchema]:
