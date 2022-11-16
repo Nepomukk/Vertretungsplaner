@@ -1,6 +1,7 @@
 .fp-absence-grid {
     display: grid;
-    grid-template-columns: [first-col] 25% 10% 20% 20% auto [last-col] 45px;
+    /*grid-template-columns: [first-col] 25% 10% 20% 20% auto [last-col] 45px;*/
+    grid-template-columns: [first-col] 10% 10% 15% 10% 15% 10% 20% 10% auto[last-col] 45px;
     padding: 5px;
 }
 .fp-absence-grid .last-col {
