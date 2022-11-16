@@ -88,16 +88,14 @@ def config_roles_edit():
         form_data = request.form
         roldeid: int = int(form_data.get('roleid', None))
 
-        role = ConfigurationRolesAPI.get_role(role_id=roldeid)
-        url: str = '/api/config/roles/edit/'
-
         ConfigurationRolesAPI.edit_role(
             roleid=roldeid,
             name=form_data.get('name', None),
             admin=form_data.get('admin', None),
             level=form_data.get('level', None)
         )
-        return render_template('pages/config_roles_edit_page.html', default=default, role=role, action_title="Bearbeiten", post_url=url)
+
+        return redirect(f'/config/roles/edit/{roldeid}')
     except:
         resp = Response("invalid request", status=400)
         return resp
@@ -108,9 +106,8 @@ def config_roles_del(roleid: str):
         role_id: int = int(roleid)
 
         ConfigurationRolesAPI.del_role(roleid=role_id)
-        url: str = '/api/config/roles/del'
-        roles = ConfigurationRolesAPI.get_roles_objs()
-        return render_template('pages/config_roles_page.html', default=default, roles=roles, post_url=url)
+
+        return redirect(f'/config/roles')
     except:
         resp = Response("invalid request", status=400)
         return resp
@@ -121,16 +118,14 @@ def config_roles_add():
         form_data = request.form
         roldeid: int = int(form_data.get('roleid', 0))
 
-        role = ConfigurationRolesAPI.get_role(role_id=roldeid)
-        url: str = '/api/config/roles/add'
-
         ConfigurationRolesAPI.add_role(
             roleid=roldeid,
             name=form_data.get('name', None),
             admin=form_data.get('admin', False),
             level=form_data.get('level', None)
         )
-        return render_template('pages/config_roles_edit_page.html', default=default, role=role, action_title="Bearbeiten", post_url=url)
+
+        return redirect(f'/config/roles/edit/{roldeid}')
     except:
         resp = Response("invalid request", status=400)
         return resp
