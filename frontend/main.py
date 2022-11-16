@@ -9,8 +9,8 @@ app = flask.Flask(__name__)
 # app.config["DEBUG"] = True
 
 # load all file names from the respective folder to automatically add all files within
-js_files = os.listdir('static/js')
-css_files = os.listdir('static/css')
+js_files = os.listdir('../static/js')
+css_files = os.listdir('../static/css')
 
 menu_items = {
     'formular': {

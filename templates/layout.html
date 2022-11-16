@@ -48,7 +48,9 @@
                             <span>{{ username }}</span>
                         </div>
                         <div class="logout-container">
-                            <i class="fa-solid fa-right-from-bracket icon-button"></i>
+                            <a href="{{ url_for('logout') }}" class="home-link">
+                                <i class="fa-solid fa-right-from-bracket icon-button"></i>
+                            </a>
                         </div>
                     </div>
                     <div class="content">

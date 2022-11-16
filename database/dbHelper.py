@@ -1,27 +1,27 @@
-from sqlalchemy import Column, create_engine, Date, Identity, text
+from flask_login import UserMixin
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey
-from sqlalchemy import Integer
-from sqlalchemy import Boolean
-from sqlalchemy import String
-from sqlalchemy.dialects.postgresql import psycopg2, TIMESTAMP
-from sqlalchemy.orm import declarative_base, sessionmaker
+from werkzeug.security import generate_password_hash
 
-Base = declarative_base()
+db = SQLAlchemy()
 
 
-class User(Base):
+class User(db.Model, UserMixin):
     __tablename__ = "users"
 
-    userid = Column(Integer, nullable=False, primary_key=True)
-    username = Column(String, nullable=False, unique=True)
-    pwd = Column(String, nullable=False)
-    firstname = Column(String, nullable=False)
-    lastname = Column(String, nullable=False)
-    email = Column(String, nullable=False)
+    userid = db.Column(db.Integer, nullable=False, primary_key=True)
+    username = db.Column(db.String, nullable=False, unique=True)
+    pwd = db.Column(db.String, nullable=False)
+    firstname = db.Column(db.String, nullable=False)
+    lastname = db.Column(db.String, nullable=False)
+    email = db.Column(db.String, nullable=False)
+
+    def get_id(self):
+        return self.userid
 
     def __init__(self, username, pwd, firstname, lastname, email):
         self.username = username
-        self.pwd = pwd
+        self.pwd = generate_password_hash(pwd)
         self.firstname = firstname
         self.lastname = lastname
         self.email = email
@@ -35,11 +35,11 @@ class User(Base):
                f"email={self.email!r})"
 
 
-class AbsenseReasons(Base):
+class AbsenseReasons(db.Model):
     __tablename__ = "absensereasons"
 
-    id = Column(Integer, nullable=False, primary_key=True)
-    descr = Column(String, nullable=False)
+    id = db.Column(db.Integer, nullable=False, primary_key=True)
+    descr = db.Column(db.String, nullable=False)
 
     def __init__(self, descr):
         self.descr = descr
@@ -49,11 +49,11 @@ class AbsenseReasons(Base):
                f"descr={self.descr!r})"
 
 
-class StatusTypes(Base):
+class StatusTypes(db.Model):
     __tablename__ = "statustypes"
 
-    id = Column(Integer, nullable=False, primary_key=True)
-    descr = Column(String, nullable=False)
+    id = db.Column(db.Integer, nullable=False, primary_key=True)
+    descr = db.Column(db.String, nullable=False)
 
     def __init__(self, descr):
         self.descr = descr
@@ -63,11 +63,11 @@ class StatusTypes(Base):
                f"descr={self.descr!r})"
 
 
-class SubstitutionTypes(Base):
+class SubstitutionTypes(db.Model):
     __tablename__ = "substitutiontypes"
 
-    id = Column(Integer, nullable=False, primary_key=True)
-    descr = Column(String, nullable=False)
+    id = db.Column(db.Integer, nullable=False, primary_key=True)
+    descr = db.Column(db.String, nullable=False)
 
     def __init__(self, descr):
         self.descr = descr
@@ -77,13 +77,13 @@ class SubstitutionTypes(Base):
                f"descr={self.descr!r})"
 
 
-class Roles(Base):
+class Roles(db.Model):
     __tablename__ = "roles"
 
-    roleid = Column(Integer, nullable=False, primary_key=True)
-    name = Column(String, nullable=False)
-    admin = Column(Boolean, nullable=False)
-    level = Column(Integer, nullable=False, unique=True)
+    roleid = db.Column(db.Integer, nullable=False, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    admin = db.Column(db.Boolean, nullable=False)
+    level = db.Column(db.Integer, nullable=False, unique=True)
 
     def __init__(self, name, admin, level):
         self.name = name
@@ -98,12 +98,12 @@ class Roles(Base):
                f")"
 
 
-class Departments(Base):
+class Departments(db.Model):
     __tablename__ = "departments"
 
-    id = Column(Integer, nullable=False, primary_key=True)
-    descr = Column(String, nullable=False)
-    shortcut = Column(String, nullable=False)
+    id = db.Column(db.Integer, nullable=False, primary_key=True)
+    descr = db.Column(db.String, nullable=False)
+    shortcut = db.Column(db.String, nullable=False)
 
     def __init__(self, descr, shortcut):
         self.descr = descr
@@ -115,12 +115,12 @@ class Departments(Base):
                f"shortcut={self.shortcut!r})"
 
 
-class UserToRole(Base):
+class UserToRole(db.Model):
     __tablename__ = "usertorole"
 
-    userid = Column(Integer, ForeignKey("users.userid"), nullable=False, primary_key=True)
-    roleid = Column(Integer, ForeignKey("roles.roleid"), nullable=False, primary_key=True)
-    departmentid = Column(Integer, ForeignKey("departments.id"), nullable=False, primary_key=True)
+    userid = db.Column(db.Integer, ForeignKey("users.userid"), nullable=False, primary_key=True)
+    roleid = db.Column(db.Integer, ForeignKey("roles.roleid"), nullable=False, primary_key=True)
+    departmentid = db.Column(db.Integer, ForeignKey("departments.id"), nullable=False, primary_key=True)
 
     def __init__(self, userid, roleid, departmentid):
         self.userid = userid
@@ -133,11 +133,11 @@ class UserToRole(Base):
                f"departmentid={self.departmentid!r})"
 
 
-class FormaToDepartment(Base):
+class FormaToDepartment(db.Model):
     __tablename__ = "fromattodepartment"
 
-    roleid = Column(Integer, ForeignKey("roles.roleid"), nullable=False, primary_key=True)
-    departmentid = Column(Integer, ForeignKey("departments.id"), nullable=False, primary_key=True)
+    roleid = db.Column(db.Integer, ForeignKey("roles.roleid"), nullable=False, primary_key=True)
+    departmentid = db.Column(db.Integer, ForeignKey("departments.id"), nullable=False, primary_key=True)
 
     def __init__(self, roleid, departmentid):
         self.roleid = roleid
@@ -148,18 +148,18 @@ class FormaToDepartment(Base):
                f"departmentid={self.departmentid!r})"
 
 
-class SubLessons(Base):
+class SubLessons(db.Model):
     __tablename__ = "sublessons"
 
-    posid = Column(Integer, nullable=False, primary_key=True)
-    formatid = Column(Integer, ForeignKey("forms.formatid"), nullable=False)
-    lessonnumber = Column(Integer, nullable=False)
-    lessontype = Column(String, nullable=False)
-    classname = Column(String, nullable=False)
-    subteachingtype = Column(Integer, ForeignKey("substitutiontypes.id"), nullable=False)
-    subteacher = Column(Integer, ForeignKey("users.userid"), nullable=False)
-    userid = Column(Integer, ForeignKey("users.userid"), nullable=False)
-    createdate = Column(Date, nullable=False)
+    posid = db.Column(db.Integer, nullable=False, primary_key=True)
+    formatid = db.Column(db.Integer, ForeignKey("forms.formatid"), nullable=False)
+    lessonnumber = db.Column(db.Integer, nullable=False)
+    lessontype = db.Column(db.String, nullable=False)
+    classname = db.Column(db.String, nullable=False)
+    subteachingtype = db.Column(db.Integer, ForeignKey("substitutiontypes.id"), nullable=False)
+    subteacher = db.Column(db.Integer, ForeignKey("users.userid"), nullable=False)
+    userid = db.Column(db.Integer, ForeignKey("users.userid"), nullable=False)
+    createdate = db.Column(db.Date, nullable=False)
 
     def __init__(self, formatid, lessonnumber, lessontype, classname, subteachingtype, subteacher, userid,
                  createdate):
@@ -184,20 +184,20 @@ class SubLessons(Base):
                f"createdate={self.createdate!r})"
 
 
-class Forms(Base):
+class Forms(db.Model):
     __tablename__ = "forms"
 
-    formatid = Column(Integer, nullable=False, primary_key=True)
-    absensereasons = Column(Integer, ForeignKey("absensereasons.id"), nullable=False)
-    other = Column(String)
-    appendfile = Column(String)
-    workarea = Column(String)
-    pdffile = Column(String)
-    status = Column(Integer, ForeignKey("statustypes.id"), nullable=False)
-    userid = Column(Integer, ForeignKey("users.userid"), nullable=False)
-    createdate = Column(Date, nullable=False)
-    activ = Column(Boolean, nullable=False)
-    fcomment = Column(String)
+    formatid = db.Column(db.Integer, nullable=False, primary_key=True)
+    absensereasons = db.Column(db.Integer, ForeignKey("absensereasons.id"), nullable=False)
+    other = db.Column(db.String)
+    appendfile = db.Column(db.String)
+    workarea = db.Column(db.String)
+    pdffile = db.Column(db.String)
+    status = db.Column(db.Integer, ForeignKey("statustypes.id"), nullable=False)
+    userid = db.Column(db.Integer, ForeignKey("users.userid"), nullable=False)
+    createdate = db.Column(db.Date, nullable=False)
+    activ = db.Column(db.Boolean, nullable=False)
+    fcomment = db.Column(db.String)
 
     def __init__(self, userid, absensereasons, other, appendfile, workarea, pdffile, status, fcomment, activ,
                  createdate):
@@ -226,14 +226,14 @@ class Forms(Base):
                f"fcomment={self.fcomment!r})"
 
 
-class Confirmation(Base):
+class Confirmation(db.Model):
     __tablename__ = "confirmation"
 
-    id = Column(Integer, primary_key=True)
-    userid = Column(Integer, ForeignKey("users.userid"), nullable=False)
-    formatid = Column(Integer, ForeignKey("forms.formatid"), nullable=False)
-    comdate = Column(TIMESTAMP, nullable=False)
-    ok = Column(Boolean, nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    userid = db.Column(db.Integer, ForeignKey("users.userid"), nullable=False)
+    formatid = db.Column(db.Integer, ForeignKey("forms.formatid"), nullable=False)
+    comdate = db.Column(db.TIMESTAMP, nullable=False)
+    ok = db.Column(db.Boolean, nullable=False)
 
     def __init__(self, userid, formatid, comdate, ok):
         self.userid = userid
@@ -256,51 +256,51 @@ class Confirmation(Base):
 #     session.add(some_object)
 #     session.add(some_other_object)
 #     session.commit()
-class Session:
+# class Session:
+#
+#     @staticmethod
+#     def getSession():
+#         engine = create_engine("postgresql+psycopg2://postgres:docker@localhost:5432/postgres")
+#         Session = sessionmaker(bind=engine)
+#         return Session
+#
+#     @staticmethod
+#     def createDatadb():
+#         engine = create_engine("postgresql+psycopg2://postgres:docker@localhost:5432/postgres")
+#         db.metadata.create_all(engine)
+#         Session = sessionmaker(bind=engine)
+#         with Session() as session:
+#             session.add(Departments('AV Abteilung', 'AV'))
+#             session.add(Departments('Elektrotechnik', 'ET'))
+#             session.add(Departments('IT Abteilung', 'IT'))
+#             session.add(Departments('BFS Abteilung', 'BFS'))
+#             session.add(Departments('ITA Abteilung', 'ITA'))
+#             session.add(Departments('FOS Abteilung', 'FOS'))
+#             session.add(Departments('FS Abteilung', 'FS'))
+#
+#             session.add(AbsenseReasons('Dienstveranstaltung'))
+#             session.add(AbsenseReasons('Prüfungsausschuss'))
+#             session.add(AbsenseReasons('Fortbildung'))
+#             session.add(AbsenseReasons('Unterrichtsgang'))
+#             session.add(AbsenseReasons('Sonstiges'))
+#
+#             session.add(SubstitutionTypes('Fachvertretung'))
+#             session.add(SubstitutionTypes('passive Vertretung'))
+#
+#             session.add(StatusTypes('erstellt'))
+#             session.add(StatusTypes('bearbeiten fertig gestellt'))
+#             session.add(StatusTypes('abgelehnt von Bereichsleiter'))
+#             session.add(StatusTypes('angenommen von Bereichsleiter'))
+#             session.add(StatusTypes('abgelehnt von Vertretungsplaner'))
+#             session.add(StatusTypes('angenommen von Vertretungsplaner'))
+#
+#             session.commit()
+#
+#     @staticmethod
+#     def dropDatadb():
+#         engine = create_engine("postgresql+psycopg2://postgres:docker@localhost:5432/postgres")
+#         db.metadata.drop_all(engine)
 
-    @staticmethod
-    def getSession():
-        engine = create_engine("postgresql+psycopg2://postgres:docker@localhost:5432/postgres")
-        Session = sessionmaker(bind=engine)
-        return Session
 
-    @staticmethod
-    def createDatabase():
-        engine = create_engine("postgresql+psycopg2://postgres:docker@localhost:5432/postgres")
-        Base.metadata.create_all(engine)
-        Session = sessionmaker(bind=engine)
-        with Session() as session:
-            session.add(Departments('AV Abteilung', 'AV'))
-            session.add(Departments('Elektrotechnik', 'ET'))
-            session.add(Departments('IT Abteilung', 'IT'))
-            session.add(Departments('BFS Abteilung', 'BFS'))
-            session.add(Departments('ITA Abteilung', 'ITA'))
-            session.add(Departments('FOS Abteilung', 'FOS'))
-            session.add(Departments('FS Abteilung', 'FS'))
-
-            session.add(AbsenseReasons('Dienstveranstaltung'))
-            session.add(AbsenseReasons('Prüfungsausschuss'))
-            session.add(AbsenseReasons('Fortbildung'))
-            session.add(AbsenseReasons('Unterrichtsgang'))
-            session.add(AbsenseReasons('Sonstiges'))
-
-            session.add(SubstitutionTypes('Fachvertretung'))
-            session.add(SubstitutionTypes('passive Vertretung'))
-
-            session.add(StatusTypes('erstellt'))
-            session.add(StatusTypes('bearbeiten fertig gestellt'))
-            session.add(StatusTypes('abgelehnt von Bereichsleiter'))
-            session.add(StatusTypes('angenommen von Bereichsleiter'))
-            session.add(StatusTypes('abgelehnt von Vertretungsplaner'))
-            session.add(StatusTypes('angenommen von Vertretungsplaner'))
-
-            session.commit()
-
-    @staticmethod
-    def dropDatabase():
-        engine = create_engine("postgresql+psycopg2://postgres:docker@localhost:5432/postgres")
-        Base.metadata.drop_all(engine)
-
-
-if __name__ == '__main__':
-    Session.createDatabase()
+# if __name__ == '__main__':
+#     Session.createDatadb()

@@ -1,0 +1,50 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="wrapper flex">
+    <div class="container">
+        {% for message in get_flashed_messages() %}
+
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+        {% endfor %}
+        <div class="row flex">
+            <div class="col-md-6 align-self-center login-wrapper">
+                <div class="loginbox">
+                    <div class="col image-wrapper mb-5 flex">
+                        <img src="static/img/logo.png" class="gso-logo">
+                    </div>
+                    <form method="POST">
+                        <div class="col-md-12 mt-3">
+                            <!--                            <label for="username">Benutzername:</label>-->
+                            <!--                            <input type="text" class="form-control" id="username" placeholder="Username"-->
+                            <!--                                   aria-label="Username" aria-describedby="basic-addon1">-->
+                            {{ form.hidden_tag() }}
+                            {{ form.username.label(class="form-label") }}
+                            {{ form.username(class="form-control") }}
+                        </div>
+                        <div class="col-md-12 mt-3">
+                            <!--                            <label for="password">Passwort:</label>-->
+                            <!--                            <input type="password" class="form-control" id="password" placeholder="Password"-->
+                            <!--                                   aria-label="Password" aria-describedby="basic-addon1">-->
+                            {{ form.password.label(class="form-label") }}
+                            {{ form.password(class="form-control") }}
+                        </div>
+                        <div class="col-md-12 mt-3">
+                            {{ form.submit(class="btn btn-primary") }}
+                        </div>
+                    </form>
+
+                    <div class="col-md-12 mt-3">
+                        <a href="#">Passwort vergessen</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
