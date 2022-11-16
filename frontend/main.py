@@ -76,8 +76,7 @@ def formular_page():
         },
     }
     return render_template('pages/formular.html', default=default, username=name,
-                           absence_reasons=absence_reasons, affected_departments=affected_departments,allow_comment=allow_comment, allow_edit=False
-                           )
-
+                           absence_reasons=absence_reasons, affected_departments=affected_departments, allow_comment= allow_comment,
+                           allow_edit=False)
 
 app.run()

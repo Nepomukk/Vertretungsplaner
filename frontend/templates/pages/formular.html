@@ -10,9 +10,11 @@
                 <div class="label-container fp-absence-grid">
                     <label for="">Tag/Datum</label>
                     <label for="">UStd</label>
+                    <label for="">Stunde bis</label>
                     <label for="">Fach</label>
                     <label for="">Klasse</label>
                     <label for="">Vertretender Lehrer</label>
+                    <label for="">Vertretungsaufgaben</label>
                     <span class="circle-button text-success last-col" onclick="fpAddAbsenceLesson()">
                         <i class="fa-solid fa-circle-plus"></i>
                     </span>
@@ -23,8 +25,14 @@
                            disabled {% endif %}>
                     <input type="number" class="form-control" {% if not allow_edit %}
                            disabled {% endif %}>
+                    <input type="number" class="form-control" {% if not allow_edit %}
+                           disabled {% endif %}>
                     <input type="text" class="form-control" {% if not allow_edit %}
                     disabled {% endif %} >
+                    <input type="text" class="form-control" {% if not allow_edit %}
+                    disabled {% endif %}>
+                    <input type="text" class="form-control" {% if not allow_edit %}
+                    disabled {% endif %}>
                     <input type="text" class="form-control" {% if not allow_edit %}
                     disabled {% endif %}>
                     <span class="circle-button text-danger" onclick="fpRemoveAbsenceLesson(this)">
