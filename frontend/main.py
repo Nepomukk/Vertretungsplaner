@@ -14,7 +14,7 @@ import flask
 from flask import jsonify, render_template, request
 
 # Roles
-from backend.Configuration_Roles import ConfigurationRolesAPI, get_roles_objs
+from backend.Configuration_Roles import ConfigurationRolesAPI
 from database.dbHelper import Session
 
 app = flask.Flask(__name__)
@@ -50,20 +50,22 @@ def home():
 # A6 Konfiguration Page Endpoints
 @app.route('/config/roles') # get page config-roles
 def get_config_roles_page():
-    roles = get_roles_objs()
+    roles = ConfigurationRolesAPI.get_roles_objs()
     return render_template('pages/config_roles_page.html', default=default, roles=roles)
 
 @app.route('/api/config/roles/del/<roleid>', methods=['GET']) # del role
 def config_roles_del(roleid: int):
-    tesdfsdf = roleid
-    pass
+    roles = ConfigurationRolesAPI.get_roles_objs()
+
+    ConfigurationRolesAPI.del_role(roleid=roleid)
+    return render_template('pages/config_roles_page.html', default=default, roles=roles)
 
 @app.route('/api/config/roles/add/') # add role
 def config_roles_add():
     pass
 
-@app.route('/api/config/roles/edit/') # edit role
-def config_roles_edit():
+@app.route('/api/config/roles/edit/<roleid>', methods=['GET']) # edit role
+def config_roles_edit(roleid: int):
     roleid: int = 1
     name: str
     admin: bool
