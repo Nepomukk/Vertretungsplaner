@@ -1,14 +1,12 @@
 import os
 
 import flask
-from flask import render_template, redirect, url_for, make_response, flash
+from flask import render_template, redirect, url_for, flash
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from flask_migrate import Migrate
-from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.security import check_password_hash
 
 from database.dbHelper import *
-from flask_sqlalchemy import SQLAlchemy
-
 from frontend.forms.loginForm import LoginForm
 
 app = flask.Flask(__name__)
@@ -48,6 +46,50 @@ login_manager.init_app(app)
 login_manager.login_view = '/login'
 
 
+def init_db():
+    db.drop_all()
+    db.create_all()
+
+    db.session.add(Departments('AV Abteilung', 'AV'))
+    db.session.add(Departments('Elektrotechnik', 'ET'))
+    db.session.add(Departments('IT Abteilung', 'IT'))
+    db.session.add(Departments('BFS Abteilung', 'BFS'))
+    db.session.add(Departments('ITA Abteilung', 'ITA'))
+    db.session.add(Departments('FOS Abteilung', 'FOS'))
+    db.session.add(Departments('FS Abteilung', 'FS'))
+
+    db.session.add(AbsenseReasons('Dienstveranstaltung'))
+    db.session.add(AbsenseReasons('Prüfungsausschuss'))
+    db.session.add(AbsenseReasons('Fortbildung'))
+    db.session.add(AbsenseReasons('Unterrichtsgang'))
+    db.session.add(AbsenseReasons('Sonstiges'))
+
+    db.session.add(SubstitutionTypes('Fachvertretung'))
+    db.session.add(SubstitutionTypes('passive Vertretung'))
+
+    db.session.add(StatusTypes('erstellt'))
+    db.session.add(StatusTypes('bearbeiten fertig gestellt'))
+    db.session.add(StatusTypes('abgelehnt von Bereichsleiter'))
+    db.session.add(StatusTypes('angenommen von Bereichsleiter'))
+    db.session.add(StatusTypes('abgelehnt von Vertretungsplaner'))
+    db.session.add(StatusTypes('angenommen von Vertretungsplaner'))
+
+    db.session.add(User("test",
+                        "pbkdf2:sha256:260000$2kpyPSYmH5j4gmgo$21e41e82c2aece68f71ab3280d8213f2550364a9b1ed43c7a66cb30d93a7fd7a",
+                        "Testania", "Testtosteron", "test@tesstmail.de"))
+    db.session.add(Roles("Admin", True, 0))
+    db.session.add(Roles("Lehrer", False, 1))
+    db.session.add(Roles("Bereichsleiter", False, 2))
+    db.session.add(Roles("Vertretungsplaner", False, 3))
+
+    db.session.add(UserToRole(1, 1, 3))
+    db.session.add(UserToRole(1, 2, 3))
+    db.session.add(UserToRole(1, 3, 3))
+    db.session.add(UserToRole(1, 4, 3))
+
+    db.session.commit()
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -64,6 +106,8 @@ def home():
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
+    # to reset the database restore Default or update structure
+    # init_db()
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()

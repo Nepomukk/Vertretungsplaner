@@ -153,24 +153,31 @@ class SubLessons(db.Model):
 
     posid = db.Column(db.Integer, nullable=False, primary_key=True)
     formatid = db.Column(db.Integer, ForeignKey("forms.formatid"), nullable=False)
-    lessonnumber = db.Column(db.Integer, nullable=False)
+    lessonnumberfrom = db.Column(db.Integer, nullable=False)
+    lessonnumberto = db.Column(db.Integer, nullable=False)
     lessontype = db.Column(db.String, nullable=False)
+    lessondate = db.Column(db.Date, nullable=False)
     classname = db.Column(db.String, nullable=False)
-    subteachingtype = db.Column(db.Integer, ForeignKey("substitutiontypes.id"), nullable=False)
+    subteachingtype = db.Column(db.Integer, ForeignKey("substitutiontypes.id"))
+    subteacher = db.Column(db.Integer, ForeignKey("users.userid"), nullable=False)
+    subcontend = db.Column(db.String)
     subteacher = db.Column(db.Integer, ForeignKey("users.userid"), nullable=False)
     userid = db.Column(db.Integer, ForeignKey("users.userid"), nullable=False)
     createdate = db.Column(db.Date, nullable=False)
 
-    def __init__(self, formatid, lessonnumber, lessontype, classname, subteachingtype, subteacher, userid,
-                 createdate):
+    def __init__(self, formatid, lessonnumberfrom, lessonnumberto, lessontype, classname, subteachingtype, subteacher, userid,
+                 createdate, subcontend, lessondate):
         self.formatid = formatid
-        self.lessonnumber = lessonnumber
+        self.lessonnumberfrom = lessonnumberfrom
         self.lessontype = lessontype
         self.classname = classname
         self.subteachingtype = subteachingtype
         self.subteacher = subteacher
         self.userid = userid
         self.createdate = createdate
+        self.lessonnumberto = lessonnumberto
+        self.subcontend = subcontend
+        self.lessondate = lessondate
 
     def __repr__(self):
         return f"SubLessons(posid={self.posid!r}, " \
@@ -181,6 +188,9 @@ class SubLessons(db.Model):
                f"subteachingtype={self.subteachingtype!r}" \
                f"subteacher={self.subteacher!r}" \
                f"userid={self.userid!r}" \
+               f"lessonnumberto={self.lessonnumberto!r}" \
+               f"subcontend={self.subcontend!r}" \
+               f"lessondate={self.lessondate!r}" \
                f"createdate={self.createdate!r})"
 
 
