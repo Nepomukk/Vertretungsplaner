@@ -1,3 +1,3 @@
-from sqlalchemy.orm import declarative_base
+from flask_sqlalchemy import model
 
-Base = declarative_base()
+Base = model.Model

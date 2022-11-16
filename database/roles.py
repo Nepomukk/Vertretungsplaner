@@ -18,7 +18,7 @@ class RoleSchema(TypedDict):
     level: int
 
 
-class Roles(Base, object):
+class Roles(Base):
     __tablename__ = "roles"
 
     roleid = Column(Integer, nullable=False, primary_key=True)
