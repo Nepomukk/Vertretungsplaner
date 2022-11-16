@@ -10,11 +10,9 @@ import json
 from sqlalchemy.orm import declarative_base, sessionmaker
 from typing import List, Any, NoReturn, Union
 from database.users import User, UserSchema
-from database.dbHelper import Session
 
 class ConfigurationMngrUsers:
     def get_users_objs() -> List[User]: # todo
-        session: sessionmaker = Session.getSession()
 
         users: List[User] = []
 

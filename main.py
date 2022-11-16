@@ -1,10 +1,12 @@
 import os
 
 import flask
-from flask import render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for, flash, request
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from flask_migrate import Migrate
 from werkzeug.security import check_password_hash
+from backend.ConfigurationAPI_Roles import ConfigurationAPI_Roles, ConfigurationPages_Roles
+from backend.ConfigurationAPI_Users import ConfigurationAPI_Users, ConfigurationPages_Users
 
 from database.dbHelper import *
 from frontend.forms.loginForm import LoginForm
@@ -179,6 +181,65 @@ def page_not_found(e):
     if current_user.is_authenticated and current_user.username is not None:
         hide_menu = False
     return render_template("pages/error.html", hide_menu=hide_menu, default=default), 404
+
+
+# ############################################################ A6 Konfiguration Endpoints
+@app.route('/config') # get page config
+def get_config_page():
+    return ConfigurationPages_Roles.get_config_page(default=default)
+# ############################################################ A6 Konfiguration Endpoints \
+# ############################################################ A6 Konfiguration-roles Endpoints
+@app.route('/config/roles') # get page config-roles
+def get_config_roles_page():
+    return ConfigurationPages_Roles.get_config_roles_page(default=default)
+
+@app.route('/config/roles/add') # get page add role
+def config_roles_add_page():    
+    return ConfigurationPages_Roles.config_roles_add_page(default=default)
+
+@app.route('/config/roles/edit/<roleid>', methods=['GET']) # get page edit role
+def config_roles_edit_page(roleid: str):
+    role_id: int = int(roleid)
+    return ConfigurationPages_Roles.config_roles_edit_page(default=default, roleid=role_id)
+
+@app.route('/api/config/roles/edit/', methods=['POST']) # edit role
+def config_roles_edit():
+    return ConfigurationAPI_Roles.config_roles_edit(form_data=request.form)
+
+@app.route('/api/config/roles/del/<roleid>', methods=['POST']) # del role
+def config_roles_del(roleid: str):
+    return ConfigurationAPI_Roles.config_roles_del(roleid=roleid)
+
+@app.route('/api/config/roles/add/', methods=['POST']) # add role
+def config_roles_add():
+    return ConfigurationAPI_Roles.config_roles_add(form_data=request.form)
+# ############################################################ A6 Konfiguration-roles Endpoints \
+
+# ############################################################ A6 Konfiguration-users Endpoints
+@app.route('/config/users') # get page config-users
+def get_config_users_page():
+    return ConfigurationPages_Users.get_config_users_page(default=default)
+
+@app.route('/config/users/edit/<userid>', methods=['GET']) # get page edit users
+def config_users_edit_page(userid: str):
+    return ConfigurationPages_Users.config_users_edit_page(userid=userid, default=default)
+
+@app.route('/config/users/add') # get page add user
+def config_users_add_page():
+    return ConfigurationPages_Users.config_users_add_page(default=default)
+
+@app.route('/api/config/users/edit/', methods=['POST']) # edit user
+def config_users_edit():
+    return ConfigurationAPI_Users.config_users_edit(form_data=request.form)
+
+@app.route('/api/config/users/del/<userid>', methods=['POST']) # del user
+def config_users_del(userid: str):
+    return  ConfigurationAPI_Users.config_users_del(userid=userid)
+
+@app.route('/api/config/users/add/', methods=['POST']) # add user
+def config_users_add():
+    return ConfigurationAPI_Users.config_users_add(form_data=request.form)
+# ############################################################ A6 Konfiguration-users Endpoints \
 
 
 if __name__ == "__main__":

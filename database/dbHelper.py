@@ -77,7 +77,34 @@ class SubstitutionTypes(db.Model):
                f"descr={self.descr!r}>"
 
 
-class Departments(Base):
+class Roles(db.Model):
+    __tablename__ = "roles"
+
+    roleid = db.Column(db.Integer, nullable=False, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    admin = db.Column(db.Boolean, nullable=False)
+    level = db.Column(db.Integer, nullable=False, unique=True)
+
+    def __init__(self, name, admin, level):
+        self.name = name
+        self.admin = admin
+        self.level = level
+
+    def __repr__(self):
+        return f"<Roles roleid={self.roleid!r}, " \
+               f"name={self.name!r}, " \
+               f"admin={self.admin!r}, " \
+               f"level={self.level!r}>"
+
+
+fromattodepartment = db.Table('fromattodepartment',
+                            db.Column('formatid', db.Integer, ForeignKey("forms.formatid"), nullable=False,
+                                      primary_key=True),
+                            db.Column('departmentid', db.Integer, ForeignKey("departments.id"), nullable=False,
+                                      primary_key=True))
+
+
+class Departments(db.Model):
     __tablename__ = "departments"
 
     id = db.Column(db.Integer, nullable=False, primary_key=True)
