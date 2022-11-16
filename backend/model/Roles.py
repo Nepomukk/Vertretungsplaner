@@ -8,6 +8,8 @@ from sqlalchemy.orm import declarative_base, sessionmaker
 
 from typing import TypedDict, NoReturn
 
+from backend.model.ModelBase import Base
+
 Base = declarative_base()
 
 class RoleSchema(TypedDict):
