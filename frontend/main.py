@@ -13,6 +13,7 @@ from typing import List, TypedDict, Union
 import flask
 from flask import render_template, request, Response, redirect
 from backend.ConfigurationAPI_Roles import ConfigurationAPI_Roles, ConfigurationPages_Roles
+from backend.ConfigurationAPI_Users import ConfigurationAPI_Users, ConfigurationPages_Users
 
 # Roles
 from backend.Configuration_Users import ConfigurationUsersAPI, User
@@ -87,80 +88,27 @@ def config_roles_add():
 # ############################################################ A6 Konfiguration-users Endpoints
 @app.route('/config/users') # get page config-users
 def get_config_users_page():
-    users = ConfigurationUsersAPI.get_users_objs()
-    url: str = '/api/config/users/del'
-    return render_template('pages/config_users_page.html', default=default, users=users, post_url=url)
+    return ConfigurationPages_Users.get_config_users_page(default=default)
 
 @app.route('/config/users/edit/<userid>', methods=['GET']) # get page edit users
 def config_users_edit_page(userid: str):
-    user_id: int = int(userid)
-    user = ConfigurationUsersAPI.get_user(user_id=user_id)
-    url: str = '/api/config/users/edit/'
-    return render_template('pages/config_users_edit_page.html', default=default, user=user, action_title="Bearbeiten", post_url=url)
+    return ConfigurationPages_Users.config_users_edit_page(userid=userid, default=default)
 
 @app.route('/config/users/add') # get page add user
 def config_users_add_page():
-    user = User(
-        userid=0,
-        username='Benutzername',
-        pwd='Password',
-        firstname='Vorname',
-        lastname='Nachname',
-        email='Email'
-    )
-    url: str = '/api/config/users/add'
-    return render_template('pages/config_users_edit_page.html', default=default, user=user, action_title="Hinzufügen", post_url=url)
+    return ConfigurationPages_Users.config_users_add_page(default=default)
 
 @app.route('/api/config/users/edit/', methods=['POST']) # edit user
 def config_users_edit():
-    try:
-        form_data = request.form
-        userid: int = int(form_data.get('userid', None))
-
-        ConfigurationUsersAPI.edit_user(
-            userid=userid,
-            username=form_data.get('username', None),
-            pwd=form_data.get('pwd', None),
-            firstname=form_data.get('firstname', None),
-            lastname=form_data.get('lastname', None),
-            email=form_data.get('email', None),
-        )
-        return redirect(f'/config/users/edit/{userid}')
-    except:
-        resp = Response("invalid request", status=400)
-        return resp
+    return ConfigurationAPI_Users.config_users_edit(form_data=request.form)
 
 @app.route('/api/config/users/del/<userid>', methods=['POST']) # del user
 def config_users_del(userid: str):
-    try:
-        user_id: int = int(userid)
-
-        ConfigurationUsersAPI.del_user(userid=user_id)
-
-        return redirect(f'/config/users')
-    except:
-        resp = Response("invalid request", status=400)
-        return resp
+    return  ConfigurationAPI_Users.config_users_del(userid=userid)
 
 @app.route('/api/config/users/add/', methods=['POST']) # add user
 def config_users_add():
-    try:
-        form_data = request.form
-        userid: int = int(form_data.get('userid', 0))
-
-        ConfigurationUsersAPI.add_user(
-            userid=userid,
-            username=form_data.get('username', None),
-            pwd=form_data.get('pwd', None),
-            firstname=form_data.get('firstname', None),            
-            lastname=form_data.get('lastname', None),            
-            email=form_data.get('email', None)
-        )
-
-        return redirect(f'/config/users/edit/{userid}')
-    except:
-        resp = Response("invalid request", status=400)
-        return resp
+    return ConfigurationAPI_Users.config_users_add(form_data=request.form)
 # ############################################################ A6 Konfiguration-users Endpoints \
 
 @app.route('/formular')
