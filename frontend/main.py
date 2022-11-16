@@ -14,7 +14,7 @@ import flask
 from flask import jsonify, render_template, request, Response
 
 # Roles
-from backend.Configuration_Roles import ConfigurationRolesAPI
+from backend.Configuration_Roles import ConfigurationRolesAPI, Roles
 from database.dbHelper import Session
 
 app = flask.Flask(__name__)
@@ -53,6 +53,17 @@ def get_config_roles_page():
     roles = ConfigurationRolesAPI.get_roles_objs()
     return render_template('pages/config_roles_page.html', default=default, roles=roles)
 
+@app.route('/config/roles/add') # get page add role
+def config_roles_add_page():    
+    role = Roles(
+        roleid=0,
+        name='Bezeichnung',
+        admin=False,
+        level=1
+    )
+    url: str = '/api/config/roles/add'
+    return render_template('pages/config_roles_edit_page.html', default=default, role=role, action_title="Erstellen", post_url=url)
+
 @app.route('/config/roles/edit/<roleid>', methods=['GET']) # get page edit role
 def config_roles_edit_page(roleid: int):
     role_id: int = int(roleid)
@@ -84,20 +95,25 @@ def config_roles_edit():
 def config_roles_del(roleid: int):
     ConfigurationRolesAPI.del_role(roleid=roleid)
 
-# @app.route('/api/config/roles/add/', methods=['POST']) # add role
-# def config_roles_add():
-#     try:
-#         json: dict = request.get_json()
+@app.route('/api/config/roles/add/', methods=['POST']) # add role
+def config_roles_add():
+    try:
+        form_data = request.form
+        roldeid: int = int(form_data.get('roleid', 0))
 
-#         ConfigurationRolesAPI.add_role(
-#             roleid=json.get('roleid', None),
-#             name=json.get('name', None),
-#             admin=json.get('admin', None),
-#             level=json.get('level', None)
-#         )
-#     except:
-#         resp = Response("invalid request", status=400)
-#         return resp
+        role = ConfigurationRolesAPI.get_role(role_id=roldeid)
+        url: str = '/api/config/roles/add'
+
+        ConfigurationRolesAPI.add_role(
+            roleid=roldeid,
+            name=form_data.get('name', None),
+            admin=form_data.get('admin', False),
+            level=form_data.get('level', None)
+        )
+        return render_template('pages/config_roles_edit_page.html', default=default, role=role, action_title="Bearbeiten", post_url=url)
+    except:
+        resp = Response("invalid request", status=400)
+        return resp
 
 @app.route('/formular')
 def formular_page():

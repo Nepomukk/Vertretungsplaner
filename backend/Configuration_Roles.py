@@ -19,8 +19,8 @@ class ConfigurationRolesAPI:
 
         roles: List[Roles] = []
 
-        role1 = Roles(1, 'role1', 1, False)
-        role2 = Roles(2, 'role2', 2, True)
+        role1 = Roles(0, 'role1', 1, False)
+        role2 = Roles(1, 'role2', 2, True)
         roles.append(role1)
         roles.append(role2)
         return roles
