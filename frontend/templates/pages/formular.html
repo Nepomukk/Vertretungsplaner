@@ -18,11 +18,15 @@
                     </span>
                 </div>
                 <div class="input-container fp-absence-grid border rounded">
-                    <input type="date" class="form-control">
-                    <input type="number" class="form-control">
-                    <input type="text" class="form-control">
-                    <input type="text" class="form-control">
-                    <input type="text" class="form-control">
+                    <input type="date" class="form-control"
+                           {% if not allow_edit %}
+                           disabled {% endif %}>
+                    <input type="number" class="form-control" {% if not allow_edit %}
+                           disabled {% endif %}>
+                    <input type="text" class="form-control" {% if not allow_edit %}
+                    disabled {% endif %} >
+                    <input type="text" class="form-control" {% if not allow_edit %}
+                    disabled {% endif %}>
                     <span class="circle-button text-danger" onclick="fpRemoveAbsenceLesson(this)">
                         <i class="fa-solid fa-circle-minus"></i>
                     </span>
@@ -38,9 +42,10 @@
                             <label class="form-check-label" for="absence-reasons-{{ key }}">
                                 {{ item['name'] }}
                             </label>
-                            <input class="form-check-input hide-text" type="radio" name="absence-reasons" id="absence-reasons-{{ key }}" value="{{ key }}">
+                            <input class="form-check-input hide-text" type="radio" name="absence-reasons" id="absence-reasons-{{ key }}" value="{{ key }}" {% if not allow_edit %} disabled {% endif %}>
                             {% if item['enable_textarea'] %}
-                                <textarea class="form-control" id="absence-reasons-text-{{ key }}" rows="3"></textarea>
+                                <textarea class="form-control" id="absence-reasons-text-{{ key }}" rows="3"
+                                          {% if not allow_edit %} disabled {% endif %}></textarea>
                             {% endif %}
                         </div>
                     {% endfor %}
@@ -57,7 +62,8 @@
                         <div class="fp-department-grid input-container">
                             {% for key, item in affected_departments.items() %}
                                 <span>
-                                    <input type="radio" class="form-check-input" name="affected-departments" id="affected-departments-{{ key }}">
+                                    <input type="radio" class="form-check-input" name="affected-departments" id="affected-departments-{{ key }}" {% if not allow_edit %}
+                                    disabled {% endif %}>
                                 </span>
                             {% endfor %}
                         </div>
@@ -65,13 +71,14 @@
 
                     <div class="file-upload mb-3 p-2">
                         <h5>Datei Upload</h5>
-                        <input class="form-control" type="file" id="formFile">
+                        <input class="form-control" type="file" id="formFile" {% if not allow_edit %}
+                        disabled {% endif %}>
                     </div>
                 </div>
-
             </div>
-
-            <button type="submit" class="btn btn-primary">Submit</button>
+             {% if not allow_edit %}
+                <button type="submit" class="btn btn-primary">Submit</button>
+             {% endif %}
         </form>
     </div>
 {% endblock %}

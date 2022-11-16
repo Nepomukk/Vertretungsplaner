@@ -40,8 +40,8 @@ def home():
 @app.route('/formular')
 def formular_page():
     name = 'Lehrer x'
-    allow_comment = False
-    allow_edit= False
+    allow_comment = True
+    allow_edit = True
     absence_reasons = {
         'work_event': {
             'name': 'Dienstveranstaltung',
@@ -76,8 +76,7 @@ def formular_page():
         },
     }
     return render_template('pages/formular.html', default=default, username=name,
-                           absence_reasons=absence_reasons,
-                           affected_departments=affected_departments,allow_comment=allow_comment, allow_edit=allow_edit
+                           absence_reasons=absence_reasons, affected_departments=affected_departments,allow_comment=allow_comment, allow_edit=False
                            )
 
 
