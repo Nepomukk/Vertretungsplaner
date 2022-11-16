@@ -15,6 +15,7 @@ from flask import jsonify, render_template, request, Response
 
 # Roles
 from backend.Configuration_Roles import ConfigurationRolesAPI, Roles
+from backend.Configuration_Users import ConfigurationUsersAPI, User
 from database.dbHelper import Session
 
 app = flask.Flask(__name__)
@@ -129,7 +130,13 @@ def config_roles_add():
         resp = Response("invalid request", status=400)
         return resp
 # ############################################################ A6 Konfiguration Page Endpoints - ROLES \
+
 # ############################################################ A6 Konfiguration Page Endpoints - USERS
+@app.route('/config/users') # get page config-users
+def get_config_users_page():
+    users = ConfigurationUsersAPI.get_users_objs()
+    url: str = '/api/config/roles/del'
+    return render_template('pages/config_users_page.html', default=default, users=users, post_url=url)
 # ############################################################ A6 Konfiguration Page Endpoints - USERS \
 
 @app.route('/formular')
