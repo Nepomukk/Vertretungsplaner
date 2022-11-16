@@ -74,8 +74,8 @@ def init_db():
     db.session.add(StatusTypes('abgelehnt von Vertretungsplaner'))
     db.session.add(StatusTypes('angenommen von Vertretungsplaner'))
 
-    db.session.add(User("test",
-                        "pbkdf2:sha256:260000$2kpyPSYmH5j4gmgo$21e41e82c2aece68f71ab3280d8213f2550364a9b1ed43c7a66cb30d93a7fd7a",
+    db.session.add(User("test",  # username
+                        "test",  # password
                         "Testania", "Testtosteron", "test@tesstmail.de"))
     db.session.add(Roles("Admin", True, 0))
     db.session.add(Roles("Lehrer", False, 1))
