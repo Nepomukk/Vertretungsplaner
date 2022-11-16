@@ -73,3 +73,21 @@ img{
 {
 justify-content:center;
 }
+
+.errorbutton{
+display: flex;
+justify-content: center;
+}
+.errorbutton a:hover{
+color:white;
+}
+
+.errortext{
+    color:red;
+    text-align:center;
+    position:relative;
+}
+
+.error-wrapper{
+margin-top:300px;
+}
