@@ -87,9 +87,9 @@
              {% if not allow_edit %}
                 <button type="submit" class="btn btn-primary">Submit</button>
              {% endif %}
-            {% if allow_comment %}
+            {% if not allow_comment %}
             <div class="col-md-4 mb-3" id="fp-comment-box">
-                <textarea class="fp-comment" rows="3" placeholder="Ihre Nachricht"></textarea>
+                <textarea class="form-control fp-comment mt-3" rows="3" placeholder="Ihre Nachricht"></textarea>
             </div>
             {% endif %}
         </form>
