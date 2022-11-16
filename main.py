@@ -210,7 +210,7 @@ def config_roles_edit():
 def config_roles_del(roleid: str):
     return ConfigurationAPI_Roles.config_roles_del(roleid=roleid)
 
-@app.route('/api/config/roles/add/', methods=['POST']) # add role
+@app.route('/api/config/roles/add', methods=['POST']) # add role
 def config_roles_add():
     return ConfigurationAPI_Roles.config_roles_add(form_data=request.form)
 # ############################################################ A6 Konfiguration-roles Endpoints \
@@ -236,7 +236,7 @@ def config_users_edit():
 def config_users_del(userid: str):
     return  ConfigurationAPI_Users.config_users_del(userid=userid)
 
-@app.route('/api/config/users/add/', methods=['POST']) # add user
+@app.route('/api/config/users/add', methods=['POST']) # add user
 def config_users_add():
     return ConfigurationAPI_Users.config_users_add(form_data=request.form)
 # ############################################################ A6 Konfiguration-users Endpoints \

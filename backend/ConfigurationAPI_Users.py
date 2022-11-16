@@ -70,7 +70,7 @@ class ConfigurationAPI_Users:
                 email=form_data.get('email', None)
             )
 
-            # return redirect(f'/config/users/edit/{userid}')
+            return redirect(f'/config/users/edit/{userid}')
         except:
             resp = Response("invalid request", status=400)
             return resp
