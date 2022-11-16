@@ -1,17 +1,17 @@
 
 from flask import render_template, Response, redirect
-from backend.Configuration_Users import ConfigurationUsersAPI
+from backend.ConfigurationManager_Users import ConfigurationMngrUsers
 from database.users import User
 
 class ConfigurationPages_Users:
     def get_config_users_page(default):
-        users = ConfigurationUsersAPI.get_users_objs()
+        users = ConfigurationMngrUsers.get_users_objs()
         url: str = '/api/config/users/del'
         return render_template('pages/config_users_page.html', default=default, users=users, post_url=url)
 
     def config_users_edit_page(userid: str, default):
         user_id: int = int(userid)
-        user = ConfigurationUsersAPI.get_user(user_id=user_id)
+        user = ConfigurationMngrUsers.get_user(user_id=user_id)
         url: str = '/api/config/users/edit/'
         return render_template('pages/config_users_edit_page.html', default=default, user=user, action_title="Bearbeiten", post_url=url)
 
@@ -33,7 +33,7 @@ class ConfigurationAPI_Users:
         try:
             userid: int = int(form_data.get('userid', None))
 
-            ConfigurationUsersAPI.edit_user(
+            ConfigurationMngrUsers.edit_user(
                 userid=userid,
                 username=form_data.get('username', None),
                 pwd=form_data.get('pwd', None),
@@ -50,7 +50,7 @@ class ConfigurationAPI_Users:
         try:
             user_id: int = int(userid)
 
-            ConfigurationUsersAPI.del_user(userid=user_id)
+            ConfigurationMngrUsers.del_user(userid=user_id)
 
             return redirect(f'/config/users')
         except:
@@ -61,7 +61,7 @@ class ConfigurationAPI_Users:
         try:
             userid: int = int(form_data.get('userid', 0))
 
-            ConfigurationUsersAPI.add_user(
+            ConfigurationMngrUsers.add_user(
                 userid=userid,
                 username=form_data.get('username', None),
                 pwd=form_data.get('pwd', None),

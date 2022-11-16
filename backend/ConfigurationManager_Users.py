@@ -12,7 +12,7 @@ from typing import List, Any, NoReturn, Union
 from database.users import User, UserSchema
 from database.dbHelper import Session
 
-class ConfigurationUsersAPI:
+class ConfigurationMngrUsers:
     def get_users_objs() -> List[User]: # todo
         session: sessionmaker = Session.getSession()
 
@@ -25,12 +25,12 @@ class ConfigurationUsersAPI:
         return users
 
     def get_users_dicts() -> List[UserSchema]:
-        user_objs: List[User] = ConfigurationUsersAPI.get_users_objs()
+        user_objs: List[User] = ConfigurationMngrUsers.get_users_objs()
         user_dicts: List[UserSchema] = [user.to_dict() for user in user_objs]
         return user_dicts
 
     def get_user(user_id: int) -> Union[User, None]:
-        user_objs: List[User] = ConfigurationUsersAPI.get_users_objs()
+        user_objs: List[User] = ConfigurationMngrUsers.get_users_objs()
         for user in user_objs:
             if user.userid == user_id: return user
         return None
@@ -62,8 +62,8 @@ class ConfigurationUsersAPI:
         pass
 
     def get_users_json() -> str:
-        return json.dumps(ConfigurationUsersAPI.get_users_dicts())
+        return json.dumps(ConfigurationMngrUsers.get_users_dicts())
 
     def get_user_json(user_id: int) -> str:
-        return json.dumps(ConfigurationUsersAPI.get_user_dict(ConfigurationUsersAPI.get_user(user_id=user_id)))
+        return json.dumps(ConfigurationMngrUsers.get_user_dict(ConfigurationMngrUsers.get_user(user_id=user_id)))
 

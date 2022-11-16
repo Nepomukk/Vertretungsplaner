@@ -16,7 +16,7 @@ from backend.ConfigurationAPI_Roles import ConfigurationAPI_Roles, Configuration
 from backend.ConfigurationAPI_Users import ConfigurationAPI_Users, ConfigurationPages_Users
 
 # Roles
-from backend.Configuration_Users import ConfigurationUsersAPI, User
+from backend.ConfigurationManager_Users import ConfigurationMngrUsers, User
 from database.dbHelper import Session
 
 app = flask.Flask(__name__)
