@@ -1,0 +1,67 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div class="op-request-grid p-3">
+        <div class="op-request-grid-row op-grid-labels">
+            <div class="op-open-entry">
+                <button class="btn btn-success">
+                    <i class="fa-solid fa-file-circle-plus"></i>
+                    Erstellen
+                </button>
+            </div>
+            <div class="op-open-pdf op-grid-center">
+            </div>
+            <div class="op-firstname">
+                <div class="">Vorname</div>
+            </div>
+            <div class="op-lastname">
+                <div class="">Nachname</div>
+            </div>
+            <div class="op-department op-grid-center">
+                <div class="">Abtl.</div>
+            </div>
+            <div class="op-status op-grid-right">
+                <div class="">Status</div>
+            </div>
+            <div class="op-reason op-grid-right">
+                <div class="">Abw. Grund</div>
+            </div>
+            <div class="op-date op-grid-right">
+                <div class="">Datum</div>
+            </div>
+        </div>
+        {% for item in range(5) %}
+            <div class="op-request-grid-row op-grid-rows custom-box custom-grid">
+                <div class="op-open-entry">
+                    <button class="btn btn-primary">
+                        <i class="fa-solid fa-arrow-right"></i>
+                        Öffnen
+                    </button>
+                </div>
+                <div class="op-open-pdf op-grid-center">
+                    <div class="icon-button">
+                        <i class="fa-solid fa-file-pdf"></i>
+                    </div>
+                </div>
+                <div class="op-firstname">
+                    <div class="p-2">Alpha</div>
+                </div>
+                <div class="op-lastname">
+                    <div class="p-2">Beta</div>
+                </div>
+                <div class="op-department op-grid-center">
+                    <div class="p-2">IT</div>
+                </div>
+                <div class="op-status op-grid-right">
+                    <div class="badge bg-danger p-2">Zu Prüfen von Leiter</div>
+                </div>
+                <div class="op-reason op-grid-right">
+                    <div class="p-2">Dienstver.</div>
+                </div>
+                <div class="op-date op-grid-right">
+                    <div class="p-2">01.01.2023</div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

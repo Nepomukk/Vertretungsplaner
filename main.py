@@ -18,6 +18,11 @@ js_files = os.listdir('static/js')
 css_files = os.listdir('static/css')
 
 menu_items = {
+    'overview': {
+        'name': 'Übersicht',
+        'path': '/overview',
+        'icon': 'fa-solid fa-list-ul',
+    },
     'formular': {
         'name': 'Formular erstellen',
         'path': '/formular',
@@ -96,12 +101,13 @@ def load_user(user_id):
 
 
 @app.route('/')
+@app.route('/overview')
 @login_required
-def home():
+def overview():
     name = ''
     if current_user.is_authenticated:
         name = current_user.firstname + ' ' + current_user.lastname
-    return render_template('pages/home.html', default=default, username=name)
+    return render_template('pages/overview.html', default=default, username=name)
 
 
 @app.route('/login', methods=["GET", "POST"])
