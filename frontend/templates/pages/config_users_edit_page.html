@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="configuration-component">
+
+    <h1>Benutzer {{action_title}}</h1>
+
+        <div class="config-section-title">
+            <h2>{{user.username}}</h2>
+        </div>
+
+        <div class="manage-user">
+          <form action="{{post_url}}" method="post">
+            <label for="userid">ID:</label><br>
+            <input type="text" id="userid" name="userid" value="{{user.userid}}"><br>
+            <button type="submit" class="btn btn-primary float-right">Hinzufügen</button>
+          </form>
+        </div>
+</div>
+{% endblock %}
