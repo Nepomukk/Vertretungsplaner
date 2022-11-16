@@ -47,7 +47,11 @@ default = {
 def home():
     name = 'Lehrer x'
     return render_template('pages/home.html', default=default, username=name)
-
+# ############################################################ A6 Konfiguration Page Endpoints
+@app.route('/config') # get page config
+def get_config_page():
+    return render_template('pages/config_page.html', default=default)
+# ############################################################ A6 Konfiguration Page Endpoints \
 # ############################################################ A6 Konfiguration Page Endpoints - ROLES
 @app.route('/config/roles') # get page config-roles
 def get_config_roles_page():
