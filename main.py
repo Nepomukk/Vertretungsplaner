@@ -91,10 +91,42 @@ def formular_page():
     name = ''
     if current_user.is_authenticated:
         name = current_user.firstname + ' ' + current_user.lastname
-    return render_template('pages/formular.html', default=default, username=name)
-
-
-
+    absence_reasons = {
+        'work_event': {
+            'name': 'Dienstveranstaltung',
+            'enable_textarea': False,
+        },
+        'exma_committee': {
+            'name': 'Prüfungsausschuss',
+            'enable_textarea': False,
+        },
+        'further_education': {
+            'name': 'Fortbildung',
+            'enable_textarea': False,
+        },
+        'lesson_course': {
+            'name': 'Unterrichtsgang',
+            'enable_textarea': False,
+        },
+        'other': {
+            'name': 'Sonstiges',
+            'enable_textarea': True,
+        },
+    }
+    affected_departments = {
+        'av': {
+            'name': 'AV',
+        },
+        'et': {
+            'name': 'ET',
+        },
+        'it': {
+            'name': 'IT',
+        },
+    }
+    return render_template('pages/formular.html', default=default, username=name,
+                           absence_reasons=absence_reasons,
+                           affected_departments=affected_departments)
 
 
 
