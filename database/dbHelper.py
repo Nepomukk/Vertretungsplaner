@@ -27,12 +27,12 @@ class User(db.Model, UserMixin):
         self.email = email
 
     def __repr__(self):
-        return f"User(userid={self.userid!r}, " \
+        return f"<User userid={self.userid!r}, " \
                f"username={self.username!r}, " \
                f"firstname={self.firstname!r}, " \
                f"lastname={self.lastname!r}, " \
                f"pwd={self.pwd!r}, " \
-               f"email={self.email!r})"
+               f"email={self.email!r}>"
 
 
 class AbsenseReasons(db.Model):
@@ -45,8 +45,8 @@ class AbsenseReasons(db.Model):
         self.descr = descr
 
     def __repr__(self):
-        return f"AbsenceReasons(id={self.id!r}, " \
-               f"descr={self.descr!r})"
+        return f"<AbsenceReasons id={self.id!r}, " \
+               f"descr={self.descr!r}>"
 
 
 class StatusTypes(db.Model):
@@ -59,8 +59,8 @@ class StatusTypes(db.Model):
         self.descr = descr
 
     def __repr__(self):
-        return f"StatusTypes(id={self.id!r}, " \
-               f"descr={self.descr!r})"
+        return f"<StatusTypes id={self.id!r}, " \
+               f"descr={self.descr!r}>"
 
 
 class SubstitutionTypes(db.Model):
@@ -73,8 +73,8 @@ class SubstitutionTypes(db.Model):
         self.descr = descr
 
     def __repr__(self):
-        return f"SubstitutionTypes(id={self.id!r}, " \
-               f"descr={self.descr!r})"
+        return f"<SubstitutionTypes id={self.id!r}, " \
+               f"descr={self.descr!r}>"
 
 
 class Roles(db.Model):
@@ -91,11 +91,17 @@ class Roles(db.Model):
         self.level = level
 
     def __repr__(self):
-        return f"Roles(roleid={self.roleid!r}, " \
+        return f"<Roles roleid={self.roleid!r}, " \
                f"name={self.name!r}, " \
                f"admin={self.admin!r}, " \
-               f"level={self.level!r}, " \
-               f")"
+               f"level={self.level!r}>"
+
+
+fromattodepartment = db.Table('fromattodepartment',
+                            db.Column('formatid', db.Integer, ForeignKey("forms.formatid"), nullable=False,
+                                      primary_key=True),
+                            db.Column('departmentid', db.Integer, ForeignKey("departments.id"), nullable=False,
+                                      primary_key=True))
 
 
 class Departments(db.Model):
@@ -110,9 +116,9 @@ class Departments(db.Model):
         self.shortcut = shortcut
 
     def __repr__(self):
-        return f"Departments(id={self.id!r}, " \
+        return f"<Departments id={self.id!r}, " \
                f"descr={self.descr!r}, " \
-               f"shortcut={self.shortcut!r})"
+               f"shortcut={self.shortcut!r}>"
 
 
 class UserToRole(db.Model):
@@ -128,24 +134,9 @@ class UserToRole(db.Model):
         self.departmentid = departmentid
 
     def __repr__(self):
-        return f"UserToRole(userid={self.userid!r}, " \
+        return f"<UserToRole userid={self.userid!r}, " \
                f"roleid={self.roleid!r}, " \
-               f"departmentid={self.departmentid!r})"
-
-
-class FormaToDepartment(db.Model):
-    __tablename__ = "fromattodepartment"
-
-    roleid = db.Column(db.Integer, ForeignKey("roles.roleid"), nullable=False, primary_key=True)
-    departmentid = db.Column(db.Integer, ForeignKey("departments.id"), nullable=False, primary_key=True)
-
-    def __init__(self, roleid, departmentid):
-        self.roleid = roleid
-        self.departmentid = departmentid
-
-    def __repr__(self):
-        return f"FormaToDepartment(roleid={self.roleid!r}, " \
-               f"departmentid={self.departmentid!r})"
+               f"departmentid={self.departmentid!r}>"
 
 
 class SubLessons(db.Model):
@@ -159,13 +150,16 @@ class SubLessons(db.Model):
     lessondate = db.Column(db.Date, nullable=False)
     classname = db.Column(db.String, nullable=False)
     subteachingtype = db.Column(db.Integer, ForeignKey("substitutiontypes.id"))
-    subteacher = db.Column(db.Integer, ForeignKey("users.userid"), nullable=False)
     subcontend = db.Column(db.String)
     subteacher = db.Column(db.Integer, ForeignKey("users.userid"), nullable=False)
     userid = db.Column(db.Integer, ForeignKey("users.userid"), nullable=False)
     createdate = db.Column(db.Date, nullable=False)
+    user = db.relationship('User', foreign_keys='SubLessons.userid')
+    teacher = db.relationship('User', foreign_keys='SubLessons.subteacher')
+    subtype = db.relationship('SubstitutionTypes')
 
-    def __init__(self, formatid, lessonnumberfrom, lessonnumberto, lessontype, classname, subteachingtype, subteacher, userid,
+    def __init__(self, formatid, lessonnumberfrom, lessonnumberto, lessontype, classname, subteachingtype, subteacher,
+                 userid,
                  createdate, subcontend, lessondate):
         self.formatid = formatid
         self.lessonnumberfrom = lessonnumberfrom
@@ -180,18 +174,21 @@ class SubLessons(db.Model):
         self.lessondate = lessondate
 
     def __repr__(self):
-        return f"SubLessons(posid={self.posid!r}, " \
-               f"formatid={self.formatid!r}" \
-               f"lessonnumber={self.lessonnumber!r}" \
-               f"lessontype={self.lessontype!r}" \
-               f"classname={self.classname!r}" \
-               f"subteachingtype={self.subteachingtype!r}" \
-               f"subteacher={self.subteacher!r}" \
-               f"userid={self.userid!r}" \
-               f"lessonnumberto={self.lessonnumberto!r}" \
-               f"subcontend={self.subcontend!r}" \
-               f"lessondate={self.lessondate!r}" \
-               f"createdate={self.createdate!r})"
+        return f"<SubLessons posid={self.posid!r}, " \
+               f"formatid={self.formatid!r}, " \
+               f"lessonnumberfrom={self.lessonnumberfrom!r}, " \
+               f"lessontype={self.lessontype!r}, " \
+               f"classname={self.classname!r}, " \
+               f"subteachingtype={self.subteachingtype!r}, " \
+               f"subteacher={self.subteacher!r}, " \
+               f"userid={self.userid!r}, " \
+               f"lessonnumberto={self.lessonnumberto!r}, " \
+               f"subcontend={self.subcontend!r}, " \
+               f"lessondate={self.lessondate!r}, " \
+               f"createdate={self.createdate!r}, " \
+               f"user={self.user!r}, " \
+               f"teacher={self.teacher!r}, " \
+               f"subtype={self.subtype!r}>"
 
 
 class Forms(db.Model):
@@ -208,6 +205,10 @@ class Forms(db.Model):
     createdate = db.Column(db.Date, nullable=False)
     activ = db.Column(db.Boolean, nullable=False)
     fcomment = db.Column(db.String)
+    absense = db.relationship('AbsenseReasons')
+    statusrel = db.relationship('StatusTypes')
+    user = db.relationship('User')
+    departments = db.relationship('Departments', secondary=fromattodepartment)
 
     def __init__(self, userid, absensereasons, other, appendfile, workarea, pdffile, status, fcomment, activ,
                  createdate):
@@ -223,7 +224,7 @@ class Forms(db.Model):
         self.fcomment = fcomment
 
     def __repr__(self):
-        return f"Forms(formatid={self.formatid!r}, " \
+        return f"<Forms formatid={self.formatid!r}, " \
                f"absensereasons={self.absensereasons!r}, " \
                f"other={self.other!r}, " \
                f"appendfile={self.appendfile!r}, " \
@@ -233,7 +234,11 @@ class Forms(db.Model):
                f"userid={self.userid!r}, " \
                f"createdate={self.createdate!r}, " \
                f"activ={self.activ!r}, " \
-               f"fcomment={self.fcomment!r})"
+               f"fcomment={self.fcomment!r}, " \
+               f"user={self.user!r}, " \
+               f"statusrel={self.statusrel!r}, " \
+               f"departments={self.departments!r}, " \
+               f"absense={self.absense!r}>"
 
 
 class Confirmation(db.Model):
@@ -252,65 +257,8 @@ class Confirmation(db.Model):
         self.ok = ok
 
     def __repr__(self):
-        return f"Forms(id={self.id!r}, " \
+        return f"<Forms id={self.id!r}, " \
                f"userid={self.userid!r}, " \
                f"formatid={self.formatid!r}, " \
                f"comdate={self.comdate!r}, " \
-               f"ok={self.ok!r})"
-
-
-# Example
-# we can now construct a Session() without needing to pass the
-# engine each time
-# with Session() as session:
-#     session.add(some_object)
-#     session.add(some_other_object)
-#     session.commit()
-# class Session:
-#
-#     @staticmethod
-#     def getSession():
-#         engine = create_engine("postgresql+psycopg2://postgres:docker@localhost:5432/postgres")
-#         Session = sessionmaker(bind=engine)
-#         return Session
-#
-#     @staticmethod
-#     def createDatadb():
-#         engine = create_engine("postgresql+psycopg2://postgres:docker@localhost:5432/postgres")
-#         db.metadata.create_all(engine)
-#         Session = sessionmaker(bind=engine)
-#         with Session() as session:
-#             session.add(Departments('AV Abteilung', 'AV'))
-#             session.add(Departments('Elektrotechnik', 'ET'))
-#             session.add(Departments('IT Abteilung', 'IT'))
-#             session.add(Departments('BFS Abteilung', 'BFS'))
-#             session.add(Departments('ITA Abteilung', 'ITA'))
-#             session.add(Departments('FOS Abteilung', 'FOS'))
-#             session.add(Departments('FS Abteilung', 'FS'))
-#
-#             session.add(AbsenseReasons('Dienstveranstaltung'))
-#             session.add(AbsenseReasons('Prüfungsausschuss'))
-#             session.add(AbsenseReasons('Fortbildung'))
-#             session.add(AbsenseReasons('Unterrichtsgang'))
-#             session.add(AbsenseReasons('Sonstiges'))
-#
-#             session.add(SubstitutionTypes('Fachvertretung'))
-#             session.add(SubstitutionTypes('passive Vertretung'))
-#
-#             session.add(StatusTypes('erstellt'))
-#             session.add(StatusTypes('bearbeiten fertig gestellt'))
-#             session.add(StatusTypes('abgelehnt von Bereichsleiter'))
-#             session.add(StatusTypes('angenommen von Bereichsleiter'))
-#             session.add(StatusTypes('abgelehnt von Vertretungsplaner'))
-#             session.add(StatusTypes('angenommen von Vertretungsplaner'))
-#
-#             session.commit()
-#
-#     @staticmethod
-#     def dropDatadb():
-#         engine = create_engine("postgresql+psycopg2://postgres:docker@localhost:5432/postgres")
-#         db.metadata.drop_all(engine)
-
-
-# if __name__ == '__main__':
-#     Session.createDatadb()
+               f"ok={self.ok!r}>"
