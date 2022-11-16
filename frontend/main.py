@@ -11,7 +11,7 @@ import os
 from typing import List, TypedDict, Union
 
 import flask
-from flask import jsonify, render_template, request, Response
+from flask import render_template, request, Response, redirect
 
 # Roles
 from backend.Configuration_Roles import ConfigurationRolesAPI, Roles
@@ -169,9 +169,6 @@ def config_users_edit():
         form_data = request.form
         userid: int = int(form_data.get('userid', None))
 
-        user = ConfigurationUsersAPI.get_user(user_id=userid)
-        url: str = '/api/config/users/edit/'
-
         ConfigurationUsersAPI.edit_user(
             userid=userid,
             username=form_data.get('username', None),
@@ -180,7 +177,7 @@ def config_users_edit():
             lastname=form_data.get('lastname', None),
             email=form_data.get('email', None),
         )
-        return render_template('pages/config_users_edit_page.html', default=default, user=user, action_title="Bearbeiten", post_url=url)
+        return redirect(f'/config/users/edit/{userid}')
     except:
         resp = Response("invalid request", status=400)
         return resp
@@ -191,9 +188,8 @@ def config_users_del(userid: str):
         user_id: int = int(userid)
 
         ConfigurationUsersAPI.del_user(userid=user_id)
-        url: str = '/api/config/users/del'
-        users = ConfigurationUsersAPI.get_users_objs()
-        return render_template('pages/config_users_page.html', default=default, users=users, post_url=url)
+
+        return redirect(f'/config/users')
     except:
         resp = Response("invalid request", status=400)
         return resp
@@ -204,9 +200,6 @@ def config_users_add():
         form_data = request.form
         userid: int = int(form_data.get('userid', 0))
 
-        user = ConfigurationUsersAPI.get_user(user_id=userid)
-        url: str = '/api/config/users/add'
-
         ConfigurationUsersAPI.add_user(
             userid=userid,
             username=form_data.get('username', None),
@@ -215,7 +208,8 @@ def config_users_add():
             lastname=form_data.get('lastname', None),            
             email=form_data.get('email', None)
         )
-        return render_template('pages/config_users_edit_page.html', default=default, user=user, action_title="Bearbeiten", post_url=url)
+
+        return redirect(f'/config/users/edit/{userid}')
     except:
         resp = Response("invalid request", status=400)
         return resp
