@@ -7,6 +7,7 @@ from sqlalchemy import Boolean
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import TIMESTAMP
 from sqlalchemy.orm import declarative_base, sessionmaker
+from werkzeug.security import generate_password_hash
 
 from typing import TypedDict, NoReturn
 
@@ -32,18 +33,18 @@ class User(Base):
 
     def __init__(self, username: str, pwd:str, firstname: str, lastname: str, email: str):
         self.username = username
-        self.pwd = pwd
+        self.pwd = generate_password_hash(pwd)
         self.firstname = firstname
         self.lastname = lastname
         self.email = email
 
     def __repr__(self):
-        return f"User(userid={self.userid!r}, " \
+        return f"<User userid={self.userid!r}, " \
                f"username={self.username!r}, " \
                f"firstname={self.firstname!r}, " \
                f"lastname={self.lastname!r}, " \
                f"pwd={self.pwd!r}, " \
-               f"email={self.email!r})"
+               f"email={self.email!r}>"
 
     def to_dict(self) -> UserSchema:
         def set_dict(dictonary: dict, key: str) -> NoReturn:

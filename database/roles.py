@@ -31,12 +31,11 @@ class Roles(Base):
         self.level = level
         self.admin = admin
 
-    def __repr__(self) -> str:
-        return f"Roles(roleid={self.roleid!r}, " \
+    def __repr__(self):
+        return f"<Roles roleid={self.roleid!r}, " \
                f"name={self.name!r}, " \
                f"admin={self.admin!r}, " \
-               f"level={self.level!r}, " \
-               f")"
+               f"level={self.level!r}>"
 
     def to_dict(self) -> RoleSchema:
         return {
