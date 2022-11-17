@@ -62,7 +62,7 @@
 }
 
 .op-grid-filter input,
-.op-grid-filter button {
+.op-grid-filter .btn {
     padding: 2px 5px;
     margin: 0 1px;
     margin-bottom: 5px;
@@ -101,7 +101,7 @@
 }
 
 .op-grid-filter input,
-.op-grid-filter button {
+.op-grid-filter .btn {
     max-width: 150px;
 }
 .op-grid-filter .op-date input[type=date] {
