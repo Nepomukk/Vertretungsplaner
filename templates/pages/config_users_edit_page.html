@@ -31,23 +31,23 @@
         <div class="manage-user">
           <form action="{{post_url}}" method="post">
             <label for="userid">ID:</label><br>
-            <input type="text" id="userid" name="userid" value="{{user.userid}}" disabled><br>
-            <input type="text" id="userid" name="userid" value="{{user.userid}}" hidden><br>
+            <input class="form-control" type="text" id="userid" name="userid" value="{{user.userid}}" disabled><br>
+            <input class="form-control" type="text" id="userid" name="userid" value="{{user.userid}}" hidden><br>
 
             <label for="username">Benutzername:</label><br>
-            <input type="text" id="username" name="username" value="{{user.username}}"><br>
+            <input class="form-control" type="text" id="username" name="username" value="{{user.username}}"><br>
 
             <label for="pwd">Passwort:</label><br>
-            <input type="password" id="pwd" name="pwd" value="{{user.pwd}}"><br>
+            <input class="form-control" type="password" id="pwd" name="pwd" value="{{user.pwd}}"><br>
 
             <label for="firstname">Vorname:</label><br>
-            <input type="text" id="firstname" name="firstname" value="{{user.firstname}}"><br>
+            <input  class="form-control" type="text" id="firstname" name="firstname" value="{{user.firstname}}"><br>
 
             <label for="lastname">Nachname:</label><br>
-            <input type="text" id="lastname" name="lastname" value="{{user.lastname}}"><br>
+            <input class="form-control" type="text" id="lastname" name="lastname" value="{{user.lastname}}"><br>
 
             <label for="email">Email:</label><br>
-            <input type="text" id="email" name="email" value="{{user.email}}"><br>
+            <input class="form-control" type="text" id="email" name="email" value="{{user.email}}"><br>
 
             <button type="submit" class="btn btn-primary float-right">Speichern</button>
           </form>
