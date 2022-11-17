@@ -216,12 +216,25 @@ def formular_pdf():
             return send_file(file_path, as_attachment=True)
 
 
+@app.route('/password-reset')
+def password_reset():
+    error = {
+        'error_title': 'Passwort vergessen?',
+        'error_text': 'Bitte kontaktieren Sie einen Admin.',
+    }
+    return render_template('pages/error.html', hide_menu=True, default=default, error=error)
+
+
 @app.errorhandler(404)
 def page_not_found(e):
     hide_menu = True
+    error = {
+        'error_title': 'Seite nicht gefunden!',
+        'error_text': 'Tut uns Leid, diese Seite ist leider nicht verfügbar.',
+    }
     if current_user.is_authenticated and current_user.username is not None:
         hide_menu = False
-    return render_template("pages/error.html", hide_menu=hide_menu, default=default), 404
+    return render_template("pages/error.html", hide_menu=hide_menu, default=default, error=error), 404
 
 
 if __name__ == "__main__":

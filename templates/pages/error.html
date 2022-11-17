@@ -1,12 +1,14 @@
 {% extends 'layout.html' %}
+
 {% block content %}
-    <div class="row error-wrapper">
-            <p class="errortext">Tut uns Leid, diese Seite ist leider nicht verfügbar!</p>
-        <div class="col-md-12 errorbutton">
-                 <button type="button" class="btn btn-outline-primary border rounded" id="errorbutton">
-                <a href="/">Zurück zur Startseite</a></button>
+    <div class="error-wrapper">
+        <div class="error-box custom-box p-3">
+            <h4 class="error-title text-danger">{{ error['error_title'] }}</h4>
+            <p class="error-text">{{ error['error_text'] }}</p>
+            <a href="/" class="btn btn-primary border rounded error-button">
+                Zum Start
+            </a>
         </div>
-    </div>
     </div>
 {% endblock %}
 

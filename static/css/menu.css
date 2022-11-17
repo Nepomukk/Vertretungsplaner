@@ -27,6 +27,11 @@ body, html {
     padding: 10px;
 }
 
+.menu.sidebar img {
+    height: initial;
+    width: 40%;
+}
+
 .menu.topbar {
     display: flex;
     justify-content: flex-end;
