@@ -210,18 +210,18 @@ class Forms(db.Model):
     user = db.relationship('User')
     departments = db.relationship('Departments', secondary=fromattodepartment)
 
-    def __init__(self, userid, absensereasons, other, appendfile, workarea, pdffile, status, fcomment, activ,
+    def __init__(self, userid, absensereasons, other, workarea, status, fcomment, activ,
                  createdate):
         self.absensereasons = absensereasons
         self.other = other
-        self.appendfile = appendfile
         self.workarea = workarea
-        self.pdffile = pdffile
         self.status = status
         self.userid = userid
         self.createdate = createdate
         self.activ = activ
         self.fcomment = fcomment
+        self.pdffile = None
+        self.appendfile = None
 
     def __repr__(self):
         return f"<Forms formatid={self.formatid!r}, " \

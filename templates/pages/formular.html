@@ -2,7 +2,7 @@
 
 {% block content %}
     <div class="form-container p-3">
-        <form action="{{url_for('formular_page')}}" method="post" enctype="multipart/form-data">
+        <form class="needs-validation" action="{{url_for('formular_page')}}" method="post" enctype="multipart/form-data">
             <h5>Zu vertretender Lehrer: {{ username }}</h5>
 
             <div class="fp-absence-lessons mb-3 mt-4">
@@ -22,24 +22,24 @@
                 <div class="input-container fp-absence-grid border rounded">
                     <input type="date" name="date" class="form-control"
                            {% if not allow_edit %}
-                           disabled {% endif %}>
-                    <input type="number" name="std_from" class="form-control" {% if not allow_edit %}
-                           disabled {% endif %}>
-                    <input type="number" name="std_to" class="form-control" {% if not allow_edit %}
-                           disabled {% endif %}>
+                           disabled {% endif %} required>
+                    <input type="number" name="std_from" class="form-control" min="1" max="15" {% if not allow_edit %}
+                           disabled {% endif %} required>
+                    <input type="number" name="std_to" class="form-control" min="1" max="15"{% if not allow_edit %}
+                           disabled {% endif %} required>
                     <input type="text" name="subject" class="form-control" {% if not allow_edit %}
-                    disabled {% endif %}>
+                    disabled {% endif %} required>
                     <input type="text" name="subclass" class="form-control" {% if not allow_edit %}
-                    disabled {% endif %}>
+                    disabled {% endif %} required>
                     <select type="text" name="subteacher" class="form-control" {% if not allow_edit %}
-                    disabled {% endif %}>
+                    disabled {% endif %} required>
                         <option><option>
                         {% for user in users %}
-                            <option value="{{users.userid}}">{{user.firstname}} {{user.lastname}}</option>
+                            <option value="{{ user.userid }}">{{user.firstname}} {{user.lastname}}</option>
                         {% endfor %}
                     </select>
                     <input type="text" name="subcontent" class="form-control" {% if not allow_edit %}
-                    disabled {% endif %}>
+                    disabled {% endif %} required>
                     <span class="circle-button text-danger" onclick="fpRemoveAbsenceLesson(this)">
                         <i class="fa-solid fa-circle-minus"></i>
                     </span>
@@ -55,7 +55,7 @@
                             <label class="form-check-label" for="absence-reasons-{{ reason.id }}">
                                 {{ reason.descr }}
                             </label>
-                            <input class="form-check-input hide-text" type="radio" name="absence-reasons" id="absence-reasons-{{ reason.id }}" value="{{ reason.id }}">
+                            <input class="form-check-input hide-text" type="radio" name="absence-reasons" id="absence-reasons-{{ reason.id }}" value="{{ reason.id }}" required>
                             {% if reason.descr.lower() == 'sonstiges' %}
                                 <textarea class="form-control" name="other" id="absence-reasons-text-{{ reason.id }}" rows="3"></textarea>
                             {% endif %}
@@ -74,7 +74,7 @@
                         <div class="fp-department-grid input-container">
                             {% for department in affected_departments %}
                                 <span>
-                                    <input type="radio" class="form-check-input" name="affected-departments" id="affected-departments-{{ department.id }}" value="{{ department.id }}">
+                                    <input type="radio" class="form-check-input" name="affected-departments" id="affected-departments-{{ department.id }}" value="{{ department.id }}" required>
                                 </span>
                             {% endfor %}
                         </div>
@@ -89,7 +89,7 @@
             </div>
             {% if allow_comment %}
                 <div class="col-md-4 mb-3" id="fp-comment-box">
-                     <textarea class="form-control fp-comment mt-3" rows="3" placeholder="Ihre Nachricht"></textarea>
+                     <textarea class="form-control fp-comment mt-3" rows="3" placeholder="Ihre Nachricht" {% if allow_comment %} required {% endif %}></textarea>
                 </div>
             {% endif %}
             {% if allow_edit %}
