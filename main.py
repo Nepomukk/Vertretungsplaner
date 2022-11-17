@@ -1,7 +1,12 @@
+from os.path import exists
+
+from PyPDF2 import PdfMerger
 import os
+from pathlib import Path
 
 import flask
-from flask import render_template, redirect, url_for, flash, request
+import pdfkit as pdfkit
+from flask import render_template, redirect, url_for, flash, request, request, make_response, send_file
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from flask_migrate import Migrate
 from werkzeug.security import check_password_hash
@@ -20,6 +25,11 @@ js_files = os.listdir('static/js')
 css_files = os.listdir('static/css')
 
 menu_items = {
+    'overview': {
+        'name': 'Übersicht',
+        'path': '/overview',
+        'icon': 'fa-solid fa-list-ul',
+    },
     'formular': {
         'name': 'Formular erstellen',
         'path': '/formular',
@@ -98,12 +108,13 @@ def load_user(user_id):
 
 
 @app.route('/')
+@app.route('/overview')
 @login_required
 def home():
     name = ''
     if current_user.is_authenticated:
         name = current_user.firstname + ' ' + current_user.lastname
-    return render_template('pages/home.html', default=default, username=name)
+    return render_template('pages/overview.html', default=default, username=name)
 
 
 @app.route('/login', methods=["GET", "POST"])
@@ -173,6 +184,38 @@ def formular_page():
     return render_template('pages/formular.html', default=default, username=name,
                            absence_reasons=absence_reasons,
                            affected_departments=affected_departments)
+
+
+@app.route('/formular/pdf', methods=["GET"])
+@login_required
+def formular_pdf():
+    if flask.request.method == 'GET':
+        raw_formatid = request.args.get('formatid')
+        if raw_formatid is not None and raw_formatid.isdigit():
+            merger = PdfMerger()
+            img = Path("static/img/logo.png").absolute()
+            formatid = int(raw_formatid)
+            form = Forms.query.filter_by(formatid=formatid).first()
+            lessons = SubLessons.query.filter_by(formatid=formatid).order_by(SubLessons.lessondate).all()
+            date = lessons[0].lessondate.strftime("%d.%m.%Y") + '-' + lessons[1].lessondate.strftime("%d.%m.%Y")
+            # render Template
+            html = render_template(
+                "pdflayout/pdf.html",
+                default=default, form=form, lessons=lessons, date=date, img=img, hide_menu=True)
+            Path("files/requests").mkdir(parents=True, exist_ok=True)
+            file_path = "files/requests/Request_" + str(form.formatid) + ".pdf"
+            path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
+            config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
+            pdfkit.from_string(html, file_path, configuration=config)
+            append_file = 'files/appends/Appendix_' + str(form.formatid) + ".pdf"
+            file_path_end = "files/combine/Request_" + str(form.formatid) + "_combined.pdf"
+            if exists(append_file):
+                merger.append(file_path)
+                merger.append(append_file)
+                merger.write(file_path_end)
+                merger.close()
+                return send_file(file_path_end, as_attachment=True)
+            return send_file(file_path, as_attachment=True)
 
 
 @app.errorhandler(404)

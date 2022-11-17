@@ -1,0 +1,71 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container p-3 fdesign">
+    <div class="row mb-3">
+        <div class="col-12 fimg-wrapper">
+            <img src="{{img}}" class="fimg">
+        </div>
+        <div class="col-12">
+            <h2 class="">Vertretungsantrag {{date}}</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <p><strong>Vorname:</strong> {{form.user.firstname}}</p>
+        </div>
+        <div class="col-12">
+            <p><strong>Nachname:</strong> {{form.user.lastname}}</p>
+        </div>
+    </div>
+    <div class="row">
+        {% if form.absense.id != 5 %}
+            <div class="col-12">
+                <p><strong>Grund der Abwesenheit:</strong> {{ form.absense.descr }}</p>
+            </div>
+        {% else %}
+            <div class="col-12">
+                <p><strong>Grund der Abwesenheit:</strong> {{ form.other }}</p>
+            </div>
+        {% endif %}
+        <div class="col-12">
+                <p><strong>Abteilung:</strong>
+                    {% for department in form.departments %}
+                         {{department.descr}}
+                    {% endfor %}
+                </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Datum</th>
+                    <th scope="col">Ustd von</th>
+                    <th scope="col">Ustd bis</th>
+                    <th scope="col">Fach</th>
+                    <th scope="col">Klasse</th>
+                    <th scope="col">Vertretungslehrer</th>
+                    <th scope="col">Vertretungsaufgabe</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for lesson in lessons %}
+                <tr>
+                    <td>{{ lesson.lessondate.strftime("%d.%m.%Y") }}</td>
+                    <td>{{ lesson.lessonnumberfrom }}</td>
+                    <td>{{ lesson.lessonnumberto }}</td>
+                    <td>{{ lesson.lessontype }}</td>
+                    <td>{{ lesson.classname }}</td>
+                    <td>{{ lesson.teacher.lastname }}</td>
+                    <td>{{ lesson.subcontend }}</td>
+                </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
