@@ -3,6 +3,7 @@ from os.path import exists
 from PyPDF2 import PdfMerger
 import os
 from pathlib import Path
+from datetime import datetime
 
 import flask
 import pdfkit as pdfkit
@@ -140,50 +141,66 @@ def logout():
     return redirect(url_for('login'))
 
 
-@app.route('/formular')
+@app.route('/formular', methods=["GET", "POST"])
 @login_required
 def formular_page():
     name = ''
     if current_user.is_authenticated:
         name = current_user.firstname + ' ' + current_user.lastname
-    allow_comment = False
-    allow_edit = False
-    absence_reasons = {
-        'work_event': {
-            'name': 'Dienstveranstaltung',
-            'enable_textarea': False,
-        },
-        'exma_committee': {
-            'name': 'Prüfungsausschuss',
-            'enable_textarea': False,
-        },
-        'further_education': {
-            'name': 'Fortbildung',
-            'enable_textarea': False,
-        },
-        'lesson_course': {
-            'name': 'Unterrichtsgang',
-            'enable_textarea': False,
-        },
-        'other': {
-            'name': 'Sonstiges',
-            'enable_textarea': True,
-        },
-    }
-    affected_departments = {
-        'av': {
-            'name': 'AV',
-        },
-        'et': {
-            'name': 'ET',
-        },
-        'it': {
-            'name': 'IT',
-        },
-    }
-    return render_template('pages/formular.html', default=default, username=name,
-                           absence_reasons=absence_reasons,
-                           affected_departments=affected_departments, allow_comment=allow_comment, allow_edit=allow_edit)
+    if flask.request.method == 'GET':
+        allow_comment = False
+        allow_edit = True
+
+        users = User.query.filter(User.userid != current_user.userid).all()
+        absence_reasons = AbsenseReasons.query.all()
+        affected_departments = Departments.query.all()
+        return render_template('pages/formular.html', default=default, username=name,
+                               absence_reasons=absence_reasons,
+                               affected_departments=affected_departments, allow_comment=allow_comment,
+                               allow_edit=allow_edit, users=users)
+    elif flask.request.method == 'POST':
+        sublessons = []
+        form = Forms(current_user.userid,
+                     request.form['absence-reasons'],
+                     request.form['other'],
+                     None,
+                     request.form['affected-departments'],
+                     None,
+                     1,
+                     request.form['other'],
+                     True,
+                     datetime.now().date()
+                     )
+        sess = db.session
+        sess.add(form)
+        sess.flush()
+
+        f = request.files['addfile']
+        f.save('files/appends/Appendix_' + str(form.formatid) + ".pdf")
+        for date, std_from, std_from, subject, subclass, subteacher, subcontent in zip(request.form.getlist('date'),
+                                                                                       request.form.getlist('std_from'),
+                                                                                       request.form.getlist(
+                                                                                           'std_email'),
+                                                                                       request.form.getlist('subject'),
+                                                                                       request.form.getlist('subclass'),
+                                                                                       request.form.getlist(
+                                                                                           'subteacher'),
+                                                                                       request.form.getlist(
+                                                                                           'subcontent')):
+            temp_lesson = SubLessons(form.formatid, int(std_from), int(std_from), None,
+                                     subclass,
+                                     subteacher,
+                                     current_user.userid,
+                                     datetime.now().date(),
+                                     subcontent,
+                                     datetime.strptime(date, '%Y-%m-%d').date()
+                                     )
+            sublessons.append(temp_lesson)
+
+        if sublessons.__len__() > 0:
+            sess.add_all(sublessons)
+        sess.commit()
+    return redirect(url_for('home'))
 
 
 @app.route('/formular/pdf', methods=["GET"])
