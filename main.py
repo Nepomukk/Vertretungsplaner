@@ -1,4 +1,6 @@
-import base64
+from os.path import exists
+
+from PyPDF2 import PdfMerger
 import os
 from pathlib import Path
 
@@ -176,12 +178,13 @@ def formular_page():
                            affected_departments=affected_departments)
 
 
-@app.route('/formular/pdf', methods=["GET", "POST"])
+@app.route('/formular/pdf', methods=["GET"])
 @login_required
 def formular_pdf():
     if flask.request.method == 'GET':
         raw_formatid = request.args.get('formatid')
         if raw_formatid is not None and raw_formatid.isdigit():
+            merger = PdfMerger()
             img = Path("static/img/logo.png").absolute()
             formatid = int(raw_formatid)
             form = Forms.query.filter_by(formatid=formatid).first()
@@ -191,11 +194,19 @@ def formular_pdf():
             html = render_template(
                 "pdflayout/pdf.html",
                 default=default, form=form, lessons=lessons, date=date, img=img, hide_menu=True)
-            Path("requests").mkdir(parents=True, exist_ok=True)
-            file_path = "requests/Request_" + str(form.formatid) + ".pdf"
+            Path("files/requests").mkdir(parents=True, exist_ok=True)
+            file_path = "files/requests/Request_" + str(form.formatid) + ".pdf"
             path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
             config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
             pdfkit.from_string(html, file_path, configuration=config)
+            append_file = 'files/appends/Appendix_' + str(form.formatid) + ".pdf"
+            file_path_end = "files/combine/Request_" + str(form.formatid) + "_combined.pdf"
+            if exists(append_file):
+                merger.append(file_path)
+                merger.append(append_file)
+                merger.write(file_path_end)
+                merger.close()
+                return send_file(file_path_end, as_attachment=True)
             return send_file(file_path, as_attachment=True)
 
 

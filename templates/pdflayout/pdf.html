@@ -3,32 +3,32 @@
 {% block content %}
 <div class="container p-3">
     <div class="row mb-3">
-        <div class="col-6">
-            <h2 class="">Vertretungsantrag {{date}}</h2>
-        </div>
-        <div class="col-6 fimg-wrapper">
+        <div class="col-12 fimg-wrapper">
             <img src="{{img}}" class="fimg">
+        </div>
+        <div class="col-12">
+            <h2 class="">Vertretungsantrag {{date}}</h2>
         </div>
     </div>
     <div class="row">
-        <div class="col-6">
+        <div class="col-12">
             <p><strong>Vorname:</strong> {{form.user.firstname}}</p>
         </div>
-        <div class="col-6">
+        <div class="col-12">
             <p><strong>Nachname:</strong> {{form.user.lastname}}</p>
         </div>
     </div>
     <div class="row">
         {% if form.absense.id != 5 %}
-            <div class="col-6">
+            <div class="col-12">
                 <p><strong>Grund der Abwesenheit:</strong> {{ form.absense.descr }}</p>
             </div>
         {% else %}
-            <div class="col-6">
+            <div class="col-12">
                 <p><strong>Grund der Abwesenheit:</strong> {{ form.other }}</p>
             </div>
         {% endif %}
-        <div class="col-6">
+        <div class="col-12">
                 <p><strong>Abteilung:</strong>
                     {% for department in form.departments %}
                          {{department.descr}}
