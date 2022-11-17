@@ -20,7 +20,9 @@
         <div class="manage-role">
           <form action="{{post_url}}" method="post">
             <label for="roleid">ID:</label><br>
-            <input type="text" id="roleid" name="roleid" value="{{role.roleid}}"><br>
+            <input type="text" id="roleid" name="roleid" value="{{role.roleid}}" disabled><br>
+            <input type="text" id="roleid" name="roleid" value="{{role.roleid}}" hidden><br>
+
             <label for="name">Bezeichnung:</label><br>
             <input type="text" id="name" name="name" value="{{role.name}}"><br>
             <label for="admin">Admin:</label><br>

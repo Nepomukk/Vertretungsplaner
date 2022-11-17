@@ -20,7 +20,8 @@
         <div class="manage-user">
           <form action="{{post_url}}" method="post">
             <label for="userid">ID:</label><br>
-            <input type="text" id="userid" name="userid" value="{{user.userid}}"><br>
+            <input type="text" id="userid" name="userid" value="{{user.userid}}" disabled><br>
+            <input type="text" id="userid" name="userid" value="{{user.userid}}" hidden><br>
 
             <label for="username">Benutzername:</label><br>
             <input type="text" id="username" name="username" value="{{user.username}}"><br>
