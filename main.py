@@ -22,6 +22,21 @@ app.config['SECRET_KEY'] = "mt\xd2\xa5M_\xc5\xc3\r\xf3\x1b\xd4R\xce\xa3\xb8\xa2!
 js_files = os.listdir('static/js')
 css_files = os.listdir('static/css')
 
+notifications = [
+    {
+        'message': 'Der Bereichsleiter hat den Antrag abgelehnt!',
+        'path': '/',
+    },
+    {
+        'message': 'Der Bereichsleiter hat den Antrag angenommen!',
+        'path': '/',
+    },
+    {
+        'message': 'Der Antrag wurde aktzeptiert!',
+        'path': '/',
+    },
+]
+
 menu_items = {
     'overview': {
         'name': 'Übersicht',
@@ -40,6 +55,7 @@ default = {
     "js_files": js_files,
     "css_files": css_files,
     "menu_items": menu_items,
+    "notifications": notifications,
 }
 
 # INFO: add hide_menu=True to render_template() to disable the menu for a route
