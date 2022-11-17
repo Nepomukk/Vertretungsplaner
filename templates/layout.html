@@ -4,7 +4,7 @@
 
         <link rel="stylesheet" href="{{ url_for('static', filename='fontawesome-free-6.2.0-web/css/all.css', _external=True) }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-5.2.2-dist/css/bootstrap.css', _external=True) }}">
-        <script src="{{url_for('static', filename='bootstrap-5.2.2-dist/js/bootstrap.js', _external=True)}}"></script>
+        <script src="{{url_for('static', filename='bootstrap-5.2.2-dist/js/bootstrap.bundle.js', _external=True)}}"></script>
 
         {% for css_file in default['css_files']: %}
             <link rel="stylesheet" href="{{ url_for('static', filename=('css/' + css_file), _external=True) }}">
