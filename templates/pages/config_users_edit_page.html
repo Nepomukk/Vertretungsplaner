@@ -49,7 +49,18 @@
             <label for="email">Email:</label><br>
             <input class="form-control" type="text" id="email" name="email" value="{{user.email}}"><br>
 
+            <div class="choose-roles">
+              <p>Rollen:</p>
+
+              {%for role in roles%}
+              <label for="{{role.name}}">{{role.name}}:</label><br>
+              <input class="form-check-input" type="checkbox" id="{{role.name}}" name="{{role.name}}" value="{{role.roleid}}"><br><br>
+              {%endfor%}
+
+            </div>
+
             <button type="submit" class="btn btn-primary float-right">Speichern</button>
+
           </form>
         </div>
 

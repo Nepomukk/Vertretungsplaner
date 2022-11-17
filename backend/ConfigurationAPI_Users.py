@@ -1,5 +1,6 @@
 
 from flask import render_template, Response, redirect
+from backend.ConfigurationManager_Roles import ConfigurationMngrRoles
 from backend.ConfigurationManager_Users import ConfigurationMngrUsers
 from database.users import User
 
@@ -12,8 +13,9 @@ class ConfigurationPages_Users:
     def config_users_edit_page(userid: str, default):
         user_id: int = int(userid)
         user = ConfigurationMngrUsers.get_user(user_id=user_id)
+        roles = ConfigurationMngrRoles.get_roles_objs()
         url: str = '/api/config/users/edit/'
-        return render_template('pages/config_users_edit_page.html', default=default, user=user, action_title="Bearbeiten", post_url=url)
+        return render_template('pages/config_users_edit_page.html',roles=roles, default=default, user=user, action_title="Bearbeiten", post_url=url)
 
     def config_users_add_page(default):
         user = User(
@@ -23,8 +25,9 @@ class ConfigurationPages_Users:
             lastname='Nachname',
             email='Email'
         )
+        roles = ConfigurationMngrRoles.get_roles_objs()
         url: str = '/api/config/users/add'
-        return render_template('pages/config_users_edit_page.html', default=default, user=user, action_title="Hinzufügen", post_url=url)
+        return render_template('pages/config_users_edit_page.html', default=default, user=user,roles=roles, action_title="Hinzufügen", post_url=url)
 
 
 class ConfigurationAPI_Users:
