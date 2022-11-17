@@ -78,12 +78,9 @@ def init_db():
     db.session.add(SubstitutionTypes('Fachvertretung'))
     db.session.add(SubstitutionTypes('passive Vertretung'))
 
-    db.session.add(StatusTypes('erstellt'))
-    db.session.add(StatusTypes('bearbeiten fertig gestellt'))
-    db.session.add(StatusTypes('abgelehnt von Bereichsleiter'))
-    db.session.add(StatusTypes('angenommen von Bereichsleiter'))
-    db.session.add(StatusTypes('abgelehnt von Vertretungsplaner'))
-    db.session.add(StatusTypes('angenommen von Vertretungsplaner'))
+    db.session.add(StatusTypes('wartet auf Prüfung'))
+    db.session.add(StatusTypes('wartet auf Korrektur'))
+    db.session.add(StatusTypes('abgeschlossen'))
 
     db.session.add(User("test",  # username
                         "test",  # password
@@ -147,58 +144,177 @@ def formular_page():
     name = ''
     if current_user.is_authenticated:
         name = current_user.firstname + ' ' + current_user.lastname
-    if flask.request.method == 'GET':
-        allow_comment = False
-        allow_edit = True
 
+    if flask.request.method == 'GET':
         users = User.query.filter(User.userid != current_user.userid).all()
         absence_reasons = AbsenseReasons.query.all()
         affected_departments = Departments.query.all()
+        raw_formatid = request.args.get('formatid')
+        allow_comment = False
+        allow_edit = True
+        form = None
+        lessons = None
+        modus = 1  # create
+        if raw_formatid is not None and raw_formatid != '' and raw_formatid.isdigit():
+            formatid = int(raw_formatid)
+            form = Forms.query.get(formatid)
+            lessons = SubLessons.query.filter_by(formatid=formatid).all()
+            if form is None:
+                return redirect(url_for('home'))
+
+            if form.status == 3 or form.activ is False:
+                allow_edit = False
+                modus = 3  # show
+            elif form.userid is not current_user.userid:
+                allow_edit = False
+                allow_comment = True
+                modus = 4  # accept
+            elif form.userid == current_user.userid:
+                modus = 2  # Update
+
         return render_template('pages/formular.html', default=default, username=name,
                                absence_reasons=absence_reasons,
                                affected_departments=affected_departments, allow_comment=allow_comment,
-                               allow_edit=allow_edit, users=users)
+                               allow_edit=allow_edit, users=users, form=form, lessons=lessons, modus=modus)
     elif flask.request.method == 'POST':
-        sublessons = []
-        form = Forms(current_user.userid,
-                     request.form['absence-reasons'],
-                     request.form['other'],
-                     request.form['affected-departments'],
-                     1,
-                     None,
-                     True,
-                     datetime.now().date()
-                     )
+        modus = int(request.args.get('modus'))
+        if modus is None or modus == 1:
+            formatid = 0
+            form = Forms(current_user.userid,
+                         request.form['absence-reasons'],
+                         request.form['other'],
+                         request.form['affected-departments'],
+                         1,
+                         None,
+                         True,
+                         datetime.now().date()
+                         )
 
-        db.session.add(form)
-        form.query.order_by(Forms.userid.desc()).first()
+            with app.app_context():
+                db.session.add(form)
+                db.session.flush()
+                db.session.commit()
+                formatid = form.formatid
 
-        if request.files['addfile'].filename != '':
-            f = request.files['addfile']
-            f.save('files/appends/Appendix_' + str(form.formatid) + ".pdf")
-        for date, std_from, std_to, subject, subclass, subteacher, subcontent in zip(request.form.getlist('date'),
-                                                                                       request.form.getlist('std_from'),
-                                                                                       request.form.getlist(
-                                                                                           'std_to'),
-                                                                                       request.form.getlist('subject'),
-                                                                                       request.form.getlist('subclass'),
-                                                                                       request.form.getlist(
-                                                                                           'subteacher'),
-                                                                                       request.form.getlist(
-                                                                                           'subcontent')):
-            temp_lesson = SubLessons(form.formatid,
-                                     int(std_from),
-                                     int(std_to),
-                                     subject,
-                                     subclass,
-                                     None,
-                                     subteacher,
-                                     current_user.userid,
-                                     datetime.now().date(),
-                                     subcontent,
-                                     datetime.strptime(date, '%Y-%m-%d').date()
-                                     )
-            db.session.add(temp_lesson)
+            saveAppendFile(form, request)
+
+            for date, std_from, std_to, subject, subclass, subteacher, subcontent in zip(request.form.getlist('date'),
+                                                                                         request.form.getlist(
+                                                                                             'std_from'),
+                                                                                         request.form.getlist(
+                                                                                             'std_to'),
+                                                                                         request.form.getlist(
+                                                                                             'subject'),
+                                                                                         request.form.getlist(
+                                                                                             'subclass'),
+                                                                                         request.form.getlist(
+                                                                                             'subteacher'),
+                                                                                         request.form.getlist(
+                                                                                             'subcontent')):
+                with app.app_context():
+                    temp_lesson = SubLessons(formatid,
+                                             int(std_from),
+                                             int(std_to),
+                                             subject,
+                                             subclass,
+                                             None,
+                                             subteacher,
+                                             current_user.userid,
+                                             datetime.now().date(),
+                                             subcontent,
+                                             datetime.strptime(date, '%Y-%m-%d').date()
+                                             )
+                    db.session.add(temp_lesson)
+                    db.session.commit()
+        elif modus == 2:
+            formatid = request.form.get('formatid_btn')
+            form = Forms.query.get(formatid)
+
+            saveAppendFile(form, request)
+
+            with app.app_context():
+                SubLessons.query.filter_by(formatid=formatid).delete()
+                if form.absensereasons != int(request.form['absence-reasons']):
+                    form.absensereasons = int(request.form['absence-reasons'])
+                if form.other != request.form['other']:
+                    form.other = request.form['other']
+                if form.workarea != int(request.form['affected-departments']):
+                    form.workarea = int(request.form['affected-departments'])
+                form.status = 1
+                db.session.commit()
+            for date, std_from, std_to, subject, subclass, subteacher, subcontent in zip(request.form.getlist('date'),
+                                                                                         request.form.getlist(
+                                                                                             'std_from'),
+                                                                                         request.form.getlist(
+                                                                                             'std_to'),
+                                                                                         request.form.getlist(
+                                                                                             'subject'),
+                                                                                         request.form.getlist(
+                                                                                             'subclass'),
+                                                                                         request.form.getlist(
+                                                                                             'subteacher'),
+                                                                                         request.form.getlist(
+                                                                                             'subcontent')):
+                temp_lesson = SubLessons(formatid,
+                                         int(std_from),
+                                         int(std_to),
+                                         subject,
+                                         subclass,
+                                         None,
+                                         subteacher,
+                                         current_user.userid,
+                                         datetime.now().date(),
+                                         subcontent,
+                                         datetime.strptime(date, '%Y-%m-%d').date()
+                                         )
+                with app.app_context():
+                    db.session.add(temp_lesson)
+                    db.session.commit()
+        elif modus == 4:
+            button_string = ''
+            action = True
+            end_form = False
+            if request.form.get('accept_btn') is not None:
+                button_string = request.form.get('accept_btn')
+            else:
+                button_string = request.form.get('decline_btn')
+
+            if button_string.split('_')[0] == 'not':
+                action = False
+
+            formatid = int(button_string.split('_')[1])
+
+            with app.app_context():
+                confirmations = Confirmation.query.filter_by(formatid=formatid).order_by(Confirmation.id).all()
+                user_roles = UserToRole.query.filter_by(userid=current_user.userid).all()
+                cnt_roles = Roles.query.filter_by(admin=False).count() - 1
+                cnt_confirmations = 1
+                for confirmation in confirmations:
+                    if confirmation.ok:
+                        cnt_confirmations += 1
+                    else:
+                        cnt_confirmations = 0
+                if cnt_roles >= cnt_confirmations:
+                    cnt_confirmations += 1
+                    act_role = Roles.query.filter_by(admin=False, level=cnt_confirmations).first()
+                    for user_role in user_roles:
+                        if user_role.roleid == act_role.roleid:
+                            if action and (cnt_roles + 1) == act_role.level:
+                                end_form = True
+                            confirmation = Confirmation(current_user.userid, formatid, datetime.now().date(), action)
+                            db.session.add(confirmation)
+                db.session.commit()
+
+            with app.app_context():
+                form = Forms.query.get(formatid)
+                if form.fcomment != request.form['fcomment']:
+                    form.fcomment = request.form['fcomment']
+                if end_form:
+                    form.status = 3
+                    form.activ = False
+                if action is not True:
+                    form.status = 2
+                db.session.commit()
     return redirect(url_for('home'))
 
 
@@ -241,6 +357,12 @@ def password_reset():
         'error_text': 'Bitte kontaktieren Sie einen Admin.',
     }
     return render_template('pages/error.html', hide_menu=True, default=default, error=error)
+
+
+def saveAppendFile(form, request):
+    if request.files['addfile'].filename != '':
+        f = request.files['addfile']
+        f.save('files/appends/Appendix_' + str(form.formatid) + ".pdf")
 
 
 @app.errorhandler(404)

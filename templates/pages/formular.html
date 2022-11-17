@@ -2,7 +2,7 @@
 
 {% block content %}
     <div class="form-container p-3">
-        <form class="needs-validation" action="{{url_for('formular_page')}}" method="post" enctype="multipart/form-data">
+        <form class="needs-validation" action="{{url_for('formular_page')}}?modus={{modus}}" method="post" enctype="multipart/form-data">
             <h5>Zu vertretender Lehrer: {{ username }}</h5>
 
             <div class="fp-absence-lessons mb-3 mt-4">
@@ -15,35 +15,69 @@
                     <label for="">Klasse</label>
                     <label for="">Vertretender Lehrer</label>
                     <label for="">Vertretungsaufgaben</label>
-                    <span class="circle-button text-success last-col" onclick="fpAddAbsenceLesson()">
-                        <i class="fa-solid fa-circle-plus"></i>
-                    </span>
+                    {% if modus != 3 %}
+                        <span class="circle-button text-success last-col" onclick="fpAddAbsenceLesson()" >
+                            <i class="fa-solid fa-circle-plus"></i>
+                        </span>
+                    {% endif %}
                 </div>
-                <div class="input-container fp-absence-grid border rounded">
-                    <input type="date" name="date" class="form-control"
-                           {% if not allow_edit %}
-                           disabled {% endif %} required>
-                    <input type="number" name="std_from" class="form-control" min="1" max="15" {% if not allow_edit %}
-                           disabled {% endif %} required>
-                    <input type="number" name="std_to" class="form-control" min="1" max="15"{% if not allow_edit %}
-                           disabled {% endif %} required>
-                    <input type="text" name="subject" class="form-control" {% if not allow_edit %}
-                    disabled {% endif %} required>
-                    <input type="text" name="subclass" class="form-control" {% if not allow_edit %}
-                    disabled {% endif %} required>
-                    <select type="text" name="subteacher" class="form-control" {% if not allow_edit %}
-                    disabled {% endif %} required>
-                        <option><option>
-                        {% for user in users %}
-                            <option value="{{ user.userid }}">{{user.firstname}} {{user.lastname}}</option>
-                        {% endfor %}
-                    </select>
-                    <input type="text" name="subcontent" class="form-control" {% if not allow_edit %}
-                    disabled {% endif %} required>
-                    <span class="circle-button text-danger" onclick="fpRemoveAbsenceLesson(this)">
-                        <i class="fa-solid fa-circle-minus"></i>
-                    </span>
-                </div>
+                {% if lessons is not none %}
+                 {% for lesson in lessons %}
+                    <div class="input-container fp-absence-grid border rounded">
+                        <input type="date" name="date" value="{{ lesson.lessondate }}" class="form-control"
+                               {% if not allow_edit %}
+                               disabled {% endif %}  required>
+                        <input type="number" name="std_from" value="{{ lesson.lessonnumberfrom }}" class="form-control" min="1" max="15" {% if not allow_edit %}
+                               disabled {% endif %} required>
+                        <input type="number" name="std_to" value="{{ lesson.lessonnumberto }}" class="form-control" min="1" max="15"{% if not allow_edit %}
+                               disabled {% endif %} required>
+                        <input type="text" name="subject" value="{{ lesson.lessontype }}" class="form-control" {% if not allow_edit %}
+                        disabled {% endif %} required>
+                        <input type="text" name="subclass" value="{{ lesson.classname }}" class="form-control" {% if not allow_edit %}
+                        disabled {% endif %} required>
+                        <select type="text" name="subteacher" value="{{ lesson.subteacher }}" class="form-control" {% if not allow_edit %}
+                        disabled {% endif %} required>
+                            <option><option>
+                            {% for user in users %}
+                                <option value="{{ user.userid }}" {% if user.userid == lesson.subteacher %} selected {% endif %}>{{user.firstname}} {{user.lastname}}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="text" name="subcontent" value="{{ lesson.subcontend }}" class="form-control" {% if not allow_edit %}
+                        disabled {% endif %} required>
+                        {% if modus != 3 %}
+                            <span class="circle-button text-danger" onclick="fpRemoveAbsenceLesson(this)">
+                                <i class="fa-solid fa-circle-minus"></i>
+                            </span>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                {% else %}
+                    <div class="input-container fp-absence-grid border rounded">
+                        <input type="date" name="date" class="form-control"
+                               {% if not allow_edit %}
+                               disabled {% endif %}  required>
+                        <input type="number" name="std_from" class="form-control" min="1" max="15" {% if not allow_edit %}
+                               disabled {% endif %} required>
+                        <input type="number" name="std_to" class="form-control" min="1" max="15"{% if not allow_edit %}
+                               disabled {% endif %} required>
+                        <input type="text" name="subject" class="form-control" {% if not allow_edit %}
+                        disabled {% endif %} required>
+                        <input type="text" name="subclass" class="form-control" {% if not allow_edit %}
+                        disabled {% endif %} required>
+                        <select type="text" name="subteacher" class="form-control" {% if not allow_edit %}
+                        disabled {% endif %} required>
+                            <option><option>
+                            {% for user in users %}
+                                <option value="{{ user.userid }}">{{user.firstname}} {{user.lastname}}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="text" name="subcontent" class="form-control" {% if not allow_edit %}
+                        disabled {% endif %} required>
+                        <span class="circle-button text-danger" onclick="fpRemoveAbsenceLesson(this)">
+                            <i class="fa-solid fa-circle-minus"></i>
+                        </span>
+                    </div>
+                {% endif %}
             </div>
 
             <div class="fp-row-container">
@@ -55,9 +89,12 @@
                             <label class="form-check-label" for="absence-reasons-{{ reason.id }}">
                                 {{ reason.descr }}
                             </label>
-                            <input class="form-check-input hide-text" type="radio" name="absence-reasons" id="absence-reasons-{{ reason.id }}" value="{{ reason.id }}" required>
+                            <input class="form-check-input hide-text" type="radio" name="absence-reasons"
+                                   id="absence-reasons-{{ reason.id }}" value="{{ reason.id }}" {% if not allow_edit %}
+                                    disabled {% endif %}  {% if reason.id == form.absensereasons %} checked {% endif %} required>
                             {% if reason.descr.lower() == 'sonstiges' %}
-                                <textarea class="form-control" name="other" id="absence-reasons-text-{{ reason.id }}" rows="3"></textarea>
+                                <textarea class="form-control" name="other" id="absence-reasons-text-{{ reason.id }}" {% if not allow_edit %}
+                    disabled {% endif %} value="{{ form.fcomment }}" rows="3"></textarea>
                             {% endif %}
                         </div>
                     {% endfor %}
@@ -74,26 +111,38 @@
                         <div class="fp-department-grid input-container">
                             {% for department in affected_departments %}
                                 <span>
-                                    <input type="radio" class="form-check-input" name="affected-departments" id="affected-departments-{{ department.id }}" value="{{ department.id }}" required>
+                                    <input type="radio" class="form-check-input" name="affected-departments"
+                                           id="affected-departments-{{ department.id }}" value="{{ department.id }}" {% if not allow_edit %}
+                    disabled {% endif %} {% if department.id == form.workarea %} checked {% endif %} required>
                                 </span>
                             {% endfor %}
                         </div>
                     </div>
 
-                    <div class="file-upload mb-3 p-2">
-                        <h5>Datei Upload</h5>
-                        <input class="form-control" name="addfile" type="file" id="formFile" accept="application/pdf">
-                    </div>
+                    {% if modus != 3 %}
+                        <div class="file-upload mb-3 p-2">
+                            <h5>Datei Upload</h5>
+                            <input class="form-control" name="addfile" type="file" id="formFile" {% if not allow_edit %}
+                                disabled {% endif %} accept="application/pdf">
+                        </div>
+                    {% endif %}
                 </div>
 
             </div>
-            {% if allow_comment %}
-                <div class="col-md-4 mb-3" id="fp-comment-box">
-                     <textarea class="form-control fp-comment mt-3" rows="3" placeholder="Ihre Nachricht" {% if allow_comment %} required {% endif %}></textarea>
+            {% if form.fcomment is not none %}
+                <div class="col-md-4 mb-3" id="fp-comment-box-filled">
+                     <textarea class="form-control fp-comment mt-3" name="fcomment" rows="3" placeholder="Ihre Nachricht" {% if allow_comment %} required {% endif %} disabled>{{ form.fcomment }}</textarea>
                 </div>
             {% endif %}
-            {% if allow_edit %}
-                <button type="submit" class="btn btn-primary">Submit</button>
+            {% if allow_comment %}
+                <div class="col-md-4 mb-3" id="fp-comment-box">
+                     <textarea class="form-control fp-comment mt-3" name="fcomment" rows="3" placeholder="Ihre Nachricht" {% if allow_comment %} required {% endif %}></textarea>
+                </div>
+                <button type="submit" name="decline_btn" class="btn btn-danger" value="not_{{ form.formatid }}">Ablehnen</button>
+                <button type="submit" name="accept_btn" class="btn btn-success" value="ok_{{ form.formatid }}">Annehmen</button>
+            {% endif %}
+            {% if allow_edit and modus != 3 %}
+                <button type="submit" class="btn btn-primary"  {% if modus == 2 %} name="formatid_btn" value="{{ form.formatid }}" {% endif %}}>Submit</button>
             {% endif %}
         </form>
     </div>
