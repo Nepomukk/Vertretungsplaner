@@ -3,6 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey
 from werkzeug.security import generate_password_hash
 
+from .roles import Roles
+
 db = SQLAlchemy()
 
 
@@ -75,26 +77,6 @@ class SubstitutionTypes(db.Model):
     def __repr__(self):
         return f"<SubstitutionTypes id={self.id!r}, " \
                f"descr={self.descr!r}>"
-
-
-class Roles(db.Model):
-    __tablename__ = "roles"
-
-    roleid = db.Column(db.Integer, nullable=False, primary_key=True)
-    name = db.Column(db.String, nullable=False)
-    admin = db.Column(db.Boolean, nullable=False)
-    level = db.Column(db.Integer, nullable=False, unique=True)
-
-    def __init__(self, name, admin, level):
-        self.name = name
-        self.admin = admin
-        self.level = level
-
-    def __repr__(self):
-        return f"<Roles roleid={self.roleid!r}, " \
-               f"name={self.name!r}, " \
-               f"admin={self.admin!r}, " \
-               f"level={self.level!r}>"
 
 
 fromattodepartment = db.Table('fromattodepartment',

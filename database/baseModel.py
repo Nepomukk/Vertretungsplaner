@@ -1,3 +1,4 @@
-from flask_sqlalchemy import model
+from flask_sqlalchemy import SQLAlchemy
+db = SQLAlchemy()
 
-Base = model.Model
+Base = db.Model

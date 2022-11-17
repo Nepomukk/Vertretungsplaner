@@ -13,17 +13,10 @@ from typing import List, Any, NoReturn, Union
 from database.roles import Roles, RoleSchema
 from sqlalchemy.orm import Session
 
-engine = db.create_engine("postgresql+psycopg2://postgres:docker@localhost:5432/postgres")
-
 class ConfigurationMngrRoles:
 
     def get_roles_objs() -> List[Roles]:
         roles: List[Roles] = []
-
-        role1 = Roles(0, 'role1', 1, False)
-        role2 = Roles(1, 'role2', 2, True)
-        roles.append(role1)
-        roles.append(role2)
         return roles
 
     def get_roles_dicts() -> List[RoleSchema]: # todo
@@ -47,22 +40,15 @@ class ConfigurationMngrRoles:
         pass
 
     def add_role(
-        roleid: Union[str, int] = 0, 
         name: str = 'role', 
         admin: Union[str, bool] = False, 
-        level: Union[str, int] = 0
-        ) -> NoReturn: # todo
-        # with Session(engine) as session:
-        #     new_role: Roles = Roles(
-        #         roleid=int(roleid),
-        #         name=name,
-        #         admin=bool(admin),
-        #         level=int(level)
-        #     )
-        #     role1 = Roles(6, 'adasdad', 565, False)
-        #     session.add_all([role1])
-        #     session.commit()
-        pass
+        level: Union[str, int] = 0,
+        db: Any = None
+        ) -> NoReturn:        
+        db.session.add(
+            Roles(name=name, level=int(level), admin=admin)
+        )
+        db.session.commit()
 
     def get_roles_json() -> str:
         return json.dumps(ConfigurationMngrRoles.get_roles_dicts())

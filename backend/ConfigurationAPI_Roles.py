@@ -13,12 +13,7 @@ class ConfigurationPages_Roles:
         return render_template('pages/config_roles_page.html', default=default, roles=roles, post_url=url)
 
     def config_roles_add_page(default):    
-        placeholder_role = Roles(
-            roleid=0,
-            name='Bezeichnung',
-            admin=False,
-            level=1
-        )
+        placeholder_role = Roles(name="Bezeichnung", level=0, admin=False)
         url: str = '/api/config/roles/add'
         return render_template('pages/config_roles_edit_page.html', default=default, role=placeholder_role, action_title="Erstellen", post_url=url)
 
@@ -55,15 +50,13 @@ class ConfigurationAPI_Roles:
             resp = Response("invalid request", status=400)
             return resp
 
-    def config_roles_add(form_data: dict):
+    def config_roles_add(form_data: dict, db):
         try:
-            role_id: int = int(form_data.get('roleid', 0))
-
             ConfigurationMngrRoles.add_role(
-                roleid=role_id,
                 name=form_data.get('name', None),
                 admin=form_data.get('admin', False),
-                level=form_data.get('level', None)
+                level=form_data.get('level', None),
+                db=db
             )
 
             return redirect(f'/config/roles/edit/{role_id}')

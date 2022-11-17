@@ -26,8 +26,7 @@ class Roles(Base):
     admin = Column(Boolean, nullable=False)
     level = Column(Integer, nullable=False, unique=True)
 
-    def __init__(self, roleid: int, name: str, level: int, admin: bool):
-        self.roleid = roleid
+    def __init__(self, name: str, level: int, admin: bool):
         self.name = name
         self.level = level
         self.admin = admin

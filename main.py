@@ -212,7 +212,7 @@ def config_roles_del(roleid: str):
 
 @app.route('/api/config/roles/add', methods=['POST']) # add role
 def config_roles_add():
-    return ConfigurationAPI_Roles.config_roles_add(form_data=request.form)
+    return ConfigurationAPI_Roles.config_roles_add(form_data=request.form, db=db)
 # ############################################################ A6 Konfiguration-roles Endpoints \
 
 # ############################################################ A6 Konfiguration-users Endpoints
