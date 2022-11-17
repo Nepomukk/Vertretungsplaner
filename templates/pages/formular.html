@@ -2,7 +2,7 @@
 
 {% block content %}
     <div class="form-container p-3">
-        <form>
+        <form action="{{url_for('formular_page')}}" method="post" enctype="multipart/form-data">
             <h5>Zu vertretender Lehrer: {{ username }}</h5>
 
             <div class="fp-absence-lessons mb-3 mt-4">
@@ -20,20 +20,25 @@
                     </span>
                 </div>
                 <div class="input-container fp-absence-grid border rounded">
-                    <input type="date" class="form-control"
+                    <input type="date" name="date" class="form-control"
                            {% if not allow_edit %}
                            disabled {% endif %}>
-                    <input type="number" class="form-control" {% if not allow_edit %}
+                    <input type="number" name="std_from" class="form-control" {% if not allow_edit %}
                            disabled {% endif %}>
-                    <input type="number" class="form-control" {% if not allow_edit %}
+                    <input type="number" name="std_to" class="form-control" {% if not allow_edit %}
                            disabled {% endif %}>
-                    <input type="text" class="form-control" {% if not allow_edit %}
+                    <input type="text" name="subject" class="form-control" {% if not allow_edit %}
                     disabled {% endif %}>
-                    <input type="text" class="form-control" {% if not allow_edit %}
+                    <input type="text" name="subclass" class="form-control" {% if not allow_edit %}
                     disabled {% endif %}>
-                    <input type="text" class="form-control" {% if not allow_edit %}
+                    <select type="text" name="subteacher" class="form-control" {% if not allow_edit %}
                     disabled {% endif %}>
-                    <input type="text" class="form-control" {% if not allow_edit %}
+                        <option><option>
+                        {% for user in users %}
+                            <option value="{{users.userid}}">{{user.firstname}} {{user.lastname}}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="text" name="subcontent" class="form-control" {% if not allow_edit %}
                     disabled {% endif %}>
                     <span class="circle-button text-danger" onclick="fpRemoveAbsenceLesson(this)">
                         <i class="fa-solid fa-circle-minus"></i>
@@ -45,14 +50,14 @@
 
                 <div class="absence-reasons mb-3 p-2 w-50">
                     <h5>Abwesenheitsgründe</h5>
-                    {% for key, item in absence_reasons.items() %}
+                    {% for reason in absence_reasons %}
                         <div class="form-check">
-                            <label class="form-check-label" for="absence-reasons-{{ key }}">
-                                {{ item['name'] }}
+                            <label class="form-check-label" for="absence-reasons-{{ reason.id }}">
+                                {{ reason.descr }}
                             </label>
-                            <input class="form-check-input hide-text" type="radio" name="absence-reasons" id="absence-reasons-{{ key }}" value="{{ key }}">
-                            {% if item['enable_textarea'] %}
-                                <textarea class="form-control" id="absence-reasons-text-{{ key }}" rows="3"></textarea>
+                            <input class="form-check-input hide-text" type="radio" name="absence-reasons" id="absence-reasons-{{ reason.id }}" value="{{ reason.id }}">
+                            {% if reason.descr.lower() == 'sonstiges' %}
+                                <textarea class="form-control" name="other" id="absence-reasons-text-{{ reason.id }}" rows="3"></textarea>
                             {% endif %}
                         </div>
                     {% endfor %}
@@ -62,14 +67,14 @@
                     <div class="affected-departments mb-3 p-2">
                         <h5>Betroffene Bereiche</h5>
                         <div class="fp-department-grid label-container">
-                            {% for key, item in affected_departments.items() %}
-                                <label class="form-check-label" for="affected-departments-{{ key }}">{{ item['name'] }}</label>
+                            {% for department in affected_departments %}
+                                <label class="form-check-label" for="affected-departments-{{ department.id }}">{{ department.shortcut }}</label>
                             {% endfor %}
                         </div>
                         <div class="fp-department-grid input-container">
-                            {% for key, item in affected_departments.items() %}
+                            {% for department in affected_departments %}
                                 <span>
-                                    <input type="radio" class="form-check-input" name="affected-departments" id="affected-departments-{{ key }}">
+                                    <input type="radio" class="form-check-input" name="affected-departments" id="affected-departments-{{ department.id }}" value="{{ department.id }}">
                                 </span>
                             {% endfor %}
                         </div>
@@ -77,18 +82,18 @@
 
                     <div class="file-upload mb-3 p-2">
                         <h5>Datei Upload</h5>
-                        <input class="form-control" type="file" id="formFile">
+                        <input class="form-control" name="addfile" type="file" id="formFile" accept="application/pdf">
                     </div>
                 </div>
 
             </div>
-            {% if not allow_edit %}
-                <button type="submit" class="btn btn-primary">Submit</button>
-            {% endif %}
-            {% if not allow_comment %}
+            {% if allow_comment %}
                 <div class="col-md-4 mb-3" id="fp-comment-box">
                      <textarea class="form-control fp-comment mt-3" rows="3" placeholder="Ihre Nachricht"></textarea>
                 </div>
+            {% endif %}
+            {% if allow_edit %}
+                <button type="submit" class="btn btn-primary">Submit</button>
             {% endif %}
         </form>
     </div>
