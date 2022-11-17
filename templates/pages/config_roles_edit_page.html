@@ -31,15 +31,18 @@
           <div class="manage-role">
             <form action="{{post_url}}" method="post">
               <label for="roleid">ID:</label><br>
-              <input type="text" id="roleid" name="roleid" value="{{role.roleid}}" disabled><br>
+              <input class="form-control" type="text" id="roleid" name="roleid" value="{{role.roleid}}" disabled><br>
               <input type="text" id="roleid" name="roleid" value="{{role.roleid}}" hidden><br>
 
               <label for="name">Bezeichnung:</label><br>
-              <input type="text" id="name" name="name" value="{{role.name}}"><br>
+              <input class="form-control" type="text" id="name" name="name" value="{{role.name}}"><br>
+
               <label for="admin">Admin:</label><br>
-              <input type="checkbox" id="admin" name="admin" value="{{role.admin}}"><br><br>
+              <input class="form-check-input" type="checkbox" id="admin" name="admin" value="{{role.admin}}"><br><br>
+
               <label for="level">Level:</label><br>
-              <input type="number" id="level" name="level" value="{{role.level}}"><br><br>
+              <input class="form-control" type="number" id="level" name="level" value="{{role.level}}"><br><br>
+
               <button type="submit" class="btn btn-primary float-right">Speichern</button>
             </form>
           </div>
