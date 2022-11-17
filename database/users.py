@@ -30,13 +30,12 @@ class User(Base):
     lastname = Column(String, nullable=False)
     email = Column(String, nullable=False)
 
-    def __init__(self, username, pwd, firstname, lastname, email, userid):
+    def __init__(self, username: str, pwd:str, firstname: str, lastname: str, email: str):
         self.username = username
         self.pwd = pwd
         self.firstname = firstname
         self.lastname = lastname
         self.email = email
-        self.userid = userid
 
     def __repr__(self):
         return f"User(userid={self.userid!r}, " \

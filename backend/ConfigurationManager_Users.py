@@ -10,16 +10,12 @@ import json
 from sqlalchemy.orm import declarative_base, sessionmaker
 from typing import List, Any, NoReturn, Union
 from database.users import User, UserSchema
+from database.dbHelper import db
 
 class ConfigurationMngrUsers:
-    def get_users_objs() -> List[User]: # todo
+    def get_users_objs() -> List[User]:
 
-        users: List[User] = []
-
-        user1 = User('user1', 'asd', 'firstname', 'lastname', 'eail', 0)
-        user2 = User('user2', 'asd', 'firstname', 'lastname', 'eail', 1)
-        users.append(user1)
-        users.append(user2)
+        users: List[User] = db.session.query(User).all()
         return users
 
     def get_users_dicts() -> List[UserSchema]:
@@ -50,14 +46,22 @@ class ConfigurationMngrUsers:
         pass
 
     def add_user(
-            userid: int, 
             username: str, 
             pwd: str, 
             firstname: str, 
             lastname: str,
             email: str
-            ) -> NoReturn: # todo
-        pass
+            ) -> NoReturn:
+        db.session.add(
+            User(
+                username=username, 
+                pwd=pwd, 
+                firstname=firstname,
+                lastname=lastname,
+                email=email
+            )
+        )
+        db.session.commit()
 
     def get_users_json() -> str:
         return json.dumps(ConfigurationMngrUsers.get_users_dicts())

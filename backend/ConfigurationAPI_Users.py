@@ -17,7 +17,6 @@ class ConfigurationPages_Users:
 
     def config_users_add_page(default):
         user = User(
-            userid=0,
             username='Benutzername',
             pwd='Password',
             firstname='Vorname',
@@ -59,10 +58,7 @@ class ConfigurationAPI_Users:
 
     def config_users_add(form_data: dict):
         try:
-            userid: int = int(form_data.get('userid', 0))
-
             ConfigurationMngrUsers.add_user(
-                userid=userid,
                 username=form_data.get('username', None),
                 pwd=form_data.get('pwd', None),
                 firstname=form_data.get('firstname', None),            
@@ -70,7 +66,7 @@ class ConfigurationAPI_Users:
                 email=form_data.get('email', None)
             )
 
-            return redirect(f'/config/users/edit/{userid}')
+            return redirect(f'/config/users')
         except:
             resp = Response("invalid request", status=400)
             return resp
