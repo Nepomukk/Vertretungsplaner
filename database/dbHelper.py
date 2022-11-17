@@ -198,7 +198,7 @@ class Forms(db.Model):
     absensereasons = db.Column(db.Integer, ForeignKey("absensereasons.id"), nullable=False)
     other = db.Column(db.String)
     appendfile = db.Column(db.String)
-    workarea = db.Column(db.String)
+    workarea = db.Column(db.Integer)
     pdffile = db.Column(db.String)
     status = db.Column(db.Integer, ForeignKey("statustypes.id"), nullable=False)
     userid = db.Column(db.Integer, ForeignKey("users.userid"), nullable=False)
