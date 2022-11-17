@@ -8,18 +8,18 @@ sys.path.insert(0, parentdir)
 
 import json
 import sqlalchemy as db
-from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy import select
 from typing import List, Any, NoReturn, Union
 from database.roles import Roles, RoleSchema
-from sqlalchemy.orm import Session
+from database.dbHelper import db
 
 class ConfigurationMngrRoles:
 
     def get_roles_objs() -> List[Roles]:
-        roles: List[Roles] = []
+        roles: List[Roles] = db.session.query(Roles).all()
         return roles
 
-    def get_roles_dicts() -> List[RoleSchema]: # todo
+    def get_roles_dicts() -> List[RoleSchema]:
         role_objs: List[Roles] = ConfigurationMngrRoles.get_roles_objs()
         role_dicts: List[RoleSchema] = [role.to_dict() for role in role_objs]
         return role_dicts
@@ -33,17 +33,22 @@ class ConfigurationMngrRoles:
     def get_role_dict(role: Roles) -> RoleSchema:
         return role.to_dict()
 
-    def del_role(roleid: int) -> NoReturn: # todo
-        pass
+    def del_role(roleid: int) -> NoReturn:
+        role_to_delete = db.session.get(Roles, int(roleid))
+        db.session.delete(role_to_delete)
+        db.session.commit()
 
-    def edit_role(roleid: int, name=None, admin=False, level=None) -> NoReturn: # todo
-        pass
+    def edit_role(roleid: int, name=None, admin=False, level=None) -> NoReturn:
+        role_to_edit: Roles = db.session.get(Roles, int(roleid))
+        role_to_edit.name = name
+        role_to_edit.admin = admin
+        role_to_edit.level = level
+        db.session.commit()
 
     def add_role(
         name: str = 'role', 
         admin: Union[str, bool] = False, 
         level: Union[str, int] = 0,
-        db: Any = None
         ) -> NoReturn:        
         db.session.add(
             Roles(name=name, level=int(level), admin=admin)
