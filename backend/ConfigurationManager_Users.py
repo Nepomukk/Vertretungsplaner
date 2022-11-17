@@ -32,8 +32,10 @@ class ConfigurationMngrUsers:
     def get_user_dict(user: User) -> UserSchema:
         return user.to_dict()
 
-    def del_user(userid: int) -> NoReturn: # todo
-        pass
+    def del_user(userid: Union[str, int]) -> NoReturn: # todo
+        user_to_delete = db.session.get(User, int(userid))
+        db.session.delete(user_to_delete)
+        db.session.commit()
 
     def edit_user(
             userid: int, 
