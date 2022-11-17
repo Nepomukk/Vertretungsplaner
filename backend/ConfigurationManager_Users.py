@@ -2,6 +2,9 @@ import os
 import sys
 import inspect
 
+from backend.ConfigurationManager_Roles import ConfigurationMngrRoles
+from database.roles import Roles
+
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
@@ -10,7 +13,7 @@ import json
 from sqlalchemy.orm import declarative_base, sessionmaker
 from typing import List, Any, NoReturn, Union
 from database.users import User, UserSchema
-from database.dbHelper import db
+from database.dbHelper import UserToRole, db
 
 class ConfigurationMngrUsers:
     def get_users_objs() -> List[User]:
@@ -77,3 +80,22 @@ class ConfigurationMngrUsers:
     def get_user_json(user_id: int) -> str:
         return json.dumps(ConfigurationMngrUsers.get_user_dict(ConfigurationMngrUsers.get_user(user_id=user_id)))
 
+    def set_roles(form_data: dict) -> NoReturn:
+        pass
+        # roles: Roles = ConfigurationMngrRoles.get_roles_objs()
+        # roles_names: List[str] = [role.name for role in roles]
+        # user_id: int = form_data.get('user_id', 3245)
+        # for role_name in roles_names:
+        #     role_id: int = 0
+        #     for role in roles:
+        #         if role.name == role_name: role_id = role.roleid
+        #     if role_name in form_data:
+        #         # new_role_entry = UserToRole(
+        #         #     userid=user_id,
+        #         #     roleid = role_id,
+        #         #     departmentid = 3
+        #         # )
+        #         # test = UserToRole(1, 1, 3)
+        #         # db.session.add(test)
+        #         # db.session.add(new_role_entry)
+        #         # db.session.commit()

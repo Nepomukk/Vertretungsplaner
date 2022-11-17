@@ -68,6 +68,7 @@ class ConfigurationAPI_Users:
                 lastname=form_data.get('lastname', None),            
                 email=form_data.get('email', None)
             )
+            ConfigurationMngrUsers.set_roles(form_data=form_data)
 
             return redirect(f'/config/users')
         except:
