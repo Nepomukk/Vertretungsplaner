@@ -152,43 +152,42 @@ def formular_page():
         form = Forms(current_user.userid,
                      request.form['absence-reasons'],
                      request.form['other'],
-                     None,
                      request.form['affected-departments'],
-                     None,
                      1,
-                     request.form['other'],
+                     None,
                      True,
                      datetime.now().date()
                      )
-        sess = db.session
-        sess.add(form)
-        sess.flush()
 
-        f = request.files['addfile']
-        f.save('files/appends/Appendix_' + str(form.formatid) + ".pdf")
-        for date, std_from, std_from, subject, subclass, subteacher, subcontent in zip(request.form.getlist('date'),
+        db.session.add(form)
+        form.query.order_by(Forms.userid.desc()).first()
+
+        if request.files['addfile'].filename != '':
+            f = request.files['addfile']
+            f.save('files/appends/Appendix_' + str(form.formatid) + ".pdf")
+        for date, std_from, std_to, subject, subclass, subteacher, subcontent in zip(request.form.getlist('date'),
                                                                                        request.form.getlist('std_from'),
                                                                                        request.form.getlist(
-                                                                                           'std_email'),
+                                                                                           'std_to'),
                                                                                        request.form.getlist('subject'),
                                                                                        request.form.getlist('subclass'),
                                                                                        request.form.getlist(
                                                                                            'subteacher'),
                                                                                        request.form.getlist(
                                                                                            'subcontent')):
-            temp_lesson = SubLessons(form.formatid, int(std_from), int(std_from), None,
+            temp_lesson = SubLessons(form.formatid,
+                                     int(std_from),
+                                     int(std_to),
+                                     subject,
                                      subclass,
+                                     None,
                                      subteacher,
                                      current_user.userid,
                                      datetime.now().date(),
                                      subcontent,
                                      datetime.strptime(date, '%Y-%m-%d').date()
                                      )
-            sublessons.append(temp_lesson)
-
-        if sublessons.__len__() > 0:
-            sess.add_all(sublessons)
-        sess.commit()
+            db.session.add(temp_lesson)
     return redirect(url_for('home'))
 
 
