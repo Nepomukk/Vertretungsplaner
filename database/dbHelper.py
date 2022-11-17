@@ -4,37 +4,9 @@ from sqlalchemy import ForeignKey
 from werkzeug.security import generate_password_hash
 
 from .roles import Roles
+from .users import User
 
 db = SQLAlchemy()
-
-
-class User(db.Model, UserMixin):
-    __tablename__ = "users"
-
-    userid = db.Column(db.Integer, nullable=False, primary_key=True)
-    username = db.Column(db.String, nullable=False, unique=True)
-    pwd = db.Column(db.String, nullable=False)
-    firstname = db.Column(db.String, nullable=False)
-    lastname = db.Column(db.String, nullable=False)
-    email = db.Column(db.String, nullable=False)
-
-    def get_id(self):
-        return self.userid
-
-    def __init__(self, username, pwd, firstname, lastname, email):
-        self.username = username
-        self.pwd = generate_password_hash(pwd)
-        self.firstname = firstname
-        self.lastname = lastname
-        self.email = email
-
-    def __repr__(self):
-        return f"<User userid={self.userid!r}, " \
-               f"username={self.username!r}, " \
-               f"firstname={self.firstname!r}, " \
-               f"lastname={self.lastname!r}, " \
-               f"pwd={self.pwd!r}, " \
-               f"email={self.email!r}>"
 
 
 class AbsenseReasons(db.Model):
