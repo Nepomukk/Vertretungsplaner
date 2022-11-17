@@ -3,7 +3,7 @@
 {% block content %}
     <div class="op-request-grid p-3">
         <div class="op-request-grid-row op-grid-labels">
-            <div class="op-open-entry">
+            <div class="op-create-entry">
                 <button class="btn btn-success">
                     <i class="fa-solid fa-file-circle-plus"></i>
                     Erstellen
@@ -27,9 +27,82 @@
                 <div class="">Abw. Grund</div>
             </div>
             <div class="op-date op-grid-right">
-                <div class="">Datum</div>
+                <div class="">Datum (von - bis)</div>
             </div>
         </div>
+        <form class="op-request-grid-row op-grid-filter" action="{{ url_for(request.endpoint) }}">
+            <div class="op-apply-filter">
+                <button type="submit" class="btn btn-info">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    Suchen
+                </button>
+            </div>
+            <div class="op-open-pdf op-grid-center">
+            </div>
+            <div class="op-firstname">
+                <input type="text" class="form-control" name="firstname">
+            </div>
+            <div class="op-lastname">
+                <input type="text" class="form-control" name="lastname">
+            </div>
+            <div class="op-department op-grid-center dropdown">
+                <button type="button" class="btn bg-white dropdown-toggle border" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                    &nbsp;
+                </button>
+                <div class="dropdown-menu dropdown-menu-end p-1">
+                    <div class="op-department op-dropdown-item mb-1">
+                        <input class="form-check-input" type="checkbox" value="av" id="flexCheckDefault1" name="departments">
+                        <label class="form-check-label" for="flexCheckDefault1">
+                            AV
+                        </label>
+                    </div>
+                    <div class="op-department op-dropdown-item mb-1">
+                        <input class="form-check-input" type="checkbox" value="et" id="flexCheckDefault2" name="departments">
+                        <label class="form-check-label" for="flexCheckDefault2">
+                            ET
+                        </label>
+                    </div>
+                    <div class="op-department op-dropdown-item mb-1">
+                        <input class="form-check-input" type="checkbox" value="it" id="flexCheckDefault3" name="departments">
+                        <label class="form-check-label" for="flexCheckDefault3">
+                            IT
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="op-status op-grid-right dropdown">
+                <button type="button" class="btn bg-white dropdown-toggle border" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                    Auswählen
+                </button>
+                <div class="dropdown-menu dropdown-menu-end p-1">
+                    <div class="op-status op-dropdown-item mb-1 badge bg-info">
+                        <input class="form-check-input" type="checkbox" value="waiting" id="flexCheckDefault4" name="status">
+                        <label class="form-check-label" for="flexCheckDefault4">
+                            Warte auf Prüfung
+                        </label>
+                    </div>
+                    <div class="op-status op-dropdown-item mb-1 badge bg-danger">
+                        <input class="form-check-input" type="checkbox" value="refused" id="flexCheckDefault5" name="status">
+                        <label class="form-check-label" for="flexCheckDefault5">
+                            Abgelehnt
+                        </label>
+                    </div>
+                    <div class="op-status op-dropdown-item mb-1 badge bg-success">
+                        <input class="form-check-input" type="checkbox" value="done" id="flexCheckDefault6" name="status">
+                        <label class="form-check-label" for="flexCheckDefault6">
+                            Abgeschlossen
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="op-reason op-grid-right">
+                <input type="text" class="form-control" name="absence-reason">
+            </div>
+            <div class="op-date op-grid-right">
+                <input type="date" class="form-control" name="date-from">
+                <input type="date" class="form-control" name="date-to">
+            </div>
+        </form>
         {% for item in range(5) %}
             <div class="op-request-grid-row op-grid-rows custom-box custom-grid">
                 <div class="op-open-entry">

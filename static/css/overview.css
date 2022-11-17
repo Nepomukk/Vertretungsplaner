@@ -29,29 +29,81 @@
 .op-request-grid-row > .op-grid-center {
     justify-content: center;
 }
-
+.op-request-grid-row > .op-grid-center input {
+    text-align: center;
+}
 .op-request-grid-row > .op-grid-right {
     justify-content: flex-end;
+}
+.op-request-grid-row > .op-grid-right input {
+    text-align: right;
 }
 
 .op-grid-labels {
     font-weight: 700;
 }
 
-.op-open-entry .btn {
+.op-request-grid .btn {
     display: flex;
     align-content: center;
     align-items: center;
     justify-content: space-between;
 }
-.op-open-entry .btn i {
+.op-request-grid .btn i {
     margin-right: 0.25rem;
 }
-.op-grid-labels .op-open-entry .btn {
+.op-request-grid .op-grid-labels .btn {
     padding: 3px 7px;
     margin-bottom: 10px;
 }
 
 .op-grid-rows .op-department {
     font-weight: 600;
+}
+
+.op-grid-filter input,
+.op-grid-filter button {
+    padding: 2px 5px;
+    margin: 0 1px;
+    margin-bottom: 5px;
+}
+
+.op-apply-filter .btn {
+    color: #fff;
+}
+
+.op-grid-filter .dropdown {
+    width: 100%;
+}
+
+.op-grid-filter .dropdown .dropdown-toggle {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.op-grid-filter .dropdown-menu {
+    min-width: 60px;
+}
+
+.op-grid-filter .dropdown .op-dropdown-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    text-align: left;
+}
+.op-grid-filter .dropdown .op-dropdown-item input {
+    margin: 0;
+    margin-right: 3px;
+}
+.op-grid-filter .dropdown .op-dropdown-item label {
+    width: 100%;
+}
+
+.op-grid-filter input,
+.op-grid-filter button {
+    max-width: 150px;
+}
+.op-grid-filter .op-date input[type=date] {
+    max-width: 110px;
 }

@@ -103,7 +103,7 @@ def load_user(user_id):
 @app.route('/')
 @app.route('/overview')
 @login_required
-def overview():
+def home():
     name = ''
     if current_user.is_authenticated:
         name = current_user.firstname + ' ' + current_user.lastname
