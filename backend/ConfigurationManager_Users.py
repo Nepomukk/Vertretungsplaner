@@ -101,3 +101,17 @@ class ConfigurationMngrUsers:
                 )
                 db.session.add(new_role_entry)
                 db.session.commit()
+
+    def get_user_roles(user_id: int) -> List[Roles]:
+        user_to_roles: List[UserToRole] = ConfigurationMngrRoles.get_user_to_roles()
+        current_user: User = ConfigurationMngrUsers.get_user(user_id=user_id)
+        current_user_roles: List[Roles] = []
+
+        for user_role in user_to_roles:
+            user_role: UserToRole
+            
+            if user_role.userid == current_user.userid:
+                current_user_roles.append(
+                    ConfigurationMngrRoles.get_roly_by_id(user_role.roleid)
+                )
+        return current_user_roles

@@ -50,12 +50,23 @@
             <input class="form-control" type="text" id="email" name="email" value="{{user.email}}"><br>
 
             <div class="choose-roles">
-              <p>Rollen:</p>
+              <p>verfügbare Rollen:</p>
 
               {%for role in roles%}
               <label for="{{role.name}}">{{role.name}}:</label><br>
               <input class="form-check-input" type="checkbox" id="{{role.name}}" name="{{role.name}}" value="{{role.roleid}}"><br><br>
               {%endfor%}
+
+            </div>
+
+            <div class="choosen-roles">
+              <p>zugewiesene Rollen:</p>
+
+              <ol>
+                {%for c_role in current_user_roles%}
+                  <li>c_role.name</li>
+                {%endfor%}
+              </ol>
 
             </div>
 

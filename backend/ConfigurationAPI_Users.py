@@ -15,7 +15,8 @@ class ConfigurationPages_Users:
         user = ConfigurationMngrUsers.get_user(user_id=user_id)
         roles = ConfigurationMngrRoles.get_roles_objs()
         url: str = '/api/config/users/edit/'
-        return render_template('pages/config_users_edit_page.html',roles=roles, default=default, user=user, action_title="Bearbeiten", post_url=url)
+        current_user_roles = ConfigurationMngrUsers.get_user_roles(user_id=user_id)
+        return render_template('pages/config_users_edit_page.html',roles=roles, default=default, user=user, action_title="Bearbeiten", post_url=url, current_user_roles=current_user_roles)
 
     def config_users_add_page(default):
         user = User(
@@ -27,7 +28,8 @@ class ConfigurationPages_Users:
         )
         roles = ConfigurationMngrRoles.get_roles_objs()
         url: str = '/api/config/users/add'
-        return render_template('pages/config_users_edit_page.html', default=default, user=user,roles=roles, action_title="Hinzufügen", post_url=url)
+        current_user_roles = []
+        return render_template('pages/config_users_edit_page.html', default=default, user=user,roles=roles, action_title="Hinzufügen", post_url=url, current_user_roles=current_user_roles)
 
 
 class ConfigurationAPI_Users:

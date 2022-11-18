@@ -10,7 +10,7 @@ import json
 import sqlalchemy as db
 from sqlalchemy import select
 from typing import List, Any, NoReturn, Union
-from database.dbHelper import Roles, RoleSchema
+from database.dbHelper import Roles, RoleSchema, UserToRole
 from database.dbHelper import db
 
 class ConfigurationMngrRoles:
@@ -60,4 +60,16 @@ class ConfigurationMngrRoles:
 
     def get_role_json(role_id: int) -> str:
         return json.dumps(ConfigurationMngrRoles.get_role_dict(ConfigurationMngrRoles.get_role(role_id=role_id)))
+
+    def get_user_to_roles() -> List[UserToRole]:
+        user_to_roles: List[UserToRole] = db.session.query(UserToRole).all()
+        return user_to_roles
+
+    def get_roly_by_id(role_id: int) -> Union[Roles, None]:
+        roles: List[Roles] = ConfigurationMngrRoles.get_roles_objs()
+
+        for role in roles:
+            role: Roles
+            if role.roleid == role_id: return role
+        return None
 
