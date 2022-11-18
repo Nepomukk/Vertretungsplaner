@@ -1,3 +1,4 @@
+import copy
 from os.path import exists
 
 from PyPDF2 import PdfMerger
@@ -12,6 +13,8 @@ from flask_migrate import Migrate
 from werkzeug.security import check_password_hash
 from backend.ConfigurationAPI_Roles import ConfigurationAPI_Roles, ConfigurationPages_Roles
 from backend.ConfigurationAPI_Users import ConfigurationAPI_Users, ConfigurationPages_Users
+from backend.ConfigurationManager_Roles import ConfigurationMngrRoles
+from backend.ConfigurationManager_Users import ConfigurationMngrUsers
 
 from database.dbHelper import *
 from frontend.forms.loginForm import LoginForm
@@ -58,6 +61,13 @@ default = {
     "css_files": css_files,
     "menu_items": menu_items,
     "notifications": notifications,
+}
+
+admin_default = copy.deepcopy(default)
+admin_default['menu_items']['manage'] = {
+    'name': 'Verwaltung',
+    'path': '/config',
+    'icon': 'fa-solid fa-file-circle-plus',
 }
 
 # INFO: add hide_menu=True to render_template() to disable the menu for a route
@@ -130,7 +140,12 @@ def home():
     name = ''
     if current_user.is_authenticated:
         name = current_user.firstname + ' ' + current_user.lastname
-    return render_template('pages/overview.html', default=default, username=name)
+    user: User = current_user
+    is_admin: bool = ConfigurationMngrRoles.is_admin(user_id=user.userid)
+    my_default = default
+    if is_admin: 
+        my_default = admin_default
+    return render_template('pages/overview.html', default=my_default, username=name)
 
 
 @app.route('/login', methods=["GET", "POST"])
@@ -258,22 +273,27 @@ def page_not_found(e):
 
 # ############################################################ A6 Konfiguration Endpoints
 @app.route('/config') # get page config
+@login_required
 def get_config_page():
-    return ConfigurationPages_Roles.get_config_page(default=default)
+    user: User = current_user
+    is_admin: bool = ConfigurationMngrRoles.is_admin(user_id=user.userid)
+    if not is_admin: 
+        redirect(url_for('login'))
+    return ConfigurationPages_Roles.get_config_page(default=admin_default)
 # ############################################################ A6 Konfiguration Endpoints \
 # ############################################################ A6 Konfiguration-roles Endpoints
 @app.route('/config/roles') # get page config-roles
 def get_config_roles_page():
-    return ConfigurationPages_Roles.get_config_roles_page(default=default)
+    return ConfigurationPages_Roles.get_config_roles_page(default=admin_default)
 
 @app.route('/config/roles/add') # get page add role
 def config_roles_add_page():    
-    return ConfigurationPages_Roles.config_roles_add_page(default=default)
+    return ConfigurationPages_Roles.config_roles_add_page(default=admin_default)
 
 @app.route('/config/roles/edit/<roleid>', methods=['GET']) # get page edit role
 def config_roles_edit_page(roleid: str):
     role_id: int = int(roleid)
-    return ConfigurationPages_Roles.config_roles_edit_page(default=default, roleid=role_id)
+    return ConfigurationPages_Roles.config_roles_edit_page(default=admin_default, roleid=role_id)
 
 @app.route('/api/config/roles/edit/', methods=['POST']) # edit role
 def config_roles_edit():
@@ -291,15 +311,15 @@ def config_roles_add():
 # ############################################################ A6 Konfiguration-users Endpoints
 @app.route('/config/users') # get page config-users
 def get_config_users_page():
-    return ConfigurationPages_Users.get_config_users_page(default=default)
+    return ConfigurationPages_Users.get_config_users_page(default=admin_default)
 
 @app.route('/config/users/edit/<userid>', methods=['GET']) # get page edit users
 def config_users_edit_page(userid: str):
-    return ConfigurationPages_Users.config_users_edit_page(userid=userid, default=default)
+    return ConfigurationPages_Users.config_users_edit_page(userid=userid, default=admin_default)
 
 @app.route('/config/users/add') # get page add user
 def config_users_add_page():
-    return ConfigurationPages_Users.config_users_add_page(default=default)
+    return ConfigurationPages_Users.config_users_add_page(default=admin_default)
 
 @app.route('/api/config/users/edit/', methods=['POST']) # edit user
 def config_users_edit():

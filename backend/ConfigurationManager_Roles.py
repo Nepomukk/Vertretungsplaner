@@ -2,6 +2,8 @@ import os
 import sys
 import inspect
 
+from backend.ConfigurationManager_Users import ConfigurationMngrUsers
+
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
@@ -73,3 +75,9 @@ class ConfigurationMngrRoles:
             if role.roleid == role_id: return role
         return None
 
+    def is_admin(user_id: int) -> bool:
+        user_roles: List[Roles] = ConfigurationMngrUsers.get_user_roles(user_id=user_id)
+        for role in user_roles:
+            role: Roles
+            if role.admin: return True
+        return False

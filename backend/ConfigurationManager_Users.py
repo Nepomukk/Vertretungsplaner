@@ -2,7 +2,7 @@ import os
 import sys
 import inspect
 
-from backend.ConfigurationManager_Roles import ConfigurationMngrRoles
+# from backend.ConfigurationManager_Roles import ConfigurationMngrRoles
 from database.dbHelper import Roles
 
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
@@ -87,7 +87,7 @@ class ConfigurationMngrUsers:
         return json.dumps(ConfigurationMngrUsers.get_user_dict(ConfigurationMngrUsers.get_user(user_id=user_id)))
 
     def set_roles(form_data: dict) -> NoReturn:
-        roles: Roles = ConfigurationMngrRoles.get_roles_objs()
+        roles: List[Roles] = db.session.query(Roles).all()
         username: str = form_data.get('username')
         current_user: User = ConfigurationMngrUsers.get_user_by_name(username)
 
@@ -102,8 +102,16 @@ class ConfigurationMngrUsers:
                 db.session.add(new_role_entry)
                 db.session.commit()
 
+    def get_roly_by_id(role_id: int) -> Union[Roles, None]:
+        roles: List[Roles] = db.session.query(Roles).all()
+
+        for role in roles:
+            role: Roles
+            if role.roleid == role_id: return role
+        return None
+
     def get_user_roles(user_id: int) -> List[Roles]:
-        user_to_roles: List[UserToRole] = ConfigurationMngrRoles.get_user_to_roles()
+        user_to_roles: List[UserToRole] = db.session.query(UserToRole).all()
         current_user: User = ConfigurationMngrUsers.get_user(user_id=user_id)
         current_user_roles: List[Roles] = []
 
@@ -112,6 +120,6 @@ class ConfigurationMngrUsers:
             
             if user_role.userid == current_user.userid:
                 current_user_roles.append(
-                    ConfigurationMngrRoles.get_roly_by_id(user_role.roleid)
+                    ConfigurationMngrUsers.get_roly_by_id(user_role.roleid)
                 )
         return current_user_roles

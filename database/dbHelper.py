@@ -50,7 +50,7 @@ class Roles(db.Model):
             'level': self.level
         }
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = "users"
 
     userid = db.Column(db.Integer, nullable=False, primary_key=True)
@@ -59,6 +59,9 @@ class User(db.Model):
     firstname = db.Column(db.String, nullable=False)
     lastname = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
+
+    def get_id(self):
+        return self.userid
 
     def __init__(self, username: str, pwd:str, firstname: str, lastname: str, email: str):
         self.username = username
