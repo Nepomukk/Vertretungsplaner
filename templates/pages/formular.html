@@ -94,7 +94,7 @@
                                     disabled {% endif %}  {% if reason.id == form.absensereasons %} checked {% endif %} required>
                             {% if reason.descr.lower() == 'sonstiges' %}
                                 <textarea class="form-control" name="other" id="absence-reasons-text-{{ reason.id }}" {% if not allow_edit %}
-                    disabled {% endif %} value="{{ form.fcomment }}" rows="3"></textarea>
+                    disabled {% endif %} value="{{ form.other }}" rows="3">{{ form.other }}</textarea>
                             {% endif %}
                         </div>
                     {% endfor %}
@@ -113,7 +113,7 @@
                                 <span>
                                     <input type="checkbox" class="form-check-input" name="affected-departments"
                                            id="affected-departments-{{ department.id }}" value="{{ department.id }}" {% if not allow_edit %}
-                    disabled {% endif %} {% if department.id == form.workarea %} checked {% endif %}>
+                    disabled {% endif %} {% for temp_department in departments_list %}{% if department.id == temp_department.departmentid %} checked {% endif %} {% endfor %}>
                                 </span>
                             {% endfor %}
                         </div>

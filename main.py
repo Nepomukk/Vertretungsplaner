@@ -227,10 +227,12 @@ def formular_page():
         form = None
         lessons = None
         modus = 1  # create
+        departments_list = []
         if raw_formatid is not None and raw_formatid != '' and raw_formatid.isdigit():
             formatid = int(raw_formatid)
             form = Forms.query.get(formatid)
             lessons = SubLessons.query.filter_by(formatid=formatid).all()
+            departments_list = FromatToDepartment.query.filter_by(formatid=formatid).all()
             if form is None:
                 return redirect(url_for('home'))
 
@@ -247,7 +249,7 @@ def formular_page():
         return render_template('pages/formular.html', default=my_default, username=name,
                                absence_reasons=absence_reasons,
                                affected_departments=affected_departments, allow_comment=allow_comment,
-                               allow_edit=allow_edit, users=users, form=form, lessons=lessons, modus=modus)
+                               allow_edit=allow_edit, users=users, form=form, lessons=lessons, modus=modus, departments_list=departments_list)
     elif flask.request.method == 'POST':
         modus = int(request.args.get('modus'))
         if modus is None or modus == 1:
@@ -413,7 +415,7 @@ def formular_pdf():
             formatid = int(raw_formatid)
             form = Forms.query.filter_by(formatid=formatid).first()
             lessons = SubLessons.query.filter_by(formatid=formatid).order_by(SubLessons.lessondate).all()
-            date = lessons[0].lessondate.strftime("%d.%m.%Y") + '-' + lessons[1].lessondate.strftime("%d.%m.%Y")
+            date = lessons[0].lessondate.strftime("%d.%m.%Y") + '-' + lessons[len(lessons) - 1].lessondate.strftime("%d.%m.%Y")
             # render Template
             html = render_template(
                 "pdflayout/pdf.html",
