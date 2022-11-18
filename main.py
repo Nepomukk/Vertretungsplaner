@@ -78,9 +78,9 @@ def init_db():
     db.session.add(SubstitutionTypes('Fachvertretung'))
     db.session.add(SubstitutionTypes('passive Vertretung'))
 
-    db.session.add(StatusTypes('wartet auf Prüfung'))
-    db.session.add(StatusTypes('wartet auf Korrektur'))
-    db.session.add(StatusTypes('abgeschlossen'))
+    db.session.add(StatusTypes('wartet auf Prüfung', 'bg-info'))
+    db.session.add(StatusTypes('wartet auf Korrektur', 'bg-danger'))
+    db.session.add(StatusTypes('abgeschlossen', 'bg-success'))
 
     db.session.add(User("test",  # username
                         "test",  # password
@@ -103,14 +103,20 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-@app.route('/')
-@app.route('/overview')
+@app.route('/', methods=["GET", "POST"])
+@app.route('/overview', methods=["GET", "POST"])
 @login_required
 def home():
     name = ''
+    #TODO Filterlogik
     if current_user.is_authenticated:
         name = current_user.firstname + ' ' + current_user.lastname
-    return render_template('pages/overview.html', default=default, username=name)
+    affected_departments = Departments.query.all()
+    absence_reasons = AbsenseReasons.query.all()
+    status_types = StatusTypes.query.all()
+    form_list = Forms.query.filter_by(userid=current_user.userid).all()  # TODO Logik erweitern für mehr als die eigenen bzw des Pozesses Rellen des Users benutzen
+    return render_template('pages/overview.html', default=default, username=name, departments=affected_departments,
+                               absence_reasons=absence_reasons, status_types=status_types, form_list=form_list)
 
 
 @app.route('/login', methods=["GET", "POST"])
@@ -352,9 +358,15 @@ def formular_pdf():
 
 @app.route('/password-reset')
 def password_reset():
+    kontakt_str = ''
+    with app.app_context():
+        adimn_role = Roles.query.filter_by(admin=True).first()
+        admin_id = UserToRole.query.filter_by(roleid=adimn_role.roleid).first()
+        admin = User.query.get(admin_id.userid)
+        kontakt_str = 'Bitte kontaktieren Sie den Admin mit dieser E-Mail-Adresse: ' + admin.email + '.'
     error = {
         'error_title': 'Passwort vergessen?',
-        'error_text': 'Bitte kontaktieren Sie einen Admin.',
+        'error_text': kontakt_str,
     }
     return render_template('pages/error.html', hide_menu=True, default=default, error=error)
 

@@ -54,13 +54,16 @@ class StatusTypes(db.Model):
 
     id = db.Column(db.Integer, nullable=False, primary_key=True)
     descr = db.Column(db.String, nullable=False)
+    color = db.Column(db.String, nullable=False)
 
-    def __init__(self, descr):
+    def __init__(self, descr, color):
         self.descr = descr
+        self.color = color
 
     def __repr__(self):
         return f"<StatusTypes id={self.id!r}, " \
-               f"descr={self.descr!r}>"
+               f"descr={self.descr!r}, " \
+               f"color={self.color!r}>"
 
 
 class SubstitutionTypes(db.Model):
@@ -209,6 +212,7 @@ class Forms(db.Model):
     statusrel = db.relationship('StatusTypes')
     user = db.relationship('User')
     departments = db.relationship('Departments', secondary=fromattodepartment)
+    sublessons = db.relationship("SubLessons")
 
     def __init__(self, userid, absensereasons, other, workarea, status, fcomment, activ,
                  createdate):
@@ -238,6 +242,7 @@ class Forms(db.Model):
                f"user={self.user!r}, " \
                f"statusrel={self.statusrel!r}, " \
                f"departments={self.departments!r}, " \
+               f"sublessons={self.sublessons!r}, " \
                f"absense={self.absense!r}>"
 
 

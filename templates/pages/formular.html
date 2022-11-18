@@ -131,7 +131,7 @@
             </div>
             {% if form.fcomment is not none %}
                 <div class="col-md-4 mb-3" id="fp-comment-box-filled">
-                     <textarea class="form-control fp-comment mt-3" name="fcomment" rows="3" placeholder="Ihre Nachricht" {% if allow_comment %} required {% endif %} disabled>{{ form.fcomment }}</textarea>
+                     <textarea class="form-control fp-comment mt-3" name="fcomment" rows="3" {% if allow_comment %} required {% endif %} disabled>{{ form.fcomment }}</textarea>
                 </div>
             {% endif %}
             {% if allow_comment %}
@@ -142,7 +142,13 @@
                 <button type="submit" name="accept_btn" class="btn btn-success" value="ok_{{ form.formatid }}">Annehmen</button>
             {% endif %}
             {% if allow_edit and modus != 3 %}
-                <button type="submit" class="btn btn-primary"  {% if modus == 2 %} name="formatid_btn" value="{{ form.formatid }}" {% endif %}}>Submit</button>
+                <button type="submit" class="btn btn-primary"  {% if modus == 2 %} name="formatid_btn" value="{{ form.formatid }}" {% endif %}}>
+                    {% if modus == 2 %}
+                        Erstellen
+                    {% else %}
+                        Bearbeiten
+                    {% endif %}
+                </button>
             {% endif %}
         </form>
     </div>

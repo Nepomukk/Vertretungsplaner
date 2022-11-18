@@ -30,7 +30,7 @@
                 <div class="">Datum (von - bis)</div>
             </div>
         </div>
-        <form class="op-request-grid-row op-grid-filter" action="{{ url_for(request.endpoint) }}">
+        <form class="op-request-grid-row op-grid-filter" action="{{ url_for('home') }}">
             <div class="op-apply-filter">
                 <button type="submit" class="btn btn-info">
                     <i class="fa-solid fa-magnifying-glass"></i>
@@ -47,27 +47,17 @@
             </div>
             <div class="op-department op-grid-center dropdown">
                 <button type="button" class="btn bg-white dropdown-toggle border" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
-                    &nbsp;
+                    &nbsp;?
                 </button>
                 <div class="dropdown-menu dropdown-menu-end p-1">
-                    <div class="op-department op-dropdown-item mb-1">
-                        <input class="form-check-input" type="checkbox" value="av" id="flexCheckDefault1" name="departments">
-                        <label class="form-check-label" for="flexCheckDefault1">
-                            AV
-                        </label>
-                    </div>
-                    <div class="op-department op-dropdown-item mb-1">
-                        <input class="form-check-input" type="checkbox" value="et" id="flexCheckDefault2" name="departments">
-                        <label class="form-check-label" for="flexCheckDefault2">
-                            ET
-                        </label>
-                    </div>
-                    <div class="op-department op-dropdown-item mb-1">
-                        <input class="form-check-input" type="checkbox" value="it" id="flexCheckDefault3" name="departments">
-                        <label class="form-check-label" for="flexCheckDefault3">
-                            IT
-                        </label>
-                    </div>
+                    {% for department in departments %}
+                        <div class="op-department op-dropdown-item mb-1">
+                            <input class="form-check-input" type="checkbox" value="{{ department.id }}" id="flexCheckDepartment{{ department.id }}" name="departments">
+                            <label class="form-check-label" for="flexCheckDepartment{{ department.id }}">
+                                {{ department.shortcut }}
+                            </label>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
             <div class="op-status op-grid-right dropdown">
@@ -75,63 +65,72 @@
                     Auswählen
                 </button>
                 <div class="dropdown-menu dropdown-menu-end p-1">
-                    <div class="op-status op-dropdown-item mb-1 badge bg-info">
-                        <input class="form-check-input" type="checkbox" value="waiting" id="flexCheckDefault4" name="status">
-                        <label class="form-check-label" for="flexCheckDefault4">
-                            Warte auf Prüfung
-                        </label>
-                    </div>
-                    <div class="op-status op-dropdown-item mb-1 badge bg-danger">
-                        <input class="form-check-input" type="checkbox" value="refused" id="flexCheckDefault5" name="status">
-                        <label class="form-check-label" for="flexCheckDefault5">
-                            Abgelehnt
-                        </label>
-                    </div>
-                    <div class="op-status op-dropdown-item mb-1 badge bg-success">
-                        <input class="form-check-input" type="checkbox" value="done" id="flexCheckDefault6" name="status">
-                        <label class="form-check-label" for="flexCheckDefault6">
-                            Abgeschlossen
-                        </label>
-                    </div>
+
+                    {% for status in status_types %}
+                        <div class="op-status op-dropdown-item mb-1 badge {{ status.color }}">
+                            <input class="form-check-input" type="checkbox" value="{{ status.id }}" id="flexCheckStatus{{ status.id }}" name="status">
+                            <label class="form-check-label" for="flexCheckStatus{{ status.id }}">
+                                {{ status.descr}}
+                            </label>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
-            <div class="op-reason op-grid-right">
-                <input type="text" class="form-control" name="absence-reason">
+            <div class="op-reason op-grid-right dropdown">
+                <button type="button" class="btn bg-white dropdown-toggle border" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                    Auswählen
+                </button>
+                <div class="dropdown-menu dropdown-menu-end p-1">
+                    {% for reason in absence_reasons %}
+                        <div class="op-department op-dropdown-item mb-1">
+                            <input class="form-check-input" type="checkbox" value="{{ reason.id }}" id="flexCheckDepartment{{ reason.id }}" name="reasons">
+                            <label class="form-check-label" for="flexCheckDepartment{{ reason.id }}">
+                                {{ reason.descr }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
             <div class="op-date op-grid-right">
                 <input type="date" class="form-control" name="date-from">
                 <input type="date" class="form-control" name="date-to">
             </div>
         </form>
-        {% for item in range(5) %}
+        {% for form in form_list %}
             <div class="op-request-grid-row op-grid-rows custom-box custom-grid">
                 <div class="op-open-entry">
-                    <button class="btn btn-primary">
+                    <a class="btn btn-primary" href="{{ url_for('formular_page') }}?formatid={{ form.formatid }}">
                         <i class="fa-solid fa-arrow-right"></i>
                         Öffnen
-                    </button>
+                    </a>
                 </div>
                 <div class="op-open-pdf op-grid-center">
-                    <div class="icon-button">
+                    <a class="icon-button" href="{{ url_for('formular_pdf') }}?formatid={{ form.formatid }}">
                         <i class="fa-solid fa-file-pdf"></i>
-                    </div>
+                    </a>
                 </div>
                 <div class="op-firstname">
-                    <div class="p-2">Alpha</div>
+                    <div class="p-2">{{ form.user.firstname }}</div>
                 </div>
                 <div class="op-lastname">
-                    <div class="p-2">Beta</div>
+                    <div class="p-2">{{ form.user.firstname }}</div>
                 </div>
                 <div class="op-department op-grid-center">
-                    <div class="p-2">IT</div>
+<!--                    TODO Abteilung anzeigen-->
+                    <div class="p-2">{{ form.departments.descr }}</div>
                 </div>
                 <div class="op-status op-grid-right">
-                    <div class="badge bg-danger p-2">Zu Prüfen von Leiter</div>
+                    <div class="badge {{ form.statusrel.color }} p-2">{{ form.statusrel.descr }}</div>
                 </div>
                 <div class="op-reason op-grid-right">
-                    <div class="p-2">Dienstver.</div>
+                    {% if form.absensereasons == 5 %}
+                        <div class="p-2">{{ form.other }}</div>
+                    {% else %}
+                        <div class="p-2">{{ form.absense.descr }}</div>
+                    {% endif %}
                 </div>
                 <div class="op-date op-grid-right">
+<!--                    TODO Datum aus Positionen ermitteln-->
                     <div class="p-2">01.01.2023 - 01.01.2023</div>
                 </div>
             </div>
