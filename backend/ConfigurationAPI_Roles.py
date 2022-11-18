@@ -1,7 +1,7 @@
 
 from flask import render_template, Response, redirect
 from backend.ConfigurationManager_Roles import ConfigurationMngrRoles
-from database.roles import Roles
+from database.dbHelper import Roles
 
 class ConfigurationPages_Roles:
     def get_config_page(default):

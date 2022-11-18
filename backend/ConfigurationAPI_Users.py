@@ -2,7 +2,7 @@
 from flask import render_template, Response, redirect
 from backend.ConfigurationManager_Roles import ConfigurationMngrRoles
 from backend.ConfigurationManager_Users import ConfigurationMngrUsers
-from database.users import User
+from database.dbHelper import User
 
 class ConfigurationPages_Users:
     def get_config_users_page(default):

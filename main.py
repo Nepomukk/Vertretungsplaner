@@ -121,6 +121,7 @@ def home():
 def login():
     # to reset the database restore Default or update structure
     # init_db()
+    # db.drop_all()
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()

@@ -10,7 +10,7 @@ import json
 import sqlalchemy as db
 from sqlalchemy import select
 from typing import List, Any, NoReturn, Union
-from database.roles import Roles, RoleSchema
+from database.dbHelper import Roles, RoleSchema
 from database.dbHelper import db
 
 class ConfigurationMngrRoles:
