@@ -150,7 +150,7 @@ def home():
     user: User = current_user
     is_admin: bool = ConfigurationMngrRoles.is_admin(user_id=user.userid)
     my_default = default
-    if is_admin: 
+    if is_admin:
         my_default = admin_default
     affected_departments = Departments.query.all()
     absence_reasons = AbsenseReasons.query.all()
@@ -162,10 +162,21 @@ def home():
     for form in form_list:
         if form.formatid not in formatid_list:
             formatid_list.append(form.formatid)
-            dep_list.append(FromatToDepartment.query.filter(FromatToDepartment.formatid==form.formatid).all())
+            dep_list.append(FromatToDepartment.query.filter(FromatToDepartment.formatid == form.formatid).all())
+    depart_dict = {}
+    for form in form_list:
+        temp_short_list = []
+        for temp_list in dep_list:
+            for temp_dep in temp_list:
+                if temp_dep.formatid == form.formatid:
+                    for department in affected_departments:
+                        if temp_dep.departmentid == department.id:
+                            temp_short_list.append(department.shortcut)
+        depart_dict[str(form.formatid)] = temp_short_list
 
-    return render_template('pages/overview.html', default=my_default, username=name, departments=affected_departments,
-                           absence_reasons=absence_reasons, status_types=status_types, form_list=form_list, formatid_list=formatid_list, dep_list=dep_list)
+    return render_template('pages/overview.html', default=default, username=name, departments=affected_departments,
+                           absence_reasons=absence_reasons, status_types=status_types, form_list=form_list,
+                           dep_dict=depart_dict)
 
 
 @app.route('/login', methods=["GET", "POST"])
@@ -462,7 +473,7 @@ def page_not_found(e):
 def get_config_page():
     user: User = current_user
     is_admin: bool = ConfigurationMngrRoles.is_admin(user_id=user.userid)
-    if not is_admin: 
+    if not is_admin:
         redirect(url_for('login'))
     return ConfigurationPages_Roles.get_config_page(default=admin_default)
 # ############################################################ A6 Konfiguration Endpoints \
@@ -472,7 +483,7 @@ def get_config_roles_page():
     return ConfigurationPages_Roles.get_config_roles_page(default=admin_default)
 
 @app.route('/config/roles/add') # get page add role
-def config_roles_add_page():    
+def config_roles_add_page():
     return ConfigurationPages_Roles.config_roles_add_page(default=admin_default)
 
 @app.route('/config/roles/edit/<roleid>', methods=['GET']) # get page edit role

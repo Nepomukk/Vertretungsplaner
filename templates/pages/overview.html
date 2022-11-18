@@ -116,20 +116,11 @@
                     <div class="p-2">{{ form.user.firstname }}</div>
                 </div>
                 <div class="op-department op-grid-center">
-                    {% for temp_id in formatid_list %}
-                        {% if temp_id == form.formatid %}
-                            <div class="p-2">
-                                {% for temp_dep in dep_list[loop.index0] %}
-                                    {% for department in affected_departments %}
-                                        {% if temp_dep == department.id %}
-                                            {{ department.shortcut }}
-                                        {% endif %}
-                                    {% endfor %}
-                                {% endfor %}
-
-                            </div>
+                    <div class="p-2">
+                        {% if dep_dict[form.formatid|string] is not none: %}
+                            {{ dep_dict[form.formatid|string]|join(' ') }}
                         {% endif %}
-                    {% endfor %}
+                    </div>
                 </div>
                 <div class="op-status op-grid-right">
                     <div class="badge {{ form.statusrel.color }} p-2">{{ form.statusrel.descr }}</div>

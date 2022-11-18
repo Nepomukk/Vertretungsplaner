@@ -153,8 +153,7 @@ class FromatToDepartment(db.Model):
 
     def __repr__(self):
         return f"<FromatToDepartment formatid={self.formatid!r}, " \
-               f"departmentid={self.departmentid!r}, " \
-               f"department={self.department!r}>"
+               f"departmentid={self.departmentid!r}>"
 
 
 class Departments(db.Model):
