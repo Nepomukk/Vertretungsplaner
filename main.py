@@ -174,7 +174,7 @@ def home():
                             temp_short_list.append(department.shortcut)
         depart_dict[str(form.formatid)] = temp_short_list
 
-    return render_template('pages/overview.html', default=default, username=name, departments=affected_departments,
+    return render_template('pages/overview.html', default=my_default, username=name, departments=affected_departments,
                            absence_reasons=absence_reasons, status_types=status_types, form_list=form_list,
                            dep_dict=depart_dict)
 

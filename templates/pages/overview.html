@@ -133,11 +133,7 @@
                     {% endif %}
                 </div>
                 <div class="op-date op-grid-right">
-<!--                    {% if form.sublesson|length >= 1 %}-->
-                        <div class="p-2">{{ form.sublessons[0].lessondate.strftime("%d.%m.%Y") }} - {{ form.sublessons[form.sublessons|length - 1].lessondate.strftime("%d.%m.%Y") }}</div>
-<!--                    {% else %}-->
-<!--                        <div class="p-2">Antrag enthält keine Unterrichtsstunden</div>-->
-<!--                    {% endif %}-->
+                    <div class="p-2">{{ form.sublessons[0].lessondate.strftime("%d.%m.%Y") }} - {{ form.sublessons[form.sublessons|length - 1].lessondate.strftime("%d.%m.%Y") }}</div>
                 </div>
             </div>
         {% endfor %}
