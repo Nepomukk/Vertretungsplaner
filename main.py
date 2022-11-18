@@ -155,8 +155,7 @@ def home():
     affected_departments = Departments.query.all()
     absence_reasons = AbsenseReasons.query.all()
     status_types = StatusTypes.query.all()
-    form_list = Forms.query.filter(
-        Forms.userid == current_user.userid).all()  # TODO Logik erweitern für mehr als die eigenen bzw des Pozesses Rellen des Users benutzen
+    form_list = Forms.query.all()  # TODO Logik erweitern für mehr als die eigenen bzw des Pozesses Rellen des Users benutzen
     formatid_list = []
     dep_list = []
     for form in form_list:
