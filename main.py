@@ -164,7 +164,7 @@ def home():
             formatid_list.append(form.formatid)
             dep_list.append(FromatToDepartment.query.filter(FromatToDepartment.formatid==form.formatid).all())
 
-    return render_template('pages/overview.html', default=default, username=name, departments=affected_departments,
+    return render_template('pages/overview.html', default=my_default, username=name, departments=affected_departments,
                            absence_reasons=absence_reasons, status_types=status_types, form_list=form_list, formatid_list=formatid_list, dep_list=dep_list)
 
 
@@ -233,7 +233,7 @@ def formular_page():
             elif form.userid == current_user.userid:
                 modus = 2  # Update
 
-        return render_template('pages/formular.html', default=default, username=name,
+        return render_template('pages/formular.html', default=my_default, username=name,
                                absence_reasons=absence_reasons,
                                affected_departments=affected_departments, allow_comment=allow_comment,
                                allow_edit=allow_edit, users=users, form=form, lessons=lessons, modus=modus)
