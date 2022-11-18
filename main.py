@@ -10,6 +10,9 @@ import pdfkit as pdfkit
 from flask import render_template, redirect, url_for, flash, request, make_response, send_file
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from flask_migrate import Migrate
+from sqlalchemy import text
+from sqlalchemy.dialects.postgresql import insert
+from sqlalchemy.orm import load_only
 from werkzeug.security import check_password_hash
 
 from database.dbHelper import *
@@ -108,15 +111,23 @@ def load_user(user_id):
 @login_required
 def home():
     name = ''
-    #TODO Filterlogik
+    # TODO Filterlogik
     if current_user.is_authenticated:
         name = current_user.firstname + ' ' + current_user.lastname
     affected_departments = Departments.query.all()
     absence_reasons = AbsenseReasons.query.all()
     status_types = StatusTypes.query.all()
-    form_list = Forms.query.filter_by(userid=current_user.userid).all()  # TODO Logik erweitern für mehr als die eigenen bzw des Pozesses Rellen des Users benutzen
+    form_list = Forms.query.filter(
+        Forms.userid == current_user.userid).all()  # TODO Logik erweitern für mehr als die eigenen bzw des Pozesses Rellen des Users benutzen
+    formatid_list = []
+    dep_list = []
+    for form in form_list:
+        if form.formatid not in formatid_list:
+            formatid_list.append(form.formatid)
+            dep_list.append(FromatToDepartment.query.filter(FromatToDepartment.formatid==form.formatid).all())
+
     return render_template('pages/overview.html', default=default, username=name, departments=affected_departments,
-                               absence_reasons=absence_reasons, status_types=status_types, form_list=form_list)
+                           absence_reasons=absence_reasons, status_types=status_types, form_list=form_list, formatid_list=formatid_list, dep_list=dep_list)
 
 
 @app.route('/login', methods=["GET", "POST"])
@@ -204,6 +215,11 @@ def formular_page():
 
             saveAppendFile(form, request)
 
+            for department in zip(request.form.getlist('affected-departments')):
+                with app.app_context():
+                    db.session.add(FromatToDepartment(formatid=formatid, departmentid=department))
+                    db.session.commit()
+
             for date, std_from, std_to, subject, subclass, subteacher, subcontent in zip(request.form.getlist('date'),
                                                                                          request.form.getlist(
                                                                                              'std_from'),
@@ -239,6 +255,7 @@ def formular_page():
             saveAppendFile(form, request)
 
             with app.app_context():
+                FromatToDepartment.query.filter_by(formatid=formatid).delete()
                 SubLessons.query.filter_by(formatid=formatid).delete()
                 if form.absensereasons != int(request.form['absence-reasons']):
                     form.absensereasons = int(request.form['absence-reasons'])
@@ -248,6 +265,12 @@ def formular_page():
                     form.workarea = int(request.form['affected-departments'])
                 form.status = 1
                 db.session.commit()
+
+            for department in zip(request.form.getlist('affected-departments')):
+                with app.app_context():
+                    db.session.add(FromatToDepartment(formatid=formatid, departmentid=department))
+                    db.session.commit()
+
             for date, std_from, std_to, subject, subclass, subteacher, subcontent in zip(request.form.getlist('date'),
                                                                                          request.form.getlist(
                                                                                              'std_from'),

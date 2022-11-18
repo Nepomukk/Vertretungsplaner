@@ -99,12 +99,28 @@ class Roles(db.Model):
                f"admin={self.admin!r}, " \
                f"level={self.level!r}>"
 
-
+#
 fromattodepartment = db.Table('fromattodepartment',
                             db.Column('formatid', db.Integer, ForeignKey("forms.formatid"), nullable=False,
                                       primary_key=True),
                             db.Column('departmentid', db.Integer, ForeignKey("departments.id"), nullable=False,
                                       primary_key=True))
+
+class FromatToDepartment(db.Model):
+    __tablename__ = "fromattodepartment"
+    __table_args__ = {'extend_existing': True}
+
+    formatid = db.Column('formatid', db.Integer, ForeignKey("forms.formatid"), nullable=False, primary_key=True)
+    departmentid = db.Column('departmentid', db.Integer, ForeignKey("departments.id"), nullable=False, primary_key=True)
+
+    def __init__(self, formatid, departmentid):
+        self.formatid = formatid
+        self.departmentid = departmentid
+
+    def __repr__(self):
+        return f"<FromatToDepartment formatid={self.formatid!r}, " \
+               f"departmentid={self.departmentid!r}, " \
+               f"department={self.department!r}>"
 
 
 class Departments(db.Model):
@@ -212,7 +228,7 @@ class Forms(db.Model):
     statusrel = db.relationship('StatusTypes')
     user = db.relationship('User')
     departments = db.relationship('Departments', secondary=fromattodepartment)
-    sublessons = db.relationship("SubLessons")
+    sublessons = db.relationship("SubLessons", order_by="SubLessons.lessondate")
 
     def __init__(self, userid, absensereasons, other, workarea, status, fcomment, activ,
                  createdate):

@@ -116,8 +116,20 @@
                     <div class="p-2">{{ form.user.firstname }}</div>
                 </div>
                 <div class="op-department op-grid-center">
-<!--                    TODO Abteilung anzeigen-->
-                    <div class="p-2">{{ form.departments.descr }}</div>
+                    {% for temp_id in formatid_list %}
+                        {% if temp_id == form.formatid %}
+                            <div class="p-2">
+                                {% for temp_dep in dep_list[loop.index0] %}
+                                    {% for department in affected_departments %}
+                                        {% if temp_dep == department.id %}
+                                            {{ department.shortcut }}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+
+                            </div>
+                        {% endif %}
+                    {% endfor %}
                 </div>
                 <div class="op-status op-grid-right">
                     <div class="badge {{ form.statusrel.color }} p-2">{{ form.statusrel.descr }}</div>
@@ -130,8 +142,11 @@
                     {% endif %}
                 </div>
                 <div class="op-date op-grid-right">
-<!--                    TODO Datum aus Positionen ermitteln-->
-                    <div class="p-2">01.01.2023 - 01.01.2023</div>
+                    {% if form.sublesson %}
+                        <div class="p-2">{{ form.sublessons[0].lessondate.strftime("%d.%m.%Y") }} - {{ form.sublessons[form.sublessons|length - 1].lessondate.strftime("%d.%m.%Y") }}</div>
+                    {% else %}
+                        <div class="p-2">Antrag enthält keine Unterrichtsstunden</div>
+                    {% endif %}
                 </div>
             </div>
         {% endfor %}

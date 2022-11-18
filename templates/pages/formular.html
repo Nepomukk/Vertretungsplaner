@@ -111,9 +111,9 @@
                         <div class="fp-department-grid input-container">
                             {% for department in affected_departments %}
                                 <span>
-                                    <input type="radio" class="form-check-input" name="affected-departments"
+                                    <input type="checkbox" class="form-check-input" name="affected-departments"
                                            id="affected-departments-{{ department.id }}" value="{{ department.id }}" {% if not allow_edit %}
-                    disabled {% endif %} {% if department.id == form.workarea %} checked {% endif %} required>
+                    disabled {% endif %} {% if department.id == form.workarea %} checked {% endif %}>
                                 </span>
                             {% endfor %}
                         </div>
