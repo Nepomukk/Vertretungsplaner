@@ -64,10 +64,15 @@ default = {
 }
 
 admin_default = copy.deepcopy(default)
-admin_default['menu_items']['manage'] = {
-    'name': 'Verwaltung',
-    'path': '/config',
-    'icon': 'fa-solid fa-file-circle-plus',
+admin_default['menu_items']['manage_users'] = {
+    'name': 'Nutzer-Verwaltung',
+    'path': '/config/users',
+    'icon': 'fa-solid fa-circle-user',
+}
+admin_default['menu_items']['manage_roles'] = {
+    'name': 'Rollen-Verwaltung',
+    'path': '/config/roles',
+    'icon': 'fa-solid fa-hat-cowboy',
 }
 
 # INFO: add hide_menu=True to render_template() to disable the menu for a route
@@ -180,6 +185,11 @@ def formular_page():
     name = ''
     if current_user.is_authenticated:
         name = current_user.firstname + ' ' + current_user.lastname
+    user: User = current_user
+    is_admin: bool = ConfigurationMngrRoles.is_admin(user_id=user.userid)
+    my_default = default
+    if is_admin:
+        my_default = admin_default
     absence_reasons = {
         'work_event': {
             'name': 'Dienstveranstaltung',
@@ -213,7 +223,7 @@ def formular_page():
             'name': 'IT',
         },
     }
-    return render_template('pages/formular.html', default=default, username=name,
+    return render_template('pages/formular.html', default=my_default, username=name,
                            absence_reasons=absence_reasons,
                            affected_departments=affected_departments)
 

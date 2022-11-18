@@ -141,3 +141,7 @@ img {
 .fdesign {
     font-family: Roboto;
 }
+
+.configuration-component {
+    padding: 1rem !important;
+}
