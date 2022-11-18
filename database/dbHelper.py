@@ -1,16 +1,60 @@
+from typing import TypedDict
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey
 from werkzeug.security import generate_password_hash
 
+# from .roles import Roles
+# from .users import User
+
 db = SQLAlchemy()
 
+class UserSchema(TypedDict):
+    userid: int
+    username: str
+    pwd: str
+    firstname: str
+    lastname: str
+    email: str
+
+class RoleSchema(TypedDict):
+    roleid: int
+    name: str
+    admin: bool
+    level: int
+
+class Roles(db.Model):
+    __tablename__ = "roles"
+
+    roleid = db.Column(db.Integer, nullable=False, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    admin = db.Column(db.Boolean, nullable=False)
+    level = db.Column(db.Integer, nullable=False, unique=True)
+
+    def __init__(self, name: str, admin: bool, level: int):
+        self.name = name
+        self.level = level
+        self.admin = admin
+
+    def __repr__(self):
+        return f"<Roles roleid={self.roleid!r}, " \
+               f"name={self.name!r}, " \
+               f"admin={self.admin!r}, " \
+               f"level={self.level!r}>"
+
+    def to_dict(self) -> RoleSchema:
+        return {
+            'roleid': self.roleid,
+            'name': self.name,
+            'admin': self.admin,
+            'level': self.level
+        }
 
 class User(db.Model, UserMixin):
     __tablename__ = "users"
 
     userid = db.Column(db.Integer, nullable=False, primary_key=True)
-    username = db.Column(db.String, nullable=False, unique=True)
+    username = db.Column(db.String, nullable=False)
     pwd = db.Column(db.String, nullable=False)
     firstname = db.Column(db.String, nullable=False)
     lastname = db.Column(db.String, nullable=False)
@@ -19,7 +63,7 @@ class User(db.Model, UserMixin):
     def get_id(self):
         return self.userid
 
-    def __init__(self, username, pwd, firstname, lastname, email):
+    def __init__(self, username: str, pwd:str, firstname: str, lastname: str, email: str):
         self.username = username
         self.pwd = generate_password_hash(pwd)
         self.firstname = firstname
@@ -33,6 +77,15 @@ class User(db.Model, UserMixin):
                f"lastname={self.lastname!r}, " \
                f"pwd={self.pwd!r}, " \
                f"email={self.email!r}>"
+
+    def to_dict(self) -> UserSchema:
+        def set_dict(dictonary: dict, key: str) -> NoReturn:
+            dictonary[key] = getattr(self, key, None)
+
+        keys = UserSchema.__annotations__
+        result: UserSchema = dict
+        return [set_dict(result, key) for key in keys]
+
 
 
 class AbsenseReasons(db.Model):
@@ -147,7 +200,7 @@ class UserToRole(db.Model):
     roleid = db.Column(db.Integer, ForeignKey("roles.roleid"), nullable=False, primary_key=True)
     departmentid = db.Column(db.Integer, ForeignKey("departments.id"), nullable=False, primary_key=True)
 
-    def __init__(self, userid, roleid, departmentid):
+    def __init__(self, userid: int, roleid: int, departmentid: int):
         self.userid = userid
         self.roleid = roleid
         self.departmentid = departmentid

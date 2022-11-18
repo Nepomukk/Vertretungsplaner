@@ -1,0 +1,70 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="configuration-component">
+
+    <h1>Benutzer {{action_title}}</h1>
+
+    <div class="manage-menu container-fluid">
+
+      <div class="row">
+        <div class="col-sm-12">
+
+          <div class="config-section-title">
+            <h2>{{user.username}}</h2>
+        </div>
+
+        <div class="manage-user">
+          <form action="{{post_url}}" method="post">
+            <label for="userid">ID:</label><br>
+            <input class="form-control" type="text" id="userid" name="userid" value="{{user.userid}}" disabled><br>
+            <input class="form-control" type="text" id="userid" name="userid" value="{{user.userid}}" hidden><br>
+
+            <label for="username">Benutzername:</label><br>
+            <input class="form-control" type="text" id="username" name="username" value="{{user.username}}"><br>
+
+            <label for="pwd">Passwort:</label><br>
+            <input class="form-control" type="password" id="pwd" name="pwd" value="{{user.pwd}}"><br>
+
+            <label for="firstname">Vorname:</label><br>
+            <input  class="form-control" type="text" id="firstname" name="firstname" value="{{user.firstname}}"><br>
+
+            <label for="lastname">Nachname:</label><br>
+            <input class="form-control" type="text" id="lastname" name="lastname" value="{{user.lastname}}"><br>
+
+            <label for="email">Email:</label><br>
+            <input class="form-control" type="text" id="email" name="email" value="{{user.email}}"><br>
+
+            <div class="choosen-roles">
+              <p>zugewiesene Rollen:</p>
+
+              <ol>
+                {%for c_role in current_user_roles%}
+                  <li>c_role.name</li>
+                {%endfor%}
+              </ol>
+
+            </div>
+
+            <div class="choose-roles">
+              <p>verfügbare Rollen:</p>
+
+              {%for role in roles%}
+              <label for="{{role.name}}">{{role.name}}:</label><br>
+              <input class="form-check-input" type="checkbox" id="{{role.name}}" name="{{role.name}}" value="{{role.roleid}}"><br><br>
+              {%endfor%}
+
+            </div>
+
+            <button type="submit" class="btn btn-primary float-right">Speichern</button>
+
+          </form>
+        </div>
+
+        </div>
+      </div>
+
+    </div>  
+        
+</div>
+{% endblock %}

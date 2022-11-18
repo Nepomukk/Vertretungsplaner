@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="configuration-component">
+
+    <div class="manage-menu container-fluid">
+
+      <div class="row">
+        <div class="col-sm-12">
+
+          <div class="config-section-title">
+            <h2>Rollen Verwalten</h2>
+        </div>
+
+        <div class="manage-roles">
+          <a type="button" class="btn btn-primary float-right" href="/config/roles/add">Hinzufügen</a>
+
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Reihenfolge</th>
+                    <th scope="col">Rollen-ID</th>
+                    <th scope="col">Rollenbezeichnung</th>
+                    <th scope="col">Sicherheitsstufe</th>
+                    <th scope="col">Aktionen</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  {%for role in roles%}
+                    <tr>
+                      <td>{{roles.index(role)}}</td>
+                      <td>{{role.roleid}}</td>
+                      <td>{{role.name}}</td>
+                      <td>{{role.level}}</td>
+                      <td>
+                          <div class="row">
+                              <div class="col-sm-6">
+                                  <a type="button" class="btn btn-secondary" href="/config/roles/edit/{{role.roleid}}">Editieren</a>
+                              </div>
+                              <div class="col-sm-6">
+                                  <form action="{{post_url}}/{{role.roleid}}" method="post">
+                                    <button type="submit" class="btn btn-danger">Löschen</button>
+                                  </form>                    
+                              </div>
+                          </div>
+                      </td>
+                    </tr>
+                  {%endfor%}
+
+                </tbody>
+              </table>        
+        </div>
+
+        </div>
+      </div>
+
+    </div>
+
+</div>
+{% endblock %}

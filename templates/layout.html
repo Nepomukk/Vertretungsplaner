@@ -19,7 +19,7 @@
                 <div class="menu sidebar">
 
                     <a href="/" class="home-link pb-2 pt-1 mb-3 border-bottom">
-                        <img src="static/img/logo.png" class="gso-logo">
+                        <img src="/static/img/logo.png" class="gso-logo">
                         <h3 class="title">
                             &nbsp;Vertretung
                         </h3>
@@ -40,8 +40,19 @@
 
                 <div class="page">
                     <div class="menu topbar">
-                        <div class="notifications-bell-container icon-button">
-                            <i class="fa-solid fa-bell"></i>
+                        <div class="notifications-bell-container dropdown-center">
+                            <div class="notifications-bell icon-button dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-bell" id="message-bell"></i>
+                            </div>
+                            <div class="dropdown-menu">
+                                <div class="card">
+                                    <ul class="list-group list-group-flush">
+                                        {% for notification in default["notifications"] %}
+                                            <a class="list-group-item dropdown-item" href="{{ notification['path'] }}">{{ notification['message'] }}</a>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                         <div class="logged-in-user">
                             <i class="fa-solid fa-circle-user"></i>

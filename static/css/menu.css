@@ -62,3 +62,21 @@ body, html {
 .nav-item *:hover {
     color: #fff;
 }
+
+.notifications-bell-container .dropdown-toggle::after {
+    display: none !important;
+}
+
+.notifications-bell-container .dropdown-menu {
+    padding: 0;
+    width: 18rem;
+}
+
+.notifications-bell-container .dropdown-menu * {
+    color: #212529;
+    text-decoration: none;
+    white-space: initial;
+}
+.notifications-bell-container .dropdown-menu .dropdown-item:active {
+    background-color: var(--bs-dropdown-link-hover-bg);
+}
